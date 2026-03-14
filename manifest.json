@@ -2,7 +2,7 @@
   "name": "Toraks Cerrahi Takip",
   "short_name": "Toraks Takip",
   "description": "Göğüs Cerrahisi Hasta Takip Uygulaması — Dr. İlhan Ocakcıoğlu",
-  "start_url": "toraks_cerrahi_takip.html",
+  "start_url": "tct.v2.1.0.html",
   "scope": "/tortak/",
   "display": "standalone",
   "background_color": "#07090f",
