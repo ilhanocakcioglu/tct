@@ -1,0 +1,3031 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>THORACIS — Surgical Tracker</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00c2d4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Toraks Takip">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+:root{
+  --bg:#07090f;--surface:#0f1623;--surface2:#161f30;--surface3:#1c2840;
+  --border:#1e3354;--accent:#00c2d4;--success:#22c55e;--warn:#f59e0b;
+  --danger:#ef4444;--purple:#a78bfa;--pink:#f472b6;
+  --text:#e2e8f0;--text2:#7d9ab5;--text3:#4a6580;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:1rem;min-height:100vh;}
+/* TEMA DEĞİŞKENLERİ */
+body.theme-light{
+  --bg:#f0fafa;--surface:#ffffff;--surface2:#e6f7f4;--surface3:#d0f0ea;
+  --border:#b2e0d8;--accent:#00c9a7;--success:#059669;--warn:#d97706;
+  --danger:#dc2626;--purple:#7c3aed;--pink:#db2777;
+  --text:#1a3a38;--text2:#3d8c82;--text3:#5ba89e;
+}
+body.theme-light .cal-day.op-day{border-color:#00c9a7;background:#d0f0ea;}
+body.theme-light .cal-day.op-day .day-num{color:#007a6e;}
+body.theme-light .op-day-title{color:#007a6e !important;}
+body.theme-light .day-col.op-col{border-color:#00c9a7;}
+body.theme-light .day-col-title{color:#007a6e !important;}
+body.theme-light .day-col-count{background:#d0f0ea;color:#007a6e;}
+body.theme-light .tab.active{background:#00c9a7;color:#fff;}
+body.theme-light .btn-p{background:#00c9a7;border-color:#00c9a7;color:#fff;}
+body.theme-light .btn-p:hover{background:#00b894;color:#fff;}
+body.theme-light .stat-card{box-shadow:0 1px 6px rgba(0,180,160,0.1);}
+body.theme-light .patient-card{box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+body.theme-light .dcard{box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+body.theme-light header{box-shadow:0 1px 8px rgba(0,180,160,0.1);}
+body.theme-light .b-op{background:#e6faf7;color:#007a6e;}
+body.theme-light .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-light .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-light .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-light .b-grey{background:#e6f7f4;color:#3d8c82;}
+body.theme-light .b-purple{background:#ede9fe;color:#5b21b6;}
+body.theme-light .b-blue{background:#dbeafe;color:#1e40af;}
+body.theme-light .b-pink{background:#fce7f3;color:#9d174d;}
+body.theme-teal{--bg:#0d2e2e;--surface:#1a4a4a;--surface2:#1f5555;--surface3:#256060;--border:#2a6060;--accent:#00c9b1;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#d4f5ef;--text2:#5dbfb5;--text3:#3d9e90;}
+body.theme-wine{--bg:#2d0a14;--surface:#4a1525;--surface2:#561a2c;--surface3:#622035;--border:#6b2035;--accent:#ff6b9d;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#ffd6e7;--text2:#d4638a;--text3:#a84d6e;}
+body.theme-navy{--bg:#0d1a35;--surface:#1a2f55;--surface2:#1f3660;--surface3:#253d6b;--border:#2a4470;--accent:#5b9af5;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#d6e8ff;--text2:#6b8fcc;--text3:#4a6fa8;}
+body.theme-forest{--bg:#0a2010;--surface:#1a3d20;--surface2:#1f4525;--surface3:#254d2a;--border:#2a5530;--accent:#00d48a;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#d4f5e0;--text2:#5db87a;--text3:#3d9e5a;}
+/* SOMON 1 — pembe kırmızı */
+body.theme-salmon1{--bg:#1f0d14;--surface:#3a1825;--surface2:#45202e;--surface3:#502838;--border:#5a2838;--accent:#ff6f8a;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#ffd6de;--text2:#c05070;--text3:#a03858;}
+/* SOMON 2 — turuncu somon */
+body.theme-salmon2{--bg:#1f1008;--surface:#3a2010;--surface2:#452818;--surface3:#503020;--border:#5a3018;--accent:#ff9472;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#ffdacc;--text2:#c06040;--text3:#a04828;}
+
+/* ORTA GÜMÜŞ */
+body.theme-silver{--bg:#dde2e8;--surface:#edf0f4;--surface2:#e0e4ea;--surface3:#d4d8de;--border:#c8d0da;--accent:#64748b;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#1a202c;--text2:#718096;--text3:#a0aec0;}
+body.theme-silver .tab.active{background:#64748b;color:#fff;}
+body.theme-silver .btn-p{background:#64748b;border-color:#64748b;color:#fff;}
+body.theme-silver .btn-p:hover{background:#4a5568;color:#fff;}
+body.theme-silver .stat-card,.theme-silver .patient-card,.theme-silver .dcard{box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+body.theme-silver header{box-shadow:0 1px 6px rgba(0,0,0,0.1);}
+body.theme-silver .b-op{background:#c8d0da;color:#2d3748;}
+body.theme-silver .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-silver .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-silver .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-silver .b-grey{background:#c8d0da;color:#2d3748;}
+body.theme-lightblue{--bg:#f0f6ff;--surface:#ffffff;--surface2:#dbeafe;--surface3:#bfdbfe;--border:#93c5fd;--accent:#3b82f6;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#1e3a5f;--text2:#3b5ea6;--text3:#60a5fa;}
+body.theme-lightblue .tab.active{background:#3b82f6;color:#fff;}
+body.theme-lightblue .btn-p{background:#3b82f6;border-color:#3b82f6;color:#fff;}
+body.theme-lightblue .btn-p:hover{background:#2563eb;color:#fff;}
+body.theme-lightblue .stat-card,.theme-lightblue .patient-card,.theme-lightblue .dcard{box-shadow:0 1px 4px rgba(59,130,246,0.1);}
+body.theme-lightblue header{box-shadow:0 1px 8px rgba(59,130,246,0.1);}
+body.theme-lightblue .b-op{background:#dbeafe;color:#1d4ed8;}
+body.theme-lightblue .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-lightblue .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-lightblue .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-lightblue .b-grey{background:#dbeafe;color:#3b5ea6;}
+
+/* AÇIK KIRMIZI */
+body.theme-lightred{--bg:#fff5f5;--surface:#ffffff;--surface2:#ffe4e6;--surface3:#fecdd3;--border:#fda4af;--accent:#f43f5e;--success:#059669;--warn:#d97706;--danger:#be123c;--text:#4c0519;--text2:#be123c;--text3:#fb7185;}
+body.theme-lightred .tab.active{background:#e11d48;color:#fff;}
+body.theme-lightred .btn-p{background:#e11d48;border-color:#e11d48;color:#fff !important;}
+body.theme-lightred .btn-p:hover{background:#be123c;color:#fff !important;}
+body.theme-lightred .fbtn.active{border-color:#e11d48;color:#e11d48;}
+body.theme-lightred .tab{color:#be123c;}
+body.theme-lightred .btn{border-color:#fda4af;color:#be123c;}
+body.theme-lightred .stat-card,.theme-lightred .patient-card,.theme-lightred .dcard{box-shadow:0 1px 4px rgba(244,63,94,0.1);}
+body.theme-lightred header{box-shadow:0 1px 8px rgba(244,63,94,0.1);}
+body.theme-lightred .b-op{background:#ffe4e6;color:#be123c;}
+body.theme-lightred .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-lightred .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-lightred .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-lightred .b-grey{background:#ffe4e6;color:#be123c;}
+
+/* AÇIK MOR */
+body.theme-lavender{--bg:#faf5ff;--surface:#ffffff;--surface2:#ede9fe;--surface3:#ddd6fe;--border:#c4b5fd;--accent:#8b5cf6;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#2e1065;--text2:#6d28d9;--text3:#a78bfa;}
+body.theme-lavender .tab.active{background:#8b5cf6;color:#fff;}
+body.theme-lavender .btn-p{background:#8b5cf6;border-color:#8b5cf6;color:#fff;}
+body.theme-lavender .btn-p:hover{background:#7c3aed;color:#fff;}
+body.theme-lavender .b-op{background:#ede9fe;color:#6d28d9;}
+body.theme-lavender .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-lavender .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-lavender .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-lavender .b-grey{background:#ede9fe;color:#6d28d9;}
+
+/* AÇIK TURUNCU */
+body.theme-amber{--bg:#fffbf0;--surface:#ffffff;--surface2:#fef3c7;--surface3:#fde68a;--border:#fcd34d;--accent:#f59e0b;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#451a03;--text2:#b45309;--text3:#f59e0b;}
+body.theme-amber .tab.active{background:#f59e0b;color:#fff;}
+body.theme-amber .btn-p{background:#f59e0b;border-color:#f59e0b;color:#fff;}
+body.theme-amber .btn-p:hover{background:#d97706;color:#fff;}
+body.theme-amber .b-op{background:#fef3c7;color:#b45309;}
+body.theme-amber .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-amber .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-amber .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-amber .b-grey{background:#fef3c7;color:#b45309;}
+
+/* AÇIK ZÜMRÜT */
+body.theme-emerald{--bg:#f0fdf4;--surface:#ffffff;--surface2:#d1fae5;--surface3:#a7f3d0;--border:#6ee7b7;--accent:#10b981;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#064e3b;--text2:#047857;--text3:#34d399;}
+body.theme-emerald .tab.active{background:#10b981;color:#fff;}
+body.theme-emerald .btn-p{background:#10b981;border-color:#10b981;color:#fff;}
+body.theme-emerald .btn-p:hover{background:#059669;color:#fff;}
+body.theme-emerald .b-op{background:#d1fae5;color:#047857;}
+body.theme-emerald .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-emerald .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-emerald .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-emerald .b-grey{background:#d1fae5;color:#047857;}
+
+/* AÇIK GRİ */
+body.theme-slate{--bg:#f8fafc;--surface:#ffffff;--surface2:#e2e8f0;--surface3:#cbd5e1;--border:#94a3b8;--accent:#64748b;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#0f172a;--text2:#334155;--text3:#64748b;}
+body.theme-slate .tab.active{background:#64748b;color:#fff;}
+body.theme-slate .btn-p{background:#64748b;border-color:#64748b;color:#fff;}
+body.theme-slate .btn-p:hover{background:#475569;color:#fff;}
+body.theme-slate .b-op{background:#e2e8f0;color:#334155;}
+body.theme-slate .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-slate .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-slate .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-slate .b-grey{background:#e2e8f0;color:#334155;}
+
+/* AÇIK İNDİGO */
+body.theme-indigo{--bg:#f5f3ff;--surface:#ffffff;--surface2:#e0e7ff;--surface3:#c7d2fe;--border:#a5b4fc;--accent:#6366f1;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#1e1b4b;--text2:#4338ca;--text3:#818cf8;}
+body.theme-indigo .tab.active{background:#6366f1;color:#fff;}
+body.theme-indigo .btn-p{background:#6366f1;border-color:#6366f1;color:#fff;}
+body.theme-indigo .btn-p:hover{background:#4f46e5;color:#fff;}
+body.theme-indigo .b-op{background:#e0e7ff;color:#4338ca;}
+body.theme-indigo .b-ok{background:#d1fae5;color:#065f46;}
+body.theme-indigo .b-warn{background:#fef3c7;color:#92400e;}
+body.theme-indigo .b-danger{background:#fee2e2;color:#991b1b;}
+body.theme-indigo .b-grey{background:#e0e7ff;color:#4338ca;}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;}
+.logo{width:46px;height:46px;background:linear-gradient(135deg,var(--accent),#006080);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:2.2em;flex-shrink:0;}
+.htitle{font-size:1.55rem;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:2px;}
+.hsub{font-size:0.7rem;color:var(--text2);letter-spacing:2px;}
+.hright{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;align-items:center;max-width:160px;}
+.btn{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:0.8em;font-family:var(--sans);transition:all .2s;white-space:nowrap;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn-p{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600;}
+.btn-p:hover{background:#00ddf0;color:#000;}
+.btn-d{border-color:var(--danger);color:var(--danger);}
+.btn-d:hover{background:var(--danger);color:#fff;}
+.btn-s{border-color:var(--success);color:var(--success);}
+.btn-s:hover{background:var(--success);color:#000;}
+.btn-w{border-color:var(--warn);color:var(--warn);}
+.tabs{display:flex;gap:2px;padding:6px 10px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;}
+.tab{padding:5px 12px;border-radius:6px;cursor:pointer;font-size:0.733em;color:var(--text2);white-space:nowrap;transition:all .2s;}
+.tab:hover{color:var(--text);background:var(--surface2);}
+.tab.active{background:var(--accent);color:#000;font-weight:600;}
+main{padding:10px;max-width:960px;margin:0 auto;}
+.page{display:none;}.page.active{display:block;}
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:10px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;}
+.stat-card:hover{border-color:var(--accent);}
+.stat-card.active{border-color:var(--accent);background:var(--surface2);}
+.stat-num{font-size:1.333em;font-weight:700;font-family:var(--mono);color:var(--accent);}
+.stat-label{font-size:0.667em;color:var(--text2);margin-top:2px;}
+.filter-row{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+.filter-row input{flex:1;min-width:160px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 11px;border-radius:7px;font-size:0.867em;font-family:var(--sans);}
+.filter-row input:focus{outline:none;border-color:var(--accent);}
+.fbtn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.733em;white-space:nowrap;transition:all .2s;}
+.fbtn.active{border-color:var(--accent);color:var(--accent);}
+.op-day-header{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;margin-top:8px;}
+.op-day-title{font-size:0.8em;font-weight:600;font-family:var(--mono);color:var(--warn);}
+.op-day-count{font-size:0.667em;color:var(--text2);margin-left:auto;}
+.patient-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.patient-card:hover{border-color:var(--accent);background:var(--surface2);}
+.patient-card.done{border-left:3px solid var(--success);}
+.patient-card.planned{border-left:3px solid var(--warn);}
+.patient-card.tarihsiz{border-left:3px solid var(--text3);}
+.pavatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.933em;flex-shrink:0;}
+.pavatar.pre{background:linear-gradient(135deg,#1e3a5f,#0077b6);}
+.pavatar.post{background:linear-gradient(135deg,#052e16,#15803d);}
+.pinfo{flex:1;min-width:0;}
+.pname{font-weight:600;font-size:0.867em;}
+.pmeta{font-size:0.667em;color:var(--text2);margin-top:1px;font-family:var(--mono);}
+.pbadges{display:flex;gap:3px;flex-wrap:wrap;margin-top:3px;}
+.badge{padding:2px 6px;border-radius:3px;font-size:0.6em;font-weight:600;font-family:var(--mono);}
+.b-op{background:#1e3a5f;color:var(--accent);}
+.b-warn{background:#3f1c06;color:var(--warn);}
+.b-danger{background:#3f0606;color:var(--danger);}
+.b-ok{background:#052e16;color:var(--success);}
+.b-grey{background:var(--surface2);color:var(--text2);}
+.b-purple{background:#2e1065;color:var(--purple);}
+.b-blue{background:#1e3a5f;color:#60a5fa;}
+.b-pink{background:#500724;color:var(--pink);}
+.pdate{font-size:0.667em;color:var(--text2);text-align:right;font-family:var(--mono);min-width:62px;}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;}
+.sec-hdr{background:var(--surface2);padding:8px 13px;font-size:0.667em;font-weight:600;color:var(--accent);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.sec-hdr.green{color:var(--success);}
+.sec-hdr.purple{color:var(--purple);}
+.sec-hdr.pink{color:var(--pink);}
+.sec-hdr.warn{color:var(--warn);}
+.sec-hdr.danger{color:var(--danger);}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+@media(max-width:540px){.fgrid{grid-template-columns:1fr;}}
+.ff{padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);}
+.ff:nth-child(even){border-right:none;}
+.ff.full{grid-column:1/-1;border-right:none;}
+.fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+@media(max-width:540px){.fgrid3{grid-template-columns:1fr 1fr;}}
+.fgrid3 .ff{border-right:1px solid var(--border);}
+.fgrid3 .ff:nth-child(3n){border-right:none;}
+.flabel{font-size:0.667em;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;font-family:var(--mono);}
+.flabel .req{color:var(--danger);}
+.flabel .unit{color:var(--accent);font-size:0.6em;}
+input,select,textarea{width:100%;background:transparent;border:none;color:var(--text);font-family:var(--sans);font-size:0.867em;outline:none;}
+input::placeholder,textarea::placeholder{color:var(--text2);opacity:.4;}
+textarea{resize:vertical;min-height:52px;}
+select option{background:var(--surface);}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);}
+.tlabel{font-size:0.867em;}
+.toggle{width:38px;height:21px;border-radius:11px;background:var(--border);position:relative;cursor:pointer;transition:background .3s;flex-shrink:0;}
+.toggle.on{background:var(--accent);}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:#fff;transition:left .3s;}
+.toggle.on::after{left:20px;}
+.asa-wrap{padding:6px 12px;border-bottom:1px solid var(--border);}
+.asa-label{font-size:0.667em;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-family:var(--mono);}
+.asa-grid{display:flex;gap:4px;flex-wrap:wrap;}
+.asa-btn{padding:4px 11px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.733em;font-family:var(--mono);transition:all .2s;}
+.asa-btn.sel{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700;}
+.asa-btn.asa4.sel{background:var(--warn);border-color:var(--warn);color:#000;}
+.asa-btn.asa5.sel{background:var(--danger);border-color:var(--danger);color:#fff;}
+.form-actions{padding:10px 12px;display:flex;gap:6px;justify-content:flex-end;background:var(--surface2);border-top:1px solid var(--border);}
+.konsu-item{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;}
+.konsu-item:last-child{border-bottom:none;}
+.konsu-badge{padding:3px 8px;border-radius:4px;font-size:0.667em;font-family:var(--mono);font-weight:600;white-space:nowrap;background:var(--surface3);color:var(--purple);}
+.konsu-content{flex:1;}
+.konsu-date{font-size:0.667em;color:var(--text3);font-family:var(--mono);}
+.konsu-text{font-size:0.8em;margin-top:3px;line-height:1.5;}
+.konsu-cevap{font-size:0.8em;margin-top:5px;padding:6px 8px;background:var(--surface3);border-radius:5px;border-left:2px solid var(--success);color:var(--text);}
+.add-konsu{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;}
+.add-konsu select,.add-konsu input,.add-konsu textarea{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:0.8em;font-family:var(--sans);}
+.add-konsu textarea{width:100%;resize:vertical;}
+.hatir-item{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+.hatir-item:last-child{border-bottom:none;}
+.hatir-date{font-size:0.667em;color:var(--text3);font-family:var(--mono);min-width:80px;}
+.hatir-text{flex:1;font-size:0.8em;}
+.hatir-done-txt{opacity:.4;text-decoration:line-through;}
+.dcard{background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:8px;word-break:break-word;}
+.drow{display:flex;padding:8px 12px;border-bottom:1px solid var(--border);gap:10px;overflow:hidden;}
+.drow:last-child{border-bottom:none;}
+.dkey{font-size:0.667em;color:var(--text2);min-width:100px;max-width:110px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.4px;padding-top:2px;flex-shrink:0;}
+.dval{font-size:0.867em;flex:1;line-height:1.5;min-width:0;overflow-wrap:break-word;word-break:break-word;}
+.dval.hi{color:var(--accent);font-family:var(--mono);}
+.dval.wn{color:var(--warn);}
+.dval.dn{color:var(--danger);font-weight:600;}
+.dval.ok{color:var(--success);}
+.dval.pu{color:var(--purple);}
+.back-btn{display:flex;align-items:center;gap:5px;color:var(--accent);cursor:pointer;font-size:0.8em;margin-bottom:8px;font-family:var(--mono);}
+.back-btn:hover{opacity:.8;}
+.empty-state{text-align:center;padding:36px;color:var(--text2);}
+.empty-state .icon{font-size:2.4em;margin-bottom:8px;}
+.evre-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-family:var(--mono);font-weight:700;font-size:0.8em;}
+.eI{background:#052e16;color:var(--success);}
+.eII{background:#1e3a5f;color:#60a5fa;}
+.eIII{background:#3f1c06;color:var(--warn);}
+.eIV{background:#3f0606;color:var(--danger);}
+.eB{background:var(--surface2);color:var(--text2);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;display:none;align-items:center;justify-content:center;padding:12px;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;font-size:1rem;}
+.modal-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:2;}
+.modal-title{font-size:0.867em;font-weight:600;font-family:var(--mono);color:var(--accent);}
+.modal-close{cursor:pointer;color:var(--text2);font-size:1.333em;line-height:1;padding:2px 6px;}
+.modal-body{padding:14px;}
+.modal-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:6px;position:sticky;bottom:0;background:var(--surface);}
+.settings-section{margin-bottom:6px;border:1px solid var(--border);border-radius:9px;overflow:hidden;}
+.settings-label{font-size:0.733em;font-weight:600;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;background:var(--surface2);}
+.settings-label:hover{background:var(--surface3);}
+.settings-label .s-arrow{font-size:0.667em;color:var(--text3);transition:transform .2s;flex-shrink:0;}
+.settings-label.open .s-arrow{transform:rotate(90deg);}
+.settings-body{display:none;padding:10px 14px;border-top:1px solid var(--border);background:var(--surface);font-size:1rem;}
+.settings-body.open{display:block;}
+.tag-list{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}
+.tag-item{padding:4px 10px;border-radius:5px;background:var(--surface2);border:1px solid var(--border);font-size:0.8em;display:flex;align-items:center;gap:5px;}
+.tag-del{cursor:pointer;color:var(--danger);font-size:0.8em;opacity:.6;}
+.tag-del:hover{opacity:1;}
+.add-tag-row{display:flex;gap:5px;}
+.add-tag-row input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.8em;font-family:var(--sans);}
+.add-tag-row input:focus{outline:none;border-color:var(--accent);}
+/* TEMA SEÇİCİ */
+.theme-grid{display:flex;gap:8px;flex-wrap:wrap;}
+.theme-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;}
+.theme-dot.active{border-color:var(--accent);transform:scale(1.15);}
+/* FOTOĞRAF */
+.photo-upload-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;border:1px dashed var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8em;transition:all .2s;margin-bottom:6px;}
+.photo-upload-btn:hover{border-color:var(--accent);color:var(--accent);}
+.photo-upload-btn input{display:none;}
+.photo-thumb-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.photo-thumb{position:relative;width:70px;height:70px;border-radius:7px;overflow:hidden;border:1px solid var(--border);}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
+.photo-thumb .del-photo{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);color:var(--danger);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.733em;cursor:pointer;}
+.ai-loading{display:none;padding:8px 12px;color:var(--accent);font-family:var(--mono);font-size:0.733em;background:var(--surface2);border-radius:6px;margin-top:4px;}
+/* TAKVİM */
+.cal-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.cal-nav{padding:5px 12px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:0.8em;}
+.cal-title{font-size:0.867em;font-weight:600;font-family:var(--mono);color:var(--accent);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:16px;}
+.cal-day-name{text-align:center;font-size:0.667em;color:var(--text2);font-family:var(--mono);padding:4px 0;}
+.cal-day{min-height:60px;border-radius:5px;padding:4px;background:var(--surface);border:1px solid var(--border);font-size:0.667em;cursor:default;}
+.cal-day.op-day{border-color:var(--warn);background:#150f00;}
+.cal-day.today{border-color:var(--accent);}
+.cal-day .day-num{font-family:var(--mono);font-size:0.8em;margin-bottom:3px;color:var(--text2);font-weight:600;}
+.cal-day.op-day .day-num{color:var(--warn);}
+.cal-pat{font-size:0.6em;background:var(--surface3);border-radius:2px;padding:1px 4px;margin-bottom:1px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cal-pat:hover{background:var(--border);}
+.cal-pat.done-pat{background:#052e16;color:var(--success);}
+/* HAFTALIK AMELİYAT KARTLARI */
+.week-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:500px){.week-cols{grid-template-columns:1fr;}}
+.day-col{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.day-col.op-col{border-color:var(--warn);}
+.day-col-hdr{padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.day-col-title{font-size:0.733em;font-family:var(--mono);color:var(--warn);font-weight:600;}
+.day-col-date{font-size:0.667em;color:var(--text2);font-family:var(--mono);}
+.day-col-count{font-size:0.667em;background:#3f1c06;color:var(--warn);padding:2px 6px;border-radius:3px;font-family:var(--mono);}
+.week-pat-card{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.week-pat-card:last-child{border-bottom:none;}
+.week-pat-card:hover{background:var(--surface2);}
+.week-pat-num{font-size:0.8em;font-family:var(--mono);color:var(--text3);min-width:20px;padding-top:1px;}
+.week-pat-body{flex:1;min-width:0;}
+.week-pat-name{font-size:0.867em;font-weight:600;margin-bottom:3px;}
+.week-empty{padding:16px 12px;font-size:0.8em;color:var(--text3);text-align:center;}
+/* İSTATİSTİK */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+@media(max-width:500px){.stats-grid{grid-template-columns:1fr;}}
+.stats-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;}
+.stats-card-title{font-size:0.667em;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.bar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.bar-label{font-size:0.733em;color:var(--text2);min-width:110px;font-family:var(--mono);}
+.bar-track{flex:1;height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;background:var(--accent);transition:width .5s;}
+.bar-val{font-size:0.733em;font-family:var(--mono);color:var(--text);min-width:24px;text-align:right;}
+.pie-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.pie-leg-item{display:flex;align-items:center;gap:4px;font-size:0.667em;}
+.pie-dot{width:8px;height:8px;border-radius:50%;}
+/* SES */
+#photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+#photo-viewer.show{display:flex;}
+#photo-viewer img{max-width:95vw;max-height:85vh;border-radius:8px;}
+#photo-viewer .close-pv{position:absolute;top:14px;right:18px;font-size:1.867em;cursor:pointer;color:#fff;opacity:.7;}
+/* SES KAYIT */
+.mic-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8em;}
+.mic-btn.recording{border-color:var(--danger);color:var(--danger);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+/* SÜRÜKLE BIRAK */
+.week-pat-card.dragging{opacity:.4;border:2px dashed var(--accent);}
+.week-pat-card.drag-over{border-top:3px solid var(--accent);}
+.drag-handle{cursor:grab;color:var(--text3);padding:0 4px;font-size:1.067em;flex-shrink:0;}
+/* ARAÇLAR */
+.arac-result-low{color:var(--success);}
+.arac-result-mid{color:var(--warn);}
+.arac-result-high{color:var(--danger);}
+/* MORBİDİTE */
+.morb-card{padding:12px 14px;border-bottom:1px solid var(--border);transition:background .15s;}
+.morb-card:hover{background:var(--surface2);}
+.morb-name{font-size:0.867em;font-weight:600;margin-bottom:4px;}
+.morb-meta{font-size:0.733em;color:var(--text2);margin-bottom:5px;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+/* İMZA */
+.signature{text-align:center;padding:8px 10px;border-top:1px solid var(--border);background:var(--bg);position:fixed;bottom:0;left:0;right:0;z-index:100;}
+.signature span{font-size:0.733em;color:var(--text3);font-family:var(--mono);letter-spacing:.3px;}
+body{padding-bottom:40px;}
+/* PIN EKRANI */
+.pin-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.pin-logo{font-size:3.2em;}
+.pin-title{font-size:1.067em;font-weight:700;font-family:var(--mono);color:var(--accent);letter-spacing:1px;}
+.pin-sub{font-size:0.8em;color:var(--text2);text-align:center;}
+.pin-dots{display:flex;gap:14px;margin:4px 0;}
+.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all .2s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:220px;}
+.pin-btn{padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:1.333em;font-weight:600;font-family:var(--mono);cursor:pointer;text-align:center;transition:all .15s;}
+.pin-btn:active{background:var(--accent);color:#000;}
+.pin-error{color:var(--danger);font-size:0.8em;font-family:var(--mono);min-height:18px;text-align:center;}
+/* AI ANALİZ */
+.ai-result-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:0.8em;line-height:1.8;color:var(--text);white-space:pre-wrap;margin-top:10px;}
+</style>
+</head>
+<body>
+
+<!-- PIN EKRANI -->
+<div id="pin-overlay" class="pin-overlay" style="display:none;">
+  <div class="pin-logo">🫁</div>
+  <div class="pin-title">TORAKS CERRAHİ TAKİP</div>
+  <div class="pin-sub" id="pin-sub-text">PIN kodunuzu girin</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinPress('clear')" style="font-size:0.867em;color:var(--text2);">SİL</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinPress('back')" style="font-size:1.2em;">⌫</button>
+  </div>
+</div>
+
+<!-- AI ANALİZ MODAL -->
+<div class="modal-overlay" id="ai-analiz-modal">
+  <div class="modal" style="max-width:600px;width:95vw;">
+    <div class="modal-hdr">
+      <div class="modal-title">🤖 AI Klinik Analiz</div>
+      <div class="modal-close" onclick="closeModal('ai-analiz-modal')">×</div>
+    </div>
+    <div class="modal-body" style="padding:14px;">
+      <div id="ai-analiz-hasta" style="font-size:0.8em;color:var(--text2);margin-bottom:10px;font-family:var(--mono);"></div>
+      <div id="ai-analiz-loading" style="display:none;text-align:center;padding:20px;color:var(--accent);font-family:var(--mono);font-size:0.8em;">⏳ Claude analiz ediyor...</div>
+      <div id="ai-analiz-result" class="ai-result-box" style="display:none;"></div>
+      <div style="margin-top:10px;font-size:0.667em;color:var(--text3);">⚕️ Bu analiz klinik karar desteği amaçlıdır. Nihai karar hekime aittir.</div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">🫁</div>
+  <div>
+    <div class="htitle">THORACIS</div>
+    <div class="hsub" id="header-sub" style="letter-spacing:2px;font-size:9px;">SURGICAL TRACKER</div>
+  </div>
+  <div class="hright">
+    <button class="btn" style="font-size:16px;padding:5px 8px;" onclick="switchTab('list')">📋</button>
+    <button class="btn" style="font-size:16px;padding:5px 8px;" onclick="switchTab('takvim')">📅</button>
+    <button class="btn" style="font-size:16px;padding:5px 8px;" onclick="openSettings()">⚙️</button>
+    <button class="btn btn-p" onclick="showNewForm()" style="order:2;font-size:0.8rem;padding:5px 10px;">+ Hasta</button>
+  </div>
+</header>
+<div id="load-banner" style="display:none;"></div>
+<div class="tabs">
+  <div class="tab active" id="tab-list" onclick="switchTab('list')">Hastalar</div>
+  <div class="tab" id="tab-takvim" onclick="switchTab('takvim')">Takvim</div>
+  <div class="tab" id="tab-istatistik" onclick="switchTab('istatistik')">İstatistik</div>
+  <div class="tab" id="tab-araclar" onclick="switchTab('araclar')">🧮 Araçlar</div>
+  <div class="tab" id="tab-detail" onclick="switchTab('detail')">Detay</div>
+</div>
+
+<main>
+<!-- LİSTE -->
+<div id="page-list" class="page active">
+  <div class="stat-row">
+    <div class="stat-card" id="fb-all" onclick="setFilter('all',this)"><div class="stat-num" id="s-total" style="color:var(--accent)">0</div><div class="stat-label">Toplam Hasta</div></div>
+    <div class="stat-card" onclick="setFilter('tarihsiz',this)"><div class="stat-num" id="s-waiting" style="color:#60a5fa">0</div><div class="stat-label">Bekleme Listesi</div></div>
+    <div class="stat-card" onclick="setFilter('pre',this)"><div class="stat-num" id="s-planned" style="color:var(--warn)">0</div><div class="stat-label">Planlı Ameliyat</div></div>
+    <div class="stat-card" onclick="setFilter('post',this)"><div class="stat-num" id="s-done" style="color:var(--success)">0</div><div class="stat-label">Ameliyat Oldu</div></div>
+  </div>
+  <div style="margin-bottom:8px;position:relative;">
+    <input type="text" id="searchInput" placeholder="🔍  Ad, TC, ameliyat, evre..." oninput="renderList()" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 36px 7px 11px;border-radius:7px;font-size:0.867em;font-family:var(--sans);outline:none;">
+    <span id="search-clear" onclick="clearSearch()" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text2);font-size:1.067em;line-height:1;">✕</span>
+  </div>
+  <div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;">
+    <button class="fbtn" id="fb-tarihsiz" onclick="setFilter('tarihsiz',this)">⏳ Bekleme Listesi</button>
+    <button class="fbtn" id="fb-pre" onclick="setFilter('pre',this)">📅 Planlı Ameliyat</button>
+    <button class="fbtn" id="fb-post" onclick="setFilter('post',this)">✅ Ameliyat Oldu</button>
+  </div>
+
+  <!-- İSTATİSTİK ŞERİDİ -->
+  <div id="info-strip" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;"></div>
+
+  <!-- YARIN ÖZET BANNER -->
+  <div id="yarin-strip" style="display:none;margin-bottom:8px;padding:9px 12px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);font-size:0.733em;font-family:var(--mono);"></div>
+
+  <div id="patient-list"></div>
+</div>
+
+<!-- FORM -->
+<div id="page-form" class="page">
+<div class="form-card">
+  <div class="sec-hdr">👤 Kişisel Bilgiler</div>
+  <div class="fgrid">
+    <div class="ff"><div class="flabel"><span class="req">*</span>Ad Soyad</div><input type="text" id="f-ad" placeholder="Ad Soyad" oninput="applyTitleCase(this)"></div>
+    <div class="ff"><div class="flabel"><span class="req">*</span>TC Kimlik No</div><input type="text" id="f-tc" placeholder="11 haneli TC No" maxlength="11"></div>
+    <div class="ff"><div class="flabel">Telefon</div><input type="tel" id="f-tel" placeholder="05XX XXX XX XX"></div>
+    <div class="ff"><div class="flabel">Yaş</div><input type="number" id="f-yas" placeholder="Yaş" min="0" max="120"></div>
+    <div class="ff"><div class="flabel">Cinsiyet</div>
+      <select id="f-cinsiyet"><option value="">Seçiniz</option><option>Erkek</option><option>Kadın</option></select></div>
+    <div class="ff"><div class="flabel">Geliş Tarihi</div><input type="date" id="f-gelis"></div>
+    <div class="ff"><div class="flabel">Gönderen Hekim</div><input type="text" id="f-hekim" placeholder="Dr. Ad Soyad / Klinik" list="hekim-list" oninput="applyTitleCase(this)"><datalist id="hekim-list"></datalist></div>
+    <div class="ff"><div class="flabel">Planlanan Operasyon Tarihi</div><input type="date" id="f-tarih"></div>
+    <div class="ff full"><div class="flabel">Planlanan Ameliyat(lar)</div>
+      <div id="ameliyat-plan-list" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;min-height:0;"></div>
+      <div style="display:flex;gap:5px;">
+        <select id="f-ameliyat" style="flex:1;background:transparent;border:none;color:var(--text);font-family:var(--sans);font-size:0.867em;outline:none;"><option value="">Seçiniz</option></select>
+        <button class="btn" style="font-size:0.733em;padding:4px 8px;white-space:nowrap;" onclick="addAmeliyatPlan()">+ Ekle</button>
+      </div>
+      <input type="text" id="f-ameliyat-serbest" placeholder="Serbest metin: örn. Mediastinoskopi → frozen → Lobektomi" style="margin-top:5px;font-size:0.8em;">
+      <input type="hidden" id="f-ameliyat-plan-json">
+    </div>
+  </div>
+
+  <div class="sec-hdr">🫁 Görüntüleme &amp; Pre-op Tanı</div>
+  <div style="padding:10px 12px;border-bottom:1px solid var(--border);">
+    <div class="flabel" style="margin-bottom:6px;">📸 Rapor Fotoğrafı → AI Otomatik Özet</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <label class="photo-upload-btn">📷 BT Raporu Çek/Seç<input type="file" accept="image/*" capture="environment" onchange="processReportPhoto(this,'f-bt')"></label>
+      <label class="photo-upload-btn">📷 PET Raporu Çek/Seç<input type="file" accept="image/*" capture="environment" onchange="processReportPhoto(this,'f-pet')"></label>
+    </div>
+    <div class="ai-loading" id="ai-loading">⏳ AI raporu özetleniyor...</div>
+  </div>
+  <div class="fgrid">
+    <div class="ff full">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="flabel" style="margin-bottom:0;">Toraks BT Rapor Özeti</div>
+        <button class="mic-btn" id="mic-bt" onclick="toggleMic('f-bt','mic-bt')">🎙️ Sesle Yaz</button>
+      </div>
+      <textarea id="f-bt" placeholder="Toraks BT bulgularını özetleyiniz..."></textarea>
+    </div>
+    <div class="ff full">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="flabel" style="margin-bottom:0;">PET-BT Özeti</div>
+        <button class="mic-btn" id="mic-pet" onclick="toggleMic('f-pet','mic-pet')">🎙️ Sesle Yaz</button>
+      </div>
+      <textarea id="f-pet" placeholder="PET-BT bulgularını özetleyiniz..."></textarea>
+    </div>
+    <div class="ff"><div class="flabel">Pre-op Patoloji Sonucu</div><textarea id="f-patoloji" style="min-height:45px" placeholder="Pre-op patoloji..."></textarea></div>
+    <div class="ff"><div class="flabel">Biyopsi Yöntemi</div>
+      <select id="f-biopsi">
+        <option value="">Yok / Bilinmiyor</option><option>Tru-cut biyopsi</option>
+        <option>Bronkoskopik biyopsi (DOB/Bx)</option><option>EBUS</option>
+        <option>VATS biyopsi</option><option>Mediastinoskopi</option>
+        <option>İnce iğne aspirasyon (İİAB)</option><option>Torakoskopi</option>
+        <option>Açık biyopsi</option><option>Diğer</option>
+      </select></div>
+  </div>
+
+  <div class="sec-hdr pink">📁 Belge &amp; Fotoğraf Arşivi</div>
+  <div style="padding:10px 12px;border-bottom:1px solid var(--border);">
+    <label class="photo-upload-btn">📎 Fotoğraf / Belge Ekle<input type="file" accept="image/*" multiple onchange="addPhotos(this)"></label>
+    <div class="photo-thumb-list" id="photo-thumb-list"></div>
+  </div>
+
+  <div class="sec-hdr">📊 Solunum Fonksiyon Testi (SFT)</div>
+  <div class="fgrid3">
+    <div class="ff"><div class="flabel">FEV1 <span class="unit">%</span></div><input type="number" id="f-fev1p" placeholder="78" min="0" max="200" oninput="updateOpBadge()"></div>
+    <div class="ff"><div class="flabel">FEV1 <span class="unit">Litre</span></div><input type="number" id="f-fev1l" placeholder="2.4" min="0" max="10" step="0.01"></div>
+    <div class="ff"><div class="flabel">FVC <span class="unit">%</span></div><input type="number" id="f-fvcp" placeholder="82" min="0" max="200"></div>
+    <div class="ff"><div class="flabel">FVC <span class="unit">Litre</span></div><input type="number" id="f-fvcl" placeholder="3.1" min="0" max="10" step="0.01"></div>
+    <div class="ff"><div class="flabel">DLCO <span class="unit">%</span></div><input type="number" id="f-dlco" placeholder="68" min="0" max="200" oninput="updateOpBadge()"></div>
+    <div class="ff"><div class="flabel">VO2 max <span class="unit">ml/kg/dk</span></div><input type="number" id="f-vo2" placeholder="18" min="0" max="100" step="0.1"></div>
+  </div>
+  <!-- OPERABİLİTE ÖZET PANELİ -->
+  <div id="op-badge-panel" style="display:none;margin:6px 12px 10px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);">
+    <div style="font-size:0.667em;font-family:var(--mono);color:var(--text2);margin-bottom:6px;">ERS/ESTS OPERABİLİTE DEĞERLENDİRMESİ</div>
+    <div id="op-badge-content" style="font-size:0.867em;line-height:1.7;"></div>
+    <div style="font-size:0.6em;color:var(--text3);margin-top:4px;">Brunelli et al. Eur Respir J 2009 · Lobektomi için ppo = FEV1% × 0.80, Pnömonektomi için × 0.45</div>
+  </div>
+
+  <div class="sec-hdr">🫀 EKO / Kardiyak</div>
+  <div class="fgrid">
+    <div class="ff full">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="flabel" style="margin-bottom:0;">EKO Bulguları / LVEF / PAB / Patoloji</div>
+        <button class="mic-btn" id="mic-eko" onclick="toggleMic('f-eko','mic-eko')">🎙️ Sesle Yaz</button>
+      </div>
+      <textarea id="f-eko" placeholder="LVEF: %, PAB: mmHg, kapak patolojisi..."></textarea>
+    </div>
+  </div>
+
+  <div class="sec-hdr">⚕️ Klinik Durum</div>
+  <div class="fgrid">
+    <div class="ff full"><div class="flabel">Ek Hastalıklar (Komorbidite)</div><textarea id="f-komorbid" placeholder="DM, HT, KOAH, KAH, vb..." style="min-height:40px"></textarea></div>
+  </div>
+  <div class="toggle-row"><span class="tlabel">💊 Kan Sulandırıcı Kullanıyor</span><div class="toggle" id="tog-kan" onclick="toggleIt(this,'t-kan','kan-detail')"></div></div>
+  <input type="hidden" id="t-kan" value="0">
+  <div id="kan-detail" style="display:none;" class="ff full">
+    <div class="flabel">İlaç Adı / Doz / Son Alım Tarihi</div>
+    <input type="text" id="f-kan-ilac" placeholder="örn. Warfarin 5mg — son alım: 3 gün önce kesildi">
+  </div>
+  <div class="toggle-row"><span class="tlabel">⚠️ Özel Uyarı / Risk Durumu</span><div class="toggle" id="tog-uyari" onclick="toggleIt(this,'t-uyari','uyari-detail')"></div></div>
+  <input type="hidden" id="t-uyari" value="0">
+  <div id="uyari-detail" style="display:none;" class="ff full">
+    <div class="flabel">Uyarı Detayı</div>
+    <textarea id="f-uyari-txt" placeholder="Alerji, zor entübasyon, önceki komplikasyon..." style="min-height:40px"></textarea>
+  </div>
+
+  <div class="sec-hdr">🩺 Anestezi &amp; ASA</div>
+  <div class="toggle-row"><span class="tlabel">Anestezi Değerlendirmesi Yapıldı</span><div class="toggle" id="tog-anest" onclick="toggleIt(this,'t-anest',null)"></div></div>
+  <input type="hidden" id="t-anest" value="0">
+  <div class="fgrid">
+    <div class="ff"><div class="flabel">YBÜ İhtiyacı Önerisi</div>
+      <select id="f-ybu"><option value="">Değerlendirilmedi</option><option value="Gerekli">Gerekli</option><option value="Muhtemelen gerekli">Muhtemelen gerekli</option><option value="Gerekmez">Gerekmez</option></select></div>
+    <div class="ff"><div class="flabel">Anestezi Notu</div><input type="text" id="f-anest-not" placeholder="Anestezi notu..."></div>
+  </div>
+  <div class="asa-wrap">
+    <div class="asa-label">ASA Skoru</div>
+    <div class="asa-grid">
+      <div class="asa-btn" onclick="selAsa(this,'I')">ASA I</div>
+      <div class="asa-btn" onclick="selAsa(this,'II')">ASA II</div>
+      <div class="asa-btn" onclick="selAsa(this,'III')">ASA III</div>
+      <div class="asa-btn asa4" onclick="selAsa(this,'IV')">ASA IV</div>
+      <div class="asa-btn asa5" onclick="selAsa(this,'V')">ASA V</div>
+    </div>
+    <input type="hidden" id="f-asa">
+  </div>
+
+  <div class="sec-hdr purple">📋 Preop Konsültasyonlar</div>
+  <div id="preop-konsu-list" style="min-height:0;"></div>
+  <div style="padding:10px 12px;border-bottom:1px solid var(--border);">
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
+      <select id="f-prekonsu-tur" style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;"></select>
+      <input type="date" id="f-prekonsu-tarih" style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;">
+    </div>
+    <textarea id="f-prekonsu-istek" placeholder="Konsültasyon isteği..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:0.8em;font-family:var(--sans);resize:vertical;margin-bottom:4px;"></textarea>
+    <textarea id="f-prekonsu-cevap" placeholder="Konsültan cevabı (varsa)..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:0.8em;font-family:var(--sans);resize:vertical;margin-bottom:6px;"></textarea>
+    <button class="btn btn-p" onclick="addPreopKonsu()" style="width:100%;font-size:0.8em;">+ Konsültasyon Ekle</button>
+  </div>
+
+  <div class="sec-hdr green">✅ Ameliyat Sonrası</div>
+  <div class="fgrid">
+    <div class="ff full"><div class="flabel">Yapılan Ameliyat(lar)</div>
+      <div id="yapilan-plan-list" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;min-height:0;"></div>
+      <div style="display:flex;gap:5px;">
+        <select id="f-yapilan" style="flex:1;background:transparent;border:none;color:var(--text);font-family:var(--sans);font-size:0.867em;outline:none;"><option value="">Henüz yapılmadı</option></select>
+        <button class="btn" style="font-size:0.733em;padding:4px 8px;white-space:nowrap;" onclick="addYapilanPlan()">+ Ekle</button>
+      </div>
+      <input type="hidden" id="f-yapilan-json">
+    </div>
+    <div class="ff"><div class="flabel">Ameliyat Tarihi</div><input type="date" id="f-op-tarih"></div>
+    <div class="ff"><div class="flabel">Ameliyat Süresi (dakika)</div><input type="number" id="f-sure" placeholder="120" min="0"></div>
+    <div class="ff full"><div class="flabel">Final Patoloji</div><textarea id="f-son-patoloji" placeholder="Ameliyat sonrası patoloji..."></textarea></div>
+    <div class="ff"><div class="flabel">Histoloji / Tanı</div>
+      <select id="f-histoloji" onchange="toggleHistolojiFreetext(this)">
+        <option value="">Seçiniz</option>
+        <optgroup label="Akciğer"><option>Adenokarsinoma</option><option>Skuamöz hücreli karsinom</option><option>Küçük hücreli dışı AC Ca (NOS)</option><option>Büyük hücreli karsinom</option><option>Karsinoid tümör</option><option>Metastaz</option><option>Benign lezyon</option></optgroup>
+        <optgroup label="Mediasten / Diğer"><option>Timoma</option><option>Lenfoma</option><option>Nörojenik tümör</option><option>Germ hücreli tümör</option><option>Plevral mezotelyoma</option><option>Özofagus karsinomu</option></optgroup>
+        <option value="Diger">Diğer</option>
+      </select>
+      <input type="text" id="f-histoloji-serbest" placeholder="Tanıyı yazın..." style="display:none;margin-top:4px;" oninput="syncHistoloji(this)">
+    </div>
+    <div class="ff"><div class="flabel">Tümör Evresi (pTNM)</div>
+      <select id="f-evre">
+        <option value="">Belirlenmedi</option>
+        <optgroup label="Evre I"><option value="IA1">IA1</option><option value="IA2">IA2</option><option value="IA3">IA3</option><option value="IB">IB</option></optgroup>
+        <optgroup label="Evre II"><option value="IIA">IIA</option><option value="IIB">IIB</option></optgroup>
+        <optgroup label="Evre III"><option value="IIIA">IIIA</option><option value="IIIB">IIIB</option><option value="IIIC">IIIC</option></optgroup>
+        <optgroup label="Evre IV"><option value="IVA">IVA</option><option value="IVB">IVB</option></optgroup>
+        <option value="Benign">Benign</option><option value="Diger">Diğer</option>
+      </select></div>
+    <div class="ff full"><div class="flabel">Ameliyat Notu</div><textarea id="f-op-not" placeholder="İntraoperatif notlar..."></textarea></div>
+  </div>
+
+  <div class="toggle-row"><span class="tlabel">⚠️ Komplikasyon Kaydı</span><div class="toggle" id="tog-komp" onclick="toggleIt(this,'t-komp','komp-detail')"></div></div>
+  <input type="hidden" id="t-komp" value="0">
+  <div id="komp-detail" style="display:none;">
+  <div class="fgrid">
+    <div class="ff full">
+      <div class="flabel" style="margin-bottom:6px;">Komplikasyon Türü</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;" id="komp-checkboxes"></div>
+    </div>
+    <div class="ff"><div class="flabel">Clavien-Dindo Sınıfı</div>
+      <select id="f-clavien">
+        <option value="">Yok / Belirsiz</option>
+        <option value="Grade I">Grade I — Normal iyileşmeden sapma</option>
+        <option value="Grade II">Grade II — Medikal tedavi gerekti</option>
+        <option value="Grade IIIa">Grade IIIa — Girişim (anestezisiz)</option>
+        <option value="Grade IIIb">Grade IIIb — Girişim (genel anestezi)</option>
+        <option value="Grade IVa">Grade IVa — Tek organ yetmezliği</option>
+        <option value="Grade IVb">Grade IVb — Çok organ yetmezliği</option>
+        <option value="Grade V">Grade V — Ölüm</option>
+      </select></div>
+    <div class="ff"><div class="flabel">Komplikasyon Tarihi</div><input type="date" id="f-komp-tarih"></div>
+    <div class="ff full"><div class="flabel">Komplikasyon Notu</div><textarea id="f-komp-not" placeholder="Komplikasyon detayı, tedavi, sonuç..." style="min-height:40px"></textarea></div>
+  </div>
+  </div>
+
+  <div class="form-actions">
+    <input type="hidden" id="f-id">
+    <button class="btn btn-d" onclick="deletePatient()" id="btn-del" style="display:none">🗑 Sil</button>
+    <button class="btn" onclick="switchTab('list')">İptal</button>
+    <button class="btn btn-p" onclick="savePatient()">💾 Kaydet</button>
+  </div>
+</div>
+</div>
+
+<!-- TAKVİM -->
+<div id="page-takvim" class="page">
+  <div class="cal-header">
+    <button class="cal-nav" onclick="calPrev()">◀</button>
+    <div class="cal-title" id="cal-title"></div>
+    <button class="cal-nav" onclick="calNext()">▶</button>
+    <span style="font-size:0.667em;color:var(--warn);margin-left:4px;">🟡 Pzt &amp; Çrş = Operasyon Günü</span>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+  <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+      <div style="font-size:0.733em;font-family:var(--mono);color:var(--accent);letter-spacing:.5px;">📋 HAFTALIK AMELİYAT LİSTESİ</div>
+      <div style="margin-left:auto;display:flex;gap:5px;align-items:center;">
+        <button class="cal-nav" onclick="weekPrev()">◀</button>
+        <div style="font-size:0.733em;font-family:var(--mono);color:var(--text2);min-width:140px;text-align:center;" id="week-range-label"></div>
+        <button class="cal-nav" onclick="weekNext()">▶</button>
+      </div>
+    </div>
+    <div id="week-list"></div>
+  </div>
+</div>
+
+<!-- İSTATİSTİK -->
+<div id="page-istatistik" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+    <div style="font-size:0.8em;font-family:var(--mono);color:var(--accent);">📊 KARŞILAŞTIRMALı ANALİZ</div>
+    <button class="btn btn-d" onclick="openMorbidite()" style="font-size:0.733em;">🏥 Morbidite Toplantısı</button>
+  </div>
+  <div id="stats-content"></div>
+</div>
+
+<!-- ARAÇLAR -->
+<div id="page-araclar" class="page">
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="fbtn active" id="arac-tab-thoracoscore" onclick="showArac('thoracoscore',this)">🫁 Thoracoscore</button>
+    <button class="fbtn" id="arac-tab-nodul" onclick="showArac('nodul',this)">🔵 Nodül Riski</button>
+    <button class="fbtn" id="arac-tab-tnm" onclick="showArac('tnm',this)">🔬 TNM Evre</button>
+    <button class="fbtn" id="arac-tab-qr" onclick="showArac('qr',this)">📷 QR Arama</button>
+  </div>
+
+  <!-- THORACOSCORE -->
+  <div id="arac-thoracoscore">
+  <div class="form-card">
+    <div class="sec-hdr">🫁 Thoracoscore 2020 — Postop Mortalite Risk Hesaplama</div>
+    <div style="padding:6px 12px;border-bottom:1px solid var(--border);font-size:0.667em;color:var(--text2);">Die Loucou et al. EJCTS 2020 · Güncellenmiş model · 56.279 hasta · Yaş sürekli değişken olarak alınmaktadır</div>
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:0.733em;color:var(--text2);">Hasta verilerinden otomatik doldur:</span>
+      <select id="ts-hasta-sec" style="flex:1;min-width:140px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;"></select>
+      <button class="btn btn-p" onclick="autoFillThoracoscore()" style="font-size:0.733em;">⚡ Doldur</button>
+    </div>
+    <div class="fgrid">
+      <div class="ff"><div class="flabel">Yaş (yıl)</div>
+        <input type="number" id="ts-yas" placeholder="65" min="16" max="100"></div>
+      <div class="ff"><div class="flabel">Cinsiyet</div>
+        <select id="ts-cinsiyet">
+          <option value="0">Kadın</option>
+          <option value="1">Erkek (β = 0.384)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">ASA Skoru</div>
+        <select id="ts-asa">
+          <option value="0">ASA 1–2</option>
+          <option value="1">ASA ≥ 3 (β = 0.612)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Zubrod / WHO Performans Skoru</div>
+        <select id="ts-ps">
+          <option value="0">Zubrod 0–1</option>
+          <option value="1">Zubrod ≥ 2 (β = 0.554)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Dispne (mMRC)</div>
+        <select id="ts-dispne">
+          <option value="0">mMRC 0–2</option>
+          <option value="1">mMRC ≥ 3 (β = 0.421)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Tanı Grubu</div>
+        <select id="ts-tani">
+          <option value="0">Benign</option>
+          <option value="1">Malign (β = 0.298)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Ameliyat Önceliği</div>
+        <select id="ts-acil">
+          <option value="0">Elektif</option>
+          <option value="1">Acil (β = 1.125)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Ameliyat Türü</div>
+        <select id="ts-ameliyat">
+          <option value="0">Diğer (wedge, lobektomi vb.)</option>
+          <option value="1">Pnömonektomi (β = 0.742)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Komorbidite</div>
+        <select id="ts-komorbid">
+          <option value="0">Yok</option>
+          <option value="1">Var (β = 0.395)</option>
+        </select></div>
+    </div>
+    <div style="padding:12px;">
+      <button class="btn btn-p" onclick="calcThoracoscore()" style="width:100%;">🧮 Hesapla</button>
+      <div id="thoracoscore-result" style="margin-top:12px;display:none;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);">
+        <div style="font-size:0.733em;color:var(--text2);font-family:var(--mono);margin-bottom:6px;">THORACOSCORE 2020 SONUCU</div>
+        <div id="ts-score-display" style="font-size:1.867em;font-weight:700;font-family:var(--mono);"></div>
+        <div id="ts-risk-display" style="font-size:0.867em;margin-top:4px;"></div>
+        <div id="ts-interp" style="font-size:0.733em;color:var(--text2);margin-top:8px;line-height:1.6;"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- NODÜL RİSKİ -->
+  <div id="arac-nodul" style="display:none;">
+  <div class="form-card">
+    <div class="sec-hdr">🔵 Pulmoner Nodül Malignite Risk Hesaplama — Brock (Pan-Can) Modeli</div>
+    <div style="padding:6px 12px;border-bottom:1px solid var(--border);font-size:0.667em;color:var(--text2);">McWilliams et al. NEJM 2013 · Pan-Canadian Lung Cancer Screening Study</div>
+    <div class="fgrid">
+      <div class="ff"><div class="flabel">Yaş (yıl)</div>
+        <input type="number" id="nd-yas" placeholder="62" min="20" max="90"></div>
+      <div class="ff"><div class="flabel">Cinsiyet</div>
+        <select id="nd-cinsiyet">
+          <option value="0">Erkek</option>
+          <option value="1">Kadın (β = 0.601)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Ailede Akciğer Kanseri</div>
+        <select id="nd-aile">
+          <option value="0">Yok</option>
+          <option value="1">Var (β = 0.454)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">BT'de Amfizem</div>
+        <select id="nd-amfizem">
+          <option value="0">Yok</option>
+          <option value="1">Var (β = 0.751)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Nodül Çapı (mm)</div>
+        <input type="number" id="nd-cap" placeholder="8" min="1" max="30" step="0.1"></div>
+      <div class="ff"><div class="flabel">Nodül Tipi</div>
+        <select id="nd-tip">
+          <option value="solid">Solid (referans)</option>
+          <option value="ggo">Saf GGO (β = -0.127)</option>
+          <option value="partsolid">Part-Solid (β = 0.377)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Lokalizasyon</div>
+        <select id="nd-lokalizasyon">
+          <option value="0">Alt / Orta lob</option>
+          <option value="1">Üst lob (β = 0.658)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Spikülasyon</div>
+        <select id="nd-spikul">
+          <option value="0">Yok</option>
+          <option value="1">Var (β = 2.542)</option>
+        </select></div>
+      <div class="ff"><div class="flabel">Nodül Sayısı</div>
+        <select id="nd-sayi">
+          <option value="1">Tek nodül (β = 0.772)</option>
+          <option value="0">Multipl nodül</option>
+        </select></div>
+    </div>
+    <div style="padding:12px;">
+      <button class="btn btn-p" onclick="calcNodul()" style="width:100%;">🧮 Risk Hesapla</button>
+      <div id="nodul-result" style="margin-top:12px;display:none;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);">
+        <div style="font-size:0.733em;color:var(--text2);font-family:var(--mono);margin-bottom:6px;">BROCK (PAN-CAN) SONUCU</div>
+        <div id="nd-score-display" style="font-size:1.867em;font-weight:700;font-family:var(--mono);"></div>
+        <div id="nd-risk-display" style="font-size:0.867em;margin-top:4px;"></div>
+        <div id="nd-interp" style="font-size:0.733em;color:var(--text2);margin-top:8px;line-height:1.6;"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- QR ARAMA -->
+  <!-- TNM EVRE BELİRLEME -->
+  <div id="arac-tnm" style="display:none;">
+  <div class="form-card">
+    <div class="sec-hdr">🔬 TNM Evre Belirleme — Akciğer Kanseri</div>
+    <div style="padding:6px 12px;border-bottom:1px solid var(--border);font-size:0.667em;color:var(--text2);">IASLC 8. Edisyon (2017) · NSCLC için geçerlidir</div>
+    <div class="fgrid">
+      <div class="ff">
+        <div class="flabel">T — Tümör</div>
+        <select id="tnm-t">
+          <option value="">Seçiniz</option>
+          <option value="Tis">Tis — İn situ karsinom</option>
+          <option value="T1a">T1a — ≤1 cm</option>
+          <option value="T1b">T1b — >1 cm, ≤2 cm</option>
+          <option value="T1c">T1c — >2 cm, ≤3 cm</option>
+          <option value="T2a">T2a — >3 cm, ≤4 cm / Visseral plevra / Ana bronş tutulumu</option>
+          <option value="T2b">T2b — >4 cm, ≤5 cm</option>
+          <option value="T3">T3 — >5 cm, ≤7 cm / Göğüs duvarı / Frenik sinir / Perikardiyal plevra</option>
+          <option value="T4">T4 — >7 cm / Mediastinum / Kalp / Büyük damar / Trakea / Özofagus / Vertebra</option>
+        </select>
+      </div>
+      <div class="ff">
+        <div class="flabel">N — Lenf Nodu</div>
+        <select id="tnm-n">
+          <option value="">Seçiniz</option>
+          <option value="N0">N0 — Bölgesel lenf nodu metastazı yok</option>
+          <option value="N1">N1 — İpsilateral peribronşiyal / hiler LN</option>
+          <option value="N2">N2 — İpsilateral mediastinal / subkarinal LN</option>
+          <option value="N3">N3 — Kontralateral mediastinal / hiler / skalen / supraklaviküler LN</option>
+        </select>
+      </div>
+      <div class="ff">
+        <div class="flabel">M — Metastaz</div>
+        <select id="tnm-m">
+          <option value="">Seçiniz</option>
+          <option value="M0">M0 — Uzak metastaz yok</option>
+          <option value="M1a">M1a — Plevral / perikardiyal nodül veya kontralateral akciğer nodülü</option>
+          <option value="M1b">M1b — Tek ekstrapulmoner metastaz</option>
+          <option value="M1c">M1c — Multipl ekstrapulmoner metastaz</option>
+        </select>
+      </div>
+    </div>
+    <div style="padding:12px;">
+      <button class="btn btn-p" onclick="calcTNM()" style="width:100%;">🔬 Evre Belirle</button>
+      <div id="tnm-result" style="margin-top:12px;display:none;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);">
+        <div style="font-size:0.733em;color:var(--text2);font-family:var(--mono);margin-bottom:6px;">TNM EVRELEMESİ — IASLC 8. EDİSYON</div>
+        <div id="tnm-evre-display" style="font-size:1.867em;font-weight:700;font-family:var(--mono);"></div>
+        <div id="tnm-tnm-display" style="font-size:0.867em;margin-top:4px;color:var(--text2);"></div>
+        <div id="tnm-interp" style="font-size:0.733em;color:var(--text2);margin-top:8px;line-height:1.6;"></div>
+        <div style="margin-top:10px;">
+          <button id="tnm-copy-btn" class="btn btn-s" style="font-size:0.733em;width:100%;" onclick="copyTNMToForm()">📋 Bu evreyi hasta formuna kopyala</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- QR ARAMA -->
+  <div id="arac-qr" style="display:none;">
+  <div class="form-card">
+    <div style="padding:14px;">
+      <div style="font-size:0.8em;color:var(--text2);margin-bottom:10px;">TC kimlik no girin veya kameranızla QR kodu okutun.</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <input type="text" id="qr-tc-input" placeholder="TC Kimlik No ile ara..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 11px;border-radius:7px;font-size:0.867em;font-family:var(--sans);outline:none;" oninput="searchByTC()" onkeydown="if(event.key==='Enter')searchByTC()">
+        <button class="btn btn-p" onclick="startQRCamera()" id="qr-cam-btn">📷 Kamera</button>
+      </div>
+      <!-- Kamera önizleme -->
+      <div id="qr-camera-box" style="display:none;margin-bottom:10px;position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--accent);">
+        <video id="qr-video" autoplay playsinline style="width:100%;max-height:280px;display:block;background:#000;"></video>
+        <canvas id="qr-scan-canvas" style="display:none;"></canvas>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border:3px solid var(--accent);border-radius:12px;pointer-events:none;box-shadow:0 0 0 2000px rgba(0,0,0,0.4);"></div>
+        <button onclick="stopQRCamera()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.7);border:none;color:#fff;font-size:1.2em;cursor:pointer;border-radius:50%;width:32px;height:32px;">×</button>
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:0.733em;color:#fff;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:10px;">QR kodu çerçeveye getirin</div>
+      </div>
+      <div id="qr-result"></div>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+        <div style="font-size:0.733em;color:var(--text2);margin-bottom:8px;font-family:var(--mono);">HASTA DETAYINDA QR OLUŞTURMA</div>
+        <div style="font-size:0.8em;color:var(--text2);">Hasta detay sayfasını açın — sağ üstte <strong style="color:var(--accent)">📷 QR</strong> butonuna basın. Oluşan kodu buradan okutabilirsiniz.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+</div>
+
+<!-- MORBİDİTE MODAL -->
+<div class="modal-overlay" id="morbidite-modal">
+  <div class="modal" style="max-width:700px;width:95vw;">
+    <div class="modal-hdr">
+      <div class="modal-title">🏥 Morbidite &amp; Mortalite Toplantısı</div>
+      <div class="modal-close" onclick="closeModal('morbidite-modal')">×</div>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+        <span style="font-size:0.733em;color:var(--text2);">Filtre:</span>
+        <button class="fbtn active" id="mb-f-komp" onclick="setMorbFilter('komp',this)">⚠️ Komplikasyon</button>
+        <button class="fbtn" id="mb-f-mortalite" onclick="setMorbFilter('mortalite',this)">💀 Mortalite</button>
+        <button class="fbtn" id="mb-f-ybu" onclick="setMorbFilter('ybu',this)">🔴 YBÜ</button>
+        <button class="fbtn" id="mb-f-all" onclick="setMorbFilter('all',this)">Tümü</button>
+        <span style="margin-left:auto;font-size:0.667em;font-family:var(--mono);color:var(--text3);" id="mb-count"></span>
+      </div>
+      <div id="morbidite-list" style="max-height:65vh;overflow-y:auto;"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-p" onclick="closeModal('morbidite-modal')">✓ Kapat</button></div>
+  </div>
+</div>
+
+<!-- QR MODAL -->
+<div class="modal-overlay" id="qr-modal">
+  <div class="modal" style="max-width:340px;">
+    <div class="modal-hdr">
+      <div class="modal-title" id="qr-modal-title">📷 QR Kod</div>
+      <div class="modal-close" onclick="closeModal('qr-modal')">×</div>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:20px;">
+      <canvas id="qr-canvas" width="220" height="220" style="border:8px solid #fff;border-radius:6px;"></canvas>
+      <div style="font-size:0.733em;color:var(--text2);margin-top:10px;" id="qr-modal-sub"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-p" onclick="closeModal('qr-modal')">✓ Tamam</button></div>
+  </div>
+</div>
+
+<!-- YARIN BANNER -->
+<div id="yarin-banner" style="display:none;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--success);border-radius:10px;padding:10px 12px;margin:8px 0;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+    <span style="font-size:0.733em;font-family:var(--mono);color:var(--success);font-weight:600;" id="yarin-baslik">🌅 Yarın ameliyat var</span>
+    <span onclick="kapatYarinBanner()" style="cursor:pointer;color:var(--text3);font-size:1.2em;line-height:1;padding:0 4px;">×</span>
+  </div>
+  <div id="yarin-liste"></div>
+</div>
+
+<!-- DETAY -->
+<div id="page-detail" class="page">
+  <div class="back-btn" onclick="switchTab('list')">← Listeye Dön</div>
+  <div id="detail-content"></div>
+</div>
+</main>
+
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">⚙️ AYARLAR</div>
+      <div class="modal-close" onclick="closeSettings()">×</div>
+    </div>
+    <div class="modal-body" style="padding:8px;">
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">🔐 PIN Güvenlik <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="toggle-row" style="padding:0 0 10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
+            <span class="tlabel" style="font-size:0.8em;">PIN Kilidi Aktif</span>
+            <div class="toggle" id="tog-pin-enabled" onclick="togglePinEnabled(this)"></div>
+          </div>
+          <button class="btn btn-w" id="pin-change-btn" onclick="changePinFromSettings();closeSettings();" style="width:100%;">🔑 PIN Kodunu Belirle / Değiştir</button>
+          <div style="font-size:0.667em;color:var(--text2);margin-top:6px;">PIN aktifken uygulama açılışında 4 haneli kod istenir.</div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">💾 Veri Yedekleme <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn btn-w" onclick="manualSaveJSON()" style="flex:1;">📤 Yedek Al (.json)</button>
+            <label class="btn btn-p" style="flex:1;cursor:pointer;text-align:center;">📂 Yedek Yükle<input type="file" accept=".json" onchange="loadFromFile(this)" style="display:none"></label>
+          </div>
+          <div style="font-size:0.667em;color:var(--text2);margin-top:6px;line-height:1.5;">Her hasta kaydında otomatik <strong style="color:var(--accent)">toraks_yedek.json</strong> indirilir.</div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">🎨 Ekran Teması <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="theme-grid">
+            <div class="theme-dot" id="td-dark" onclick="setTheme('dark')" title="Lacivert Koyu (Varsayılan)" style="background:linear-gradient(135deg,#07090f,#0f1623);"></div>
+            <div class="theme-dot" id="td-light" onclick="setTheme('light')" title="Açık Mint" style="background:linear-gradient(135deg,#f0fafa,#00c9a7);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-teal" onclick="setTheme('teal')" title="Orta Teal" style="background:linear-gradient(135deg,#0d2e2e,#00c9b1);"></div>
+            <div class="theme-dot" id="td-wine" onclick="setTheme('wine')" title="Orta Bordo" style="background:linear-gradient(135deg,#2d0a14,#ff6b9d);"></div>
+            <div class="theme-dot" id="td-navy" onclick="setTheme('navy')" title="Orta Navy" style="background:linear-gradient(135deg,#0d1a35,#5b9af5);"></div>
+            <div class="theme-dot" id="td-forest" onclick="setTheme('forest')" title="Orta Yeşil" style="background:linear-gradient(135deg,#0a2010,#00d48a);"></div>
+            <div class="theme-dot" id="td-salmon1" onclick="setTheme('salmon1')" title="Somon Pembe" style="background:linear-gradient(135deg,#1f0d14,#ff6f8a);"></div>
+            <div class="theme-dot" id="td-salmon2" onclick="setTheme('salmon2')" title="Somon Turuncu" style="background:linear-gradient(135deg,#1f1008,#ff9472);"></div>
+            <div class="theme-dot" id="td-silver" onclick="setTheme('silver')" title="Orta Gümüş" style="background:linear-gradient(135deg,#dde2e8,#64748b);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-lightblue" onclick="setTheme('lightblue')" title="Açık Mavi" style="background:linear-gradient(135deg,#f0f6ff,#3b82f6);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-lightred" onclick="setTheme('lightred')" title="Açık Kırmızı" style="background:linear-gradient(135deg,#fff5f5,#f43f5e);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-lavender" onclick="setTheme('lavender')" title="Açık Mor" style="background:linear-gradient(135deg,#faf5ff,#8b5cf6);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-amber" onclick="setTheme('amber')" title="Açık Turuncu" style="background:linear-gradient(135deg,#fffbf0,#f59e0b);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-emerald" onclick="setTheme('emerald')" title="Açık Zümrüt" style="background:linear-gradient(135deg,#f0fdf4,#10b981);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-slate" onclick="setTheme('slate')" title="Açık Gri" style="background:linear-gradient(135deg,#f8fafc,#64748b);border:1px solid #ccc;"></div>
+            <div class="theme-dot" id="td-indigo" onclick="setTheme('indigo')" title="Açık İndigo" style="background:linear-gradient(135deg,#f5f3ff,#6366f1);border:1px solid #ccc;"></div>
+          </div>
+          <div style="font-size:0.667em;color:var(--text2);margin-top:8px;" id="theme-name-label">Lacivert Koyu</div>
+          <div style="margin-top:8px;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:0.8em;cursor:pointer;">
+              <input type="checkbox" id="theme-auto-check" onchange="toggleAutoTheme(this)">
+              Cihaz temasına göre otomatik (Açık/Koyu)
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">🔤 Yazı Boyutu <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn" id="font-btn-small" onclick="setFontSize('small')" style="flex:1;">Küçük</button>
+            <button class="btn" id="font-btn-medium" onclick="setFontSize('medium')" style="flex:1;">Orta</button>
+            <button class="btn" id="font-btn-large" onclick="setFontSize('large')" style="flex:1;">Büyük</button>
+          </div>
+          <div style="font-size:0.667em;color:var(--text2);margin-top:6px;" id="font-size-label">Seçili: Orta</div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">🏥 Klinik Adı <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="add-tag-row">
+            <input type="text" id="set-klinik" placeholder="Klinik / Hastane adı">
+            <button class="btn btn-p" onclick="saveKlinik()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">🔪 Ameliyat Seçenekleri <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="tag-list" id="ameliyat-tags"></div>
+          <div class="add-tag-row">
+            <input type="text" id="new-ameliyat" placeholder="Yeni ameliyat adı..." onkeydown="if(event.key==='Enter')addAmeliyatOption()">
+            <button class="btn btn-p" onclick="addAmeliyatOption()">+ Ekle</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">📋 Konsültasyon Türleri <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="tag-list" id="konsu-tags"></div>
+          <div class="add-tag-row">
+            <input type="text" id="new-konsu-set" placeholder="örn. Kardiyoloji..." onkeydown="if(event.key==='Enter')addKonsuOption()">
+            <button class="btn btn-p" onclick="addKonsuOption()">+ Ekle</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">⚠️ Komplikasyon Türleri <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="tag-list" id="komp-tags"></div>
+          <div class="add-tag-row">
+            <input type="text" id="new-komp-set" placeholder="örn. Şilotoraks, Empiyem..." onkeydown="if(event.key==='Enter')addKompOption()">
+            <button class="btn btn-p" onclick="addKompOption()">+ Ekle</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label" onclick="toggleSection(this)">📊 İstatistik <span class="s-arrow">▶</span></div>
+        <div class="settings-body">
+          <div class="tag-list" id="stat-tags"></div>
+          <div class="add-tag-row">
+            <select id="new-stat-select" style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.8em;">
+              <option value="ameliyat">Ameliyat türleri</option>
+              <option value="histoloji">Histoloji dağılımı</option>
+              <option value="evre">Tümör evre dağılımı</option>
+              <option value="aylik">Aylık operasyon sayısı</option>
+              <option value="komp">Komplikasyon analizi</option>
+            </select>
+            <button class="btn btn-p" onclick="toggleStatItem()">Aç/Kapat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div style="flex:1;font-size:0.667em;color:var(--text3);font-family:var(--mono);">v2.1.0 · Dr. İlhan Ocakcıoğlu</div>
+      <button class="btn btn-p" onclick="closeSettings()">✓ Tamam</button>
+    </div>
+  </div>
+</div>
+
+<!-- KONSÜLTASYON MODAL -->
+<div class="modal-overlay" id="konsu-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="konsu-modal-title">📋 Konsültasyonlar</div>
+      <div class="modal-close" onclick="closeModal('konsu-modal')">×</div>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div id="konsu-list-modal"></div>
+      <div class="add-konsu">
+        <div style="width:100%;display:flex;gap:5px;flex-wrap:wrap;">
+          <select id="new-konsu-tur" style="flex:1;min-width:120px;"></select>
+          <input type="date" id="new-konsu-tarih" style="flex:1;">
+        </div>
+        <textarea id="new-konsu-istek" placeholder="Konsültasyon isteği..." rows="2" style="width:100%;margin-top:4px;"></textarea>
+        <div style="width:100%;margin-top:4px;">
+          <div style="font-size:0.667em;color:var(--text2);font-family:var(--mono);margin-bottom:2px;">CEVAP</div>
+          <textarea id="new-konsu-cevap" placeholder="Konsültan cevabı..." rows="2" style="width:100%;"></textarea>
+        </div>
+        <button class="btn btn-p" onclick="addKonsultasyon()" style="width:100%;margin-top:4px;">+ Ekle</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-p" onclick="closeModal('konsu-modal')">✓ Kapat</button></div>
+  </div>
+</div>
+
+<!-- HATIRLATMA MODAL -->
+<div class="modal-overlay" id="hatir-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="hatir-modal-title">🔔 Hatırlatmalar</div>
+      <div class="modal-close" onclick="closeModal('hatir-modal')">×</div>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div id="hatir-list-modal"></div>
+      <div class="add-konsu" style="flex-direction:column;gap:5px;">
+        <div style="display:flex;gap:5px;">
+          <input type="date" id="new-hatir-tarih" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:0.8em;">
+          <input type="time" id="new-hatir-saat" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:0.8em;">
+        </div>
+        <textarea id="new-hatir-txt" placeholder="Hatırlatma notu..." rows="2" style="width:100%;"></textarea>
+        <button class="btn btn-p" onclick="addHatirlatma()" style="width:100%;">+ Ekle</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-p" onclick="closeModal('hatir-modal')">✓ Kapat</button></div>
+  </div>
+</div>
+
+<!-- AMELİYAT ONAY MODAL -->
+<div class="modal-overlay" id="op-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">✅ Ameliyat Gerçekleşti</div>
+      <div class="modal-close" onclick="closeModal('op-modal')">×</div>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:0.8em;color:var(--text2);margin-bottom:10px;" id="op-modal-pname"></div>
+      <div class="fgrid" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface2);">
+        <div class="ff full"><div class="flabel">Yapılan Ameliyat</div><select id="om-yapilan"></select></div>
+        <div class="ff"><div class="flabel">Ameliyat Tarihi</div><input type="date" id="om-tarih"></div>
+        <div class="ff"><div class="flabel">Süre (dk)</div><input type="number" id="om-sure" placeholder="120"></div>
+        <div class="ff full"><div class="flabel">Ameliyat Notu</div><textarea id="om-not" placeholder="Notlar..." style="min-height:38px;"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('op-modal')">İptal</button>
+      <button class="btn btn-s" onclick="confirmOperation()">✅ Onayla</button>
+    </div>
+  </div>
+</div>
+
+<div id="photo-viewer">
+  <span class="close-pv" onclick="document.getElementById('photo-viewer').classList.remove('show')">×</span>
+  <img id="photo-viewer-img" src="" alt="">
+  <div style="font-size:0.733em;color:#aaa;" id="photo-viewer-caption"></div>
+</div>
+
+<script>
+let patients = JSON.parse(localStorage.getItem('toraks_v4') || '[]');
+let settings = JSON.parse(localStorage.getItem('toraks_settings_v2') || JSON.stringify({
+  klinik:'Göğüs Cerrahisi',
+  theme:'dark',
+  ameliyatlar:['Lobektomi (VATS)','Lobektomi (Açık/Torakotomi)','Bilobektomi','Pnömonektomi','Segmentektomi (VATS)','Wedge rezeksiyon','Sleeve rezeksiyon','Mediastinal kitle eksizyonu','Timektomi','Mediastinoskopi','Plörektomi / Dekortikasyon','VATS plevral biyopsi','Özofajektomi','Göğüs duvarı rezeksiyonu','Diyafragma onarımı','Eksploratif torakotomi'],
+  konsultasyonlar:['Kardiyoloji','Göğüs Hastalıkları','Anestezi','Nöroloji','Endokrinoloji','Onkoloji','Radyoloji','Nükleer Tıp','Diğer'],
+  komplikasyonlar:['Uzamış hava kaçağı','Pnömoni','Atelektazi','Kanama / Hemotoraks','Pnömotoraks','Kardiyak aritmi','Yara yeri enfeksiyonu','Pulmoner emboli','Bronkoplevral fistül','Solunum yetmezliği','Mortalite'],
+  statShow:{ameliyat:true,histoloji:true,evre:true,aylik:true,komp:true}
+}));
+// Eski kayıtlarda komplikasyon listesi yoksa ekle
+if(!settings.komplikasyonlar) settings.komplikasyonlar=['Uzamış hava kaçağı','Pnömoni','Atelektazi','Kanama / Hemotoraks','Pnömotoraks','Kardiyak aritmi','Yara yeri enfeksiyonu','Pulmoner emboli','Bronkoplevral fistül','Solunum yetmezliği','Mortalite'];
+let calDate = new Date();
+let currentFilter = 'none';
+let currentKonsuPid = null;
+let currentHatirPid = null;
+let currentOpPid = null;
+let tempPhotos = [];
+let micRecognition = null;
+let micActive = false;
+let micTargetId = null;
+
+let _saveTimer=null;
+function saveData(){
+  localStorage.setItem('toraks_v4',JSON.stringify(patients));
+}
+function saveSettings(){ localStorage.setItem('toraks_settings_v2', JSON.stringify(settings)); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+// YAZI BOYUTU
+const fontLabels={small:'Küçük',medium:'Orta',large:'Büyük'};
+function applyFontSize(){
+  const f=settings.fontSize||'medium';
+  const sizes={small:'15px',medium:'17px',large:'19px'};
+  document.documentElement.style.fontSize=sizes[f];
+  const lbl=document.getElementById('font-size-label');
+  if(lbl) lbl.textContent='Seçili: '+fontLabels[f];
+  ['small','medium','large'].forEach(s=>{
+    const btn=document.getElementById('font-btn-'+s);
+    if(btn) btn.classList.toggle('btn-p',s===f);
+  });
+}
+function setFontSize(f){
+  settings.fontSize=f;saveSettings();applyFontSize();
+  showToast('✓ Yazı boyutu: '+fontLabels[f]);
+}
+
+// TEMA
+const themeNames={dark:'Lacivert Koyu',light:'Açık Mint',teal:'Orta Teal',wine:'Orta Bordo',navy:'Orta Navy',forest:'Orta Yeşil',salmon1:'Somon Pembe',salmon2:'Somon Turuncu',silver:'Orta Gümüş',lightblue:'Açık Mavi',lightred:'Açık Kırmızı',lavender:'Açık Mor',amber:'Açık Turuncu',emerald:'Açık Zümrüt',slate:'Açık Gri',indigo:'Açık İndigo'};
+function setTheme(t){
+  settings.theme=t;saveSettings();
+  document.body.className=t==='dark'?'':('theme-'+t);
+  document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));
+  const td=document.getElementById('td-'+t);if(td)td.classList.add('active');
+  const lbl=document.getElementById('theme-name-label');if(lbl)lbl.textContent=themeNames[t]||t;
+}
+function applyTheme(){
+  const t=settings.theme||'dark';
+  document.body.className=t==='dark'?'':('theme-'+t);
+  document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));
+  const td=document.getElementById('td-'+t);if(td)td.classList.add('active');
+  const lbl=document.getElementById('theme-name-label');if(lbl)lbl.textContent=themeNames[t]||t;
+}
+
+// İSTATİSTİK AYARLARI
+const statLabels={ameliyat:'Ameliyat türleri',histoloji:'Histoloji dağılımı',evre:'Tümör evre dağılımı',aylik:'Aylık operasyon sayısı',komp:'Komplikasyon analizi'};
+function renderStatTags(){
+  const s=settings.statShow||{ameliyat:true,histoloji:true,evre:true,aylik:true,komp:true};
+  const el=document.getElementById('stat-tags');if(!el)return;
+  el.innerHTML=Object.entries(statLabels).map(([k,v])=>`
+    <div class="tag-item" style="${s[k]!==false?'':'opacity:.4'}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${s[k]!==false?'var(--success)':'var(--danger)'};display:inline-block;"></span>
+      ${v}
+      <span class="tag-del" onclick="toggleStatKey('${k}')">${s[k]!==false?'✓':'✗'}</span>
+    </div>`).join('');
+}
+function toggleStatKey(k){
+  if(!settings.statShow)settings.statShow={ameliyat:true,histoloji:true,evre:true,aylik:true,komp:true};
+  settings.statShow[k]=settings.statShow[k]===false?true:false;
+  saveSettings();renderStatTags();
+}
+function toggleStatItem(){
+  const k=document.getElementById('new-stat-select').value;
+  toggleStatKey(k);
+}
+function loadStatSettings(){renderStatTags();}
+
+// SES TANIMA
+function toTitleCase(str){
+  if(!str)return str;
+  return str.replace(/\w\S*/g,txt=>txt.charAt(0).toUpperCase()+txt.substr(1).toLowerCase());
+}
+function applyTitleCase(el){
+  const pos=el.selectionStart;
+  el.value=toTitleCase(el.value);
+  el.setSelectionRange(pos,pos);
+}
+function toggleHistolojiFreetext(sel){
+  const ft=document.getElementById('f-histoloji-serbest');
+  if(!ft)return;
+  if(sel.value==='Diger'){ft.style.display='block';ft.focus();}
+  else{ft.style.display='none';ft.value='';}
+}
+function syncHistoloji(input){
+  input.dataset.val=input.value;
+}
+
+function toggleMic(targetId, btnId){
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){
+    showToast('❌ Bu tarayıcı ses tanımayı desteklemiyor. Chrome kullanın.');
+    return;
+  }
+  if(micActive && micTargetId===targetId){
+    if(micRecognition) micRecognition.stop();
+    micActive=false;
+    document.getElementById(btnId).classList.remove('recording');
+    document.getElementById(btnId).textContent='🎙️ Sesle Yaz';
+    return;
+  }
+  if(micRecognition) micRecognition.stop();
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  micRecognition=new SR();
+  micRecognition.lang='tr-TR';
+  micRecognition.continuous=true;
+  micRecognition.interimResults=false;
+  micTargetId=targetId;
+  micActive=true;
+  document.getElementById(btnId).classList.add('recording');
+  document.getElementById(btnId).textContent='🔴 Durdurmak için bas';
+  micRecognition.onresult=e=>{
+    const txt=Array.from(e.results).map(r=>r[0].transcript).join(' ');
+    const el=document.getElementById(targetId);
+    el.value=(el.value?el.value+' ':'')+txt;
+  };
+  micRecognition.onerror=()=>{
+    micActive=false;
+    document.getElementById(btnId).classList.remove('recording');
+    document.getElementById(btnId).textContent='🎙️ Sesle Yaz';
+    showToast('❌ Ses tanıma hatası. Mikrofon iznini kontrol edin.');
+  };
+  micRecognition.onend=()=>{
+    if(micActive){ micRecognition.start(); }
+  };
+  micRecognition.start();
+  showToast('🎙️ Dinleniyor... Konuşun. Bitince butona tekrar basın.');
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const tab=document.getElementById('tab-'+name);
+  const page=document.getElementById('page-'+name);
+  if(tab) tab.classList.add('active');
+  if(page) page.classList.add('active');
+  if(name==='list') renderList();
+  if(name==='takvim') renderCalendar();
+  if(name==='istatistik') renderStats();
+  if(name==='araclar'){showArac('thoracoscore',document.getElementById('arac-tab-thoracoscore'));rebuildThoracoscoreHastaList();}
+}
+
+function setFilter(f,el){
+  if(currentFilter===f){
+    currentFilter='none';
+    document.querySelectorAll('.fbtn,.stat-card').forEach(b=>b.classList.remove('active'));
+    renderList();return;
+  }
+  currentFilter=f;
+  document.querySelectorAll('.fbtn,.stat-card').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderList();
+}
+
+function toggleIt(el,hidId,detailId){
+  el.classList.toggle('on');
+  const v=el.classList.contains('on')?'1':'0';
+  document.getElementById(hidId).value=v;
+  if(detailId) document.getElementById(detailId).style.display=v==='1'?'block':'none';
+}
+function selAsa(el,val){
+  document.querySelectorAll('.asa-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('f-asa').value=val;
+}
+
+function toggleSection(labelEl){
+  labelEl.classList.toggle('open');
+  const body=labelEl.nextElementSibling;
+  if(body) body.classList.toggle('open');
+}
+
+function toggleAutoTheme(el){
+  if(el.checked){settings.theme='auto';saveSettings();autoThemeCheck();}
+  else{settings.theme='dark';saveSettings();applyTheme();}
+}
+function openSettings(){
+  document.getElementById('set-klinik').value=settings.klinik||'';
+  const autoChk=document.getElementById('theme-auto-check');
+  if(autoChk) autoChk.checked=settings.theme==='auto';
+  // PIN toggle durumu
+  const pinToggle=document.getElementById('tog-pin-enabled');
+  if(pinToggle){
+    const enabled=localStorage.getItem('toraks_pin_enabled')==='1';
+    if(enabled) pinToggle.classList.add('on'); else pinToggle.classList.remove('on');
+  }
+  applyTheme();
+  applyFontSize();
+  loadStatSettings();
+  renderSettingsTags();
+  document.getElementById('settings-modal').classList.add('show');
+}
+function closeSettings(){
+  document.getElementById('settings-modal').classList.remove('show');
+  rebuildSelects();
+  renderList();
+}
+function saveKlinik(){
+  settings.klinik=document.getElementById('set-klinik').value.trim()||'Göğüs Cerrahisi';
+  saveSettings();
+  // header sabit
+}
+function renderSettingsTags(){
+  document.getElementById('ameliyat-tags').innerHTML=settings.ameliyatlar.map((a,i)=>
+    `<div class="tag-item">${a}<span class="tag-del" onclick="removeAmeliyat(${i})">×</span></div>`).join('');
+  document.getElementById('konsu-tags').innerHTML=settings.konsultasyonlar.map((k,i)=>
+    `<div class="tag-item">${k}<span class="tag-del" onclick="removeKonsuSet(${i})">×</span></div>`).join('');
+  document.getElementById('komp-tags').innerHTML=settings.komplikasyonlar.map((k,i)=>
+    `<div class="tag-item">${k}<span class="tag-del" onclick="removeKompSet(${i})">×</span></div>`).join('');
+}
+function addAmeliyatOption(){const v=document.getElementById('new-ameliyat').value.trim();if(!v)return;settings.ameliyatlar.push(v);saveSettings();document.getElementById('new-ameliyat').value='';renderSettingsTags();}
+function removeAmeliyat(i){settings.ameliyatlar.splice(i,1);saveSettings();renderSettingsTags();}
+function addKonsuOption(){const v=document.getElementById('new-konsu-set').value.trim();if(!v)return;settings.konsultasyonlar.push(v);saveSettings();document.getElementById('new-konsu-set').value='';renderSettingsTags();}
+function removeKonsuSet(i){settings.konsultasyonlar.splice(i,1);saveSettings();renderSettingsTags();}
+function addKompOption(){const v=document.getElementById('new-komp-set').value.trim();if(!v)return;if(settings.komplikasyonlar.includes(v)){showToast('Bu komplikasyon zaten var.');return;}settings.komplikasyonlar.push(v);saveSettings();document.getElementById('new-komp-set').value='';renderSettingsTags();rebuildKompCheckboxes();}
+function removeKompSet(i){settings.komplikasyonlar.splice(i,1);saveSettings();renderSettingsTags();rebuildKompCheckboxes();}
+function rebuildKompCheckboxes(){
+  const el=document.getElementById('komp-checkboxes');if(!el)return;
+  el.innerHTML=settings.komplikasyonlar.map(k=>`<label style="display:flex;align-items:center;gap:4px;font-size:0.8em;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;cursor:pointer;"><input type="checkbox" value="${k}"> ${k}</label>`).join('');
+}
+
+function rebuildSelects(){
+  ['f-ameliyat','f-yapilan','om-yapilan'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value;
+    el.innerHTML=(id==='f-yapilan'||id==='om-yapilan')?'<option value="">Henüz yapılmadı</option>':'<option value="">Seçiniz</option>';
+    settings.ameliyatlar.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;el.appendChild(o);});
+    el.value=cur;
+  });
+  ['new-konsu-tur','f-prekonsu-tur'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=settings.konsultasyonlar.map(k=>`<option>${k}</option>`).join('');
+  });
+  const hl=document.getElementById('hekim-list');
+  if(hl){const hekimler=[...new Set(patients.map(p=>p.hekim).filter(Boolean))];hl.innerHTML=hekimler.map(h=>`<option value="${h}">`).join('');}
+  rebuildThoracoscoreHastaList();
+}
+
+// FORM
+function showNewForm(){clearForm();tempPhotos=[];document.getElementById('btn-del').style.display='none';renderTempPhotos();switchTab('form');checkDraft();}
+function clearForm(){
+  ['f-ad','f-tc','f-tel','f-yas','f-tarih','f-gelis','f-hekim','f-bt','f-pet','f-patoloji',
+   'f-fev1p','f-fev1l','f-fvcp','f-fvcl','f-dlco','f-vo2','f-eko','f-komorbid',
+   'f-kan-ilac','f-uyari-txt','f-asa','f-anest-not','f-op-tarih','f-sure',
+   'f-son-patoloji','f-op-not','f-komp-not','f-komp-tarih','f-id'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['f-cinsiyet','f-biopsi','f-ybu','f-histoloji','f-evre','f-clavien'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
+  ['t-kan','t-anest','t-uyari','t-komp'].forEach(id=>document.getElementById(id).value='0');
+  ['tog-kan','tog-anest','tog-uyari','tog-komp'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('kan-detail').style.display='none';
+  document.getElementById('uyari-detail').style.display='none';
+  document.getElementById('komp-detail').style.display='none';
+  document.querySelectorAll('.asa-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('#komp-checkboxes input').forEach(x=>x.checked=false);
+  tempPreopKonsu=[];
+  ameliyatPlan=[];
+  yapilanPlan=[];
+  renderAmeliyatPlan();
+  renderYapilanPlan();
+  renderPreopKonsuList();
+  rebuildSelects();
+  rebuildPreopKonsuSelect();
+}
+
+function savePatient(){
+  const ad=document.getElementById('f-ad').value.trim();
+  if(!ad){alert('Ad Soyad zorunludur.');return;}
+  const id=document.getElementById('f-id').value||Date.now().toString();
+  const existing=patients.find(x=>x.id===id)||{};
+  const p={
+    id,ad,
+    tc:document.getElementById('f-tc').value,tel:document.getElementById('f-tel').value,
+    yas:document.getElementById('f-yas').value,cinsiyet:document.getElementById('f-cinsiyet').value,
+    gelis:document.getElementById('f-gelis').value,hekim:document.getElementById('f-hekim').value,
+    tarih:document.getElementById('f-tarih').value,
+    ameliyat:ameliyatPlan.length?ameliyatPlan.join(' + '):(document.getElementById('f-ameliyat-serbest').value||document.getElementById('f-ameliyat').value||''),
+    ameliyatPlanList:ameliyatPlan.length?[...ameliyatPlan]:[],
+    ameliyatSerbest:document.getElementById('f-ameliyat-serbest').value,
+    bt:document.getElementById('f-bt').value,pet:document.getElementById('f-pet').value,
+    patoloji:document.getElementById('f-patoloji').value,biopsi:document.getElementById('f-biopsi').value,
+    fev1p:document.getElementById('f-fev1p').value,fev1l:document.getElementById('f-fev1l').value,
+    fvcp:document.getElementById('f-fvcp').value,fvcl:document.getElementById('f-fvcl').value,
+    dlco:document.getElementById('f-dlco').value,vo2:document.getElementById('f-vo2').value,
+    eko:document.getElementById('f-eko').value,komorbid:document.getElementById('f-komorbid').value,
+    kanSulandirici:document.getElementById('t-kan').value,kanIlac:document.getElementById('f-kan-ilac').value,
+    uyari:document.getElementById('t-uyari').value,uyariTxt:document.getElementById('f-uyari-txt').value,
+    anestezi:document.getElementById('t-anest').value,anestNot:document.getElementById('f-anest-not').value,
+    asa:document.getElementById('f-asa').value,ybu:document.getElementById('f-ybu').value,
+    yapilanAmeliyat:yapilanPlan.length?yapilanPlan.join(' + '):document.getElementById('f-yapilan').value,
+    yapilanAmeliyatList:yapilanPlan.length?[...yapilanPlan]:[],
+    opTarih:document.getElementById('f-op-tarih').value,
+    sure:document.getElementById('f-sure').value,sonPatoloji:document.getElementById('f-son-patoloji').value,
+    histoloji:(()=>{const sel=document.getElementById('f-histoloji');const ft=document.getElementById('f-histoloji-serbest');return sel&&sel.value==='Diger'&&ft&&ft.value.trim()?ft.value.trim():(sel?sel.value:'');})(),evre:document.getElementById('f-evre').value,
+    opNot:document.getElementById('f-op-not').value,
+    komplikasyonlar:Array.from(document.querySelectorAll('#komp-checkboxes input:checked')).map(x=>x.value),
+    clavien:document.getElementById('f-clavien').value,
+    kompTarih:document.getElementById('f-komp-tarih').value,
+    kompNot:document.getElementById('f-komp-not').value,
+    konsultasyonlar:tempPreopKonsu.length?[...tempPreopKonsu,...(existing.konsultasyonlar||[])]:(existing.konsultasyonlar||[]),
+    hatirlatmalar:existing.hatirlatmalar||[],
+    photos:tempPhotos.length?tempPhotos:(existing.photos||[]),
+    savedAt:new Date().toISOString()
+  };
+  const idx=patients.findIndex(x=>x.id===id);
+  if(idx>=0) patients[idx]=p; else patients.unshift(p);
+  clearDraft();
+  saveData(); switchTab('list');
+}
+
+function deletePatientFromDetail(id){
+  if(!confirm('Bu hastayı silmek istiyor musunuz? Bu işlem geri alınamaz.'))return;
+  patients=patients.filter(p=>p.id!==id);saveData();switchTab('list');
+  showToast('🗑 Hasta kaydı silindi.');
+}
+
+function deletePatient(){
+  const id=document.getElementById('f-id').value;
+  if(!id||!confirm('Bu hastayı silmek istiyor musunuz?')) return;
+  patients=patients.filter(p=>p.id!==id);saveData();switchTab('list');
+}
+
+function editPatient(id){
+  const p=patients.find(x=>x.id===id);if(!p)return;
+  clearForm();tempPhotos=p.photos?[...p.photos]:[];
+  const set=(elId,val)=>{const el=document.getElementById(elId);if(el&&val!==undefined)el.value=val||'';};
+  set('f-id',p.id);set('f-ad',p.ad);set('f-tc',p.tc);set('f-tel',p.tel);
+  set('f-yas',p.yas);set('f-cinsiyet',p.cinsiyet);set('f-tarih',p.tarih);set('f-gelis',p.gelis);set('f-hekim',p.hekim);
+  set('f-ameliyat',p.ameliyat);set('f-bt',p.bt);set('f-pet',p.pet);
+  set('f-patoloji',p.patoloji);set('f-biopsi',p.biopsi);
+  set('f-fev1p',p.fev1p);set('f-fev1l',p.fev1l);set('f-fvcp',p.fvcp);set('f-fvcl',p.fvcl);
+  set('f-dlco',p.dlco);set('f-vo2',p.vo2);set('f-eko',p.eko);set('f-komorbid',p.komorbid);
+  set('f-kan-ilac',p.kanIlac);set('f-uyari-txt',p.uyariTxt);
+  set('f-anest-not',p.anestNot);set('f-asa',p.asa);set('f-ybu',p.ybu);
+  set('f-yapilan',p.yapilanAmeliyat);set('f-op-tarih',p.opTarih);
+  set('f-sure',p.sure);set('f-son-patoloji',p.sonPatoloji);
+  set('f-histoloji',p.histoloji);set('f-evre',p.evre);set('f-op-not',p.opNot);
+  set('f-clavien',p.clavien);set('f-komp-tarih',p.kompTarih);set('f-komp-not',p.kompNot);
+  if(p.komplikasyonlar&&p.komplikasyonlar.length){
+    document.getElementById('t-komp').value='1';document.getElementById('tog-komp').classList.add('on');document.getElementById('komp-detail').style.display='block';
+    document.querySelectorAll('#komp-checkboxes input').forEach(x=>{x.checked=p.komplikasyonlar.includes(x.value);});
+  }
+  if(p.kanSulandirici==='1'){document.getElementById('t-kan').value='1';document.getElementById('tog-kan').classList.add('on');document.getElementById('kan-detail').style.display='block';}
+  if(p.uyari==='1'){document.getElementById('t-uyari').value='1';document.getElementById('tog-uyari').classList.add('on');document.getElementById('uyari-detail').style.display='block';}
+  if(p.anestezi==='1'){document.getElementById('t-anest').value='1';document.getElementById('tog-anest').classList.add('on');}
+  if(p.asa) document.querySelectorAll('.asa-btn').forEach(b=>{if(b.textContent==='ASA '+p.asa)b.classList.add('sel');});
+  document.getElementById('btn-del').style.display='inline-block';
+  // Ameliyat planını yükle
+  ameliyatPlan=p.ameliyatPlanList&&p.ameliyatPlanList.length?[...p.ameliyatPlanList]:[];
+  renderAmeliyatPlan();
+  if(p.ameliyatSerbest) document.getElementById('f-ameliyat-serbest').value=p.ameliyatSerbest;
+  // Yapılan ameliyat listesini yükle
+  yapilanPlan=p.yapilanAmeliyatList&&p.yapilanAmeliyatList.length?[...p.yapilanAmeliyatList]:[];
+  renderYapilanPlan();
+  // Mevcut konsültasyonları preop listesine yükle
+  tempPreopKonsu=p.konsultasyonlar?[...p.konsultasyonlar]:[];
+  renderPreopKonsuList();
+  renderTempPhotos();switchTab('form');
+}
+
+// FOTOĞRAF
+function addPhotos(input){
+  Array.from(input.files).forEach(file=>{
+    const r=new FileReader();
+    r.onload=e=>{tempPhotos.push({data:e.target.result,name:file.name,date:new Date().toLocaleDateString('tr-TR')});renderTempPhotos();};
+    r.readAsDataURL(file);
+  });input.value='';
+}
+function renderTempPhotos(){
+  const el=document.getElementById('photo-thumb-list');if(!el)return;
+  el.innerHTML=tempPhotos.map((ph,i)=>`<div class="photo-thumb"><img src="${ph.data}" alt="${ph.name}" onclick="viewPhoto(${i})"><div class="del-photo" onclick="removePhoto(${i})">×</div></div>`).join('');
+}
+function removePhoto(i){tempPhotos.splice(i,1);renderTempPhotos();}
+function viewPhoto(i,photos){
+  const arr=photos||tempPhotos;if(!arr[i])return;
+  document.getElementById('photo-viewer-img').src=arr[i].data;
+  document.getElementById('photo-viewer-caption').textContent=arr[i].name+' — '+arr[i].date;
+  document.getElementById('photo-viewer').classList.add('show');
+}
+
+async function processReportPhoto(input,targetId){
+  const file=input.files[0];if(!file)return;
+  const loading=document.getElementById('ai-loading');
+  loading.style.display='block';loading.textContent='⏳ AI raporu özetleniyor...';
+  try{
+    const base64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+    // Desteklenen formatları kontrol et — HEIC/HEIF → jpeg olarak gönder
+    let mediaType=file.type||'image/jpeg';
+    if(!['image/jpeg','image/png','image/gif','image/webp'].includes(mediaType)) mediaType='image/jpeg';
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
+          {type:'text',text:'Bu tıbbi rapor görüntüsünü oku ve kısa net Türkçe özet yaz. Sadece klinik önemli bulgular, ölçümler, sonuçlar. Maks 120 kelime.'}
+        ]}]})
+    });
+    const data=await response.json();
+    const text=data.content&&data.content[0]&&data.content[0].text;
+    if(text){document.getElementById(targetId).value=text;loading.textContent='✅ Özet tamamlandı!';setTimeout(()=>{loading.style.display='none';},2000);}
+    else{
+      const errMsg=data.error&&data.error.message?data.error.message:'Yanıt alınamadı';
+      throw new Error(errMsg);
+    }
+  }catch(e){
+    loading.textContent='❌ '+(e.message||'Hata oluştu')+'. Manuel giriş yapın.';
+    setTimeout(()=>{loading.style.display='none';},4000);
+  }
+  input.value='';
+}
+
+// YAPILAN AMELİYAT (çoklu)
+let yapilanPlan=[];
+function renderYapilanPlan(){
+  const el=document.getElementById('yapilan-plan-list');if(!el)return;
+  el.innerHTML=yapilanPlan.map((a,i)=>`
+    <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface2);border:1px solid var(--success);border-radius:5px;font-size:0.733em;font-family:var(--mono);color:var(--success);">
+      ${a}<span onclick="removeYapilanPlan(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span>
+    </span>`).join('');
+  document.getElementById('f-yapilan-json').value=JSON.stringify(yapilanPlan);
+}
+function addYapilanPlan(){
+  const sel=document.getElementById('f-yapilan').value;
+  if(!sel)return;
+  if(!yapilanPlan.includes(sel))yapilanPlan.push(sel);
+  renderYapilanPlan();
+}
+function removeYapilanPlan(i){yapilanPlan.splice(i,1);renderYapilanPlan();}
+
+// ÇOKLU AMELİYAT PLANI
+let ameliyatPlan=[];
+function renderAmeliyatPlan(){
+  const el=document.getElementById('ameliyat-plan-list');if(!el)return;
+  el.innerHTML=ameliyatPlan.map((a,i)=>`
+    <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;font-size:0.733em;font-family:var(--mono);">
+      ${a}<span onclick="removeAmeliyatPlan(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span>
+    </span>`).join('');
+  document.getElementById('f-ameliyat-plan-json').value=JSON.stringify(ameliyatPlan);
+}
+function addAmeliyatPlan(){
+  const sel=document.getElementById('f-ameliyat').value;
+  if(!sel)return;
+  if(!ameliyatPlan.includes(sel)){ameliyatPlan.push(sel);}
+  renderAmeliyatPlan();
+}
+function removeAmeliyatPlan(i){ameliyatPlan.splice(i,1);renderAmeliyatPlan();}
+
+// PREOP KONSÜLTASYONlar (Form içi)
+let tempPreopKonsu=[];
+function rebuildPreopKonsuSelect(){
+  const el=document.getElementById('f-prekonsu-tur');
+  if(el) el.innerHTML=settings.konsultasyonlar.map(k=>`<option>${k}</option>`).join('');
+  document.getElementById('f-prekonsu-tarih').value=new Date().toISOString().split('T')[0];
+}
+function renderPreopKonsuList(){
+  const el=document.getElementById('preop-konsu-list');if(!el)return;
+  if(!tempPreopKonsu.length){el.innerHTML='<div style="padding:8px 12px;font-size:0.8em;color:var(--text3);">Henüz konsültasyon eklenmedi.</div>';return;}
+  el.innerHTML=tempPreopKonsu.map((k,i)=>`
+    <div class="konsu-item">
+      <div style="flex-shrink:0;"><span class="konsu-badge">${k.tur}</span><div class="konsu-date">${k.tarih||''}</div></div>
+      <div class="konsu-content"><div class="konsu-text">${k.istek||''}</div>${k.cevap?`<div class="konsu-cevap">💬 ${k.cevap}</div>`:''}</div>
+      <span style="cursor:pointer;color:var(--danger);opacity:.6;font-size:0.933em;padding:2px 6px;" onclick="removePreopKonsu(${i})">×</span>
+    </div>`).join('');
+}
+function addPreopKonsu(){
+  const istek=document.getElementById('f-prekonsu-istek').value.trim();
+  if(!istek){showToast('⚠️ Konsültasyon isteği boş olamaz.');return;}
+  tempPreopKonsu.push({
+    tur:document.getElementById('f-prekonsu-tur').value,
+    tarih:document.getElementById('f-prekonsu-tarih').value,
+    istek,
+    cevap:document.getElementById('f-prekonsu-cevap').value.trim()
+  });
+  document.getElementById('f-prekonsu-istek').value='';
+  document.getElementById('f-prekonsu-cevap').value='';
+  renderPreopKonsuList();
+  showToast('✅ Konsültasyon eklendi.');
+}
+function removePreopKonsu(i){tempPreopKonsu.splice(i,1);renderPreopKonsuList();}
+
+// KONSÜLTASYONlar
+function openKonsuModal(pid){
+  currentKonsuPid=pid;const p=patients.find(x=>x.id===pid);if(!p)return;
+  document.getElementById('konsu-modal-title').textContent='📋 '+p.ad+' — Konsültasyonlar';
+  document.getElementById('new-konsu-tur').innerHTML=settings.konsultasyonlar.map(k=>`<option>${k}</option>`).join('');
+  document.getElementById('new-konsu-tarih').value=new Date().toISOString().split('T')[0];
+  renderKonsuList(p);document.getElementById('konsu-modal').classList.add('show');
+}
+function renderKonsuList(p){
+  const list=p.konsultasyonlar||[];const el=document.getElementById('konsu-list-modal');
+  if(!list.length){el.innerHTML='<div style="padding:12px;color:var(--text2);font-size:0.8em;">Konsültasyon yok.</div>';return;}
+  el.innerHTML=list.map((k,i)=>`<div class="konsu-item"><div style="flex-shrink:0;"><span class="konsu-badge">${k.tur}</span><div class="konsu-date">${k.tarih||''}</div></div><div class="konsu-content"><div class="konsu-text">${k.istek||''}</div>${k.cevap?`<div class="konsu-cevap">💬 ${k.cevap}</div>`:''}</div><span style="cursor:pointer;color:var(--danger);opacity:.5;font-size:0.933em" onclick="deleteKonsu('${p.id}',${i})">×</span></div>`).join('');
+}
+function addKonsultasyon(){
+  const p=patients.find(x=>x.id===currentKonsuPid);if(!p)return;
+  const istek=document.getElementById('new-konsu-istek').value.trim();if(!istek){alert('İstek boş olamaz.');return;}
+  if(!p.konsultasyonlar)p.konsultasyonlar=[];
+  p.konsultasyonlar.push({tur:document.getElementById('new-konsu-tur').value,tarih:document.getElementById('new-konsu-tarih').value,istek,cevap:document.getElementById('new-konsu-cevap').value.trim()});
+  saveData();['new-konsu-istek','new-konsu-cevap'].forEach(id=>document.getElementById(id).value='');renderKonsuList(p);
+}
+function deleteKonsu(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.konsultasyonlar.splice(i,1);saveData();renderKonsuList(p);}
+
+// HATIRLATMALAR
+function openHatirModal(pid){
+  currentHatirPid=pid;const p=patients.find(x=>x.id===pid);if(!p)return;
+  document.getElementById('hatir-modal-title').textContent='🔔 '+p.ad+' — Hatırlatmalar';
+  document.getElementById('new-hatir-tarih').value=new Date().toISOString().split('T')[0];
+  renderHatirList(p);document.getElementById('hatir-modal').classList.add('show');
+}
+function renderHatirList(p){
+  const list=p.hatirlatmalar||[];const el=document.getElementById('hatir-list-modal');
+  if(!list.length){el.innerHTML='<div style="padding:12px;color:var(--text2);font-size:0.8em;">Hatırlatma yok.</div>';return;}
+  el.innerHTML=list.map((h,i)=>`<div class="hatir-item"><div class="hatir-date">${h.tarih||''} ${h.saat||''}</div><div class="hatir-text ${h.done?'hatir-done-txt':''}">${h.txt}</div><span onclick="toggleHatir('${p.id}',${i})" style="cursor:pointer;font-size:0.867em;">${h.done?'↩️':'✅'}</span><span style="cursor:pointer;color:var(--danger);opacity:.5;font-size:0.867em" onclick="deleteHatir('${p.id}',${i})">🗑</span></div>`).join('');
+}
+function addHatirlatma(){
+  const p=patients.find(x=>x.id===currentHatirPid);if(!p)return;
+  const txt=document.getElementById('new-hatir-txt').value.trim();if(!txt)return;
+  if(!p.hatirlatmalar)p.hatirlatmalar=[];
+  p.hatirlatmalar.push({tarih:document.getElementById('new-hatir-tarih').value,saat:document.getElementById('new-hatir-saat').value,txt,done:false});
+  saveData();document.getElementById('new-hatir-txt').value='';renderHatirList(p);
+}
+function toggleHatir(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.hatirlatmalar[i].done=!p.hatirlatmalar[i].done;saveData();renderHatirList(p);}
+function deleteHatir(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.hatirlatmalar.splice(i,1);saveData();renderHatirList(p);}
+
+// AMELİYAT ONAY
+function openOpModal(pid){
+  currentOpPid=pid;const p=patients.find(x=>x.id===pid);if(!p)return;
+  document.getElementById('op-modal-pname').textContent=p.ad;
+  rebuildSelects();
+  document.getElementById('om-yapilan').value=p.ameliyat||'';
+  document.getElementById('om-tarih').value=p.tarih||new Date().toISOString().split('T')[0];
+  document.getElementById('om-sure').value='';document.getElementById('om-not').value='';
+  document.getElementById('op-modal').classList.add('show');
+}
+function confirmOperation(){
+  const p=patients.find(x=>x.id===currentOpPid);if(!p)return;
+  const yapilan=document.getElementById('om-yapilan').value;
+  if(!yapilan){alert('Ameliyatı seçiniz.');return;}
+  p.yapilanAmeliyat=yapilan;p.opTarih=document.getElementById('om-tarih').value;
+  p.sure=document.getElementById('om-sure').value;
+  if(document.getElementById('om-not').value)p.opNot=document.getElementById('om-not').value;
+  saveData();closeModal('op-modal');viewPatient(p.id);
+}
+
+// TAKVİM
+let weekOffset=0;
+function isOpDay(date){
+  const d=date.getDay();
+  const opDays=settings.opGunleri||[1,3]; // 1=Pzt, 3=Çrş varsayılan
+  return opDays.includes(d);
+}
+function calPrev(){calDate.setMonth(calDate.getMonth()-1);renderCalendar();}
+function calNext(){calDate.setMonth(calDate.getMonth()+1);renderCalendar();}
+function weekPrev(){weekOffset--;renderWeekList();}
+function weekNext(){weekOffset++;renderWeekList();}
+function renderCalendar(){
+  const year=calDate.getFullYear(),month=calDate.getMonth();
+  document.getElementById('cal-title').textContent=calDate.toLocaleDateString('tr-TR',{month:'long',year:'numeric'});
+  const first=new Date(year,month,1);const last=new Date(year,month+1,0);
+  const startDay=(first.getDay()+6)%7;
+  const today=new Date();today.setHours(0,0,0,0);
+  const grid=document.getElementById('cal-grid');
+  const dayNames=['Pzt','Sal','Çrş','Per','Cum','Cmt','Paz'];
+  let html=dayNames.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  for(let i=0;i<startDay;i++) html+='<div style="min-height:60px;"></div>';
+  for(let d=1;d<=last.getDate();d++){
+    const date=new Date(year,month,d);
+    const isToday=date.getTime()===today.getTime();
+    const isOp=isOpDay(date);
+    const dateStr=date.toISOString().split('T')[0];
+    const dayPats=patients.filter(p=>p.tarih===dateStr||p.opTarih===dateStr);
+    const pHtml=dayPats.map(p=>`<div class="cal-pat ${p.opTarih===dateStr?'done-pat':''}" onclick="viewPatient('${p.id}')">${p.ad.split(' ')[0]}</div>`).join('');
+    html+=`<div class="cal-day ${isOp?'op-day':''} ${isToday?'today':''}"><div class="day-num">${d}</div>${pHtml}</div>`;
+  }
+  grid.innerHTML=html;
+  renderWeekList();
+}
+function renderWeekList(){
+  const todayD=new Date();
+  const dow=(todayD.getDay()+6)%7;
+  const baseMon=new Date(todayD);baseMon.setDate(todayD.getDate()-dow+weekOffset*7);baseMon.setHours(0,0,0,0);
+  const fmtDate=d=>d.toISOString().split('T')[0];
+  const fmtLong=d=>d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+  const rangeEl=document.getElementById('week-range-label');
+
+  // Haftanın tüm günlerini oluştur
+  const allDays=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(baseMon);d.setDate(baseMon.getDate()+i);
+    allDays.push({date:d,dateStr:fmtDate(d),isOp:isOpDay(d)});
+  }
+
+  // Op günleri ve diğer hasta olan günler
+  const opDays=allDays.filter(d=>d.isOp);
+  const otherDays=allDays.filter(d=>!d.isOp&&patients.some(p=>p.tarih===d.dateStr&&!p.yapilanAmeliyat));
+
+  const displayDays=[...opDays,...otherDays].sort((a,b)=>a.date-b.date);
+
+  if(rangeEl) rangeEl.textContent=baseMon.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+' – '+allDays[6].date.toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});
+
+  let html='<div class="week-cols">';
+  displayDays.forEach(({date,dateStr,isOp})=>{
+    const pts=patients.filter(p=>p.tarih===dateStr||p.opTarih===dateStr);
+    const colCls=isOp?'day-col op-col':'day-col';
+    const titleColor=isOp?'var(--warn)':'var(--accent)';
+    const icon=isOp?'🔪':'📅';
+    html+=`<div class="${colCls}">
+      <div class="day-col-hdr">
+        <div><div class="day-col-title" style="color:${titleColor}">${icon} ${fmtLong(date).split(' ')[0]}</div><div class="day-col-date">${fmtLong(date)}</div></div>
+        ${pts.length?`<div class="day-col-count" style="${isOp?'':'background:var(--surface3);color:var(--accent);'}">${pts.length} hasta</div>`:''}
+      </div>`;
+    if(!pts.length){html+=`<div class="week-empty">${isOp?'Planlanmış ameliyat yok':'Hasta yok'}</div>`;}
+    else pts.sort((a,b)=>(a.siraNo||0)-(b.siraNo||0)).forEach((p,i)=>{
+      const isDone=p.opTarih===dateStr;
+      html+=`<div class="week-pat-card" data-pid="${p.id}" data-date="${dateStr}">
+        <div class="drag-handle" title="Sürükle">⠿</div>
+        <div class="week-pat-num" onclick="viewPatient('${p.id}')">${i+1}.</div>
+        <div class="week-pat-body" onclick="viewPatient('${p.id}')">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+            <span class="week-pat-name">${p.ad}</span>
+            ${p.ybu==='Gerekli'?'<span class="badge b-danger">🔴 YBÜ</span>':''}
+            ${p.kanSulandirici==='1'?'<span class="badge b-warn">💊 Kan sld.</span>':''}
+            ${isDone?'<span class="badge b-ok">✅ Yapıldı</span>':''}
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;">
+            ${(p.ameliyat||p.yapilanAmeliyat)?`<span class="badge b-op">${(p.ameliyat||p.yapilanAmeliyat).substring(0,22)}</span>`:''}
+            ${p.asa?`<span class="badge b-grey">ASA ${p.asa}</span>`:''}
+            ${p.evre?`<span class="badge b-ok">Evre ${p.evre}</span>`:''}
+            ${p.histoloji?`<span class="badge b-purple">${p.histoloji.substring(0,14)}</span>`:''}
+          </div>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('week-list').innerHTML=html;
+  enableDrag();
+}
+
+// İSTATİSTİK
+function renderStats(){
+  const el=document.getElementById('stats-content');
+  const done=patients.filter(p=>p.yapilanAmeliyat);
+  const all=patients;
+  const ss=settings.statShow||{ameliyat:true,histoloji:true,evre:true,aylik:true,komp:true};
+  if(!all.length){el.innerHTML='<div class="empty-state"><div class="icon">📊</div><p>Henüz yeterli veri yok.</p></div>';return;}
+  const opCount={};done.forEach(p=>{const k=p.yapilanAmeliyat||'Belirsiz';opCount[k]=(opCount[k]||0)+1;});
+  const opSorted=Object.entries(opCount).sort((a,b)=>b[1]-a[1]);const maxOp=opSorted[0]?opSorted[0][1]:1;
+  const evreCount={};done.forEach(p=>{if(p.evre)evreCount[p.evre]=(evreCount[p.evre]||0)+1;});
+  const evreSorted=Object.entries(evreCount).sort((a,b)=>b[1]-a[1]);
+  const histCount={};done.forEach(p=>{if(p.histoloji)histCount[p.histoloji]=(histCount[p.histoloji]||0)+1;});
+  const histSorted=Object.entries(histCount).sort((a,b)=>b[1]-a[1]);const maxHist=histSorted[0]?histSorted[0][1]:1;
+  const sureler=done.filter(p=>p.sure&&!isNaN(p.sure)).map(p=>parseFloat(p.sure));
+  const avgSure=sureler.length?Math.round(sureler.reduce((a,b)=>a+b,0)/sureler.length):0;
+  const monthly={};done.forEach(p=>{if(p.opTarih){const m=p.opTarih.substring(0,7);monthly[m]=(monthly[m]||0)+1;}});
+  const monthKeys=Object.keys(monthly).sort().slice(-8);const maxMon=Math.max(...monthKeys.map(k=>monthly[k]),1);
+  const kompCount={};done.forEach(p=>{if(p.komplikasyonlar&&p.komplikasyonlar.length)p.komplikasyonlar.forEach(k=>{kompCount[k]=(kompCount[k]||0)+1;});});
+  const kompSorted=Object.entries(kompCount).sort((a,b)=>b[1]-a[1]);const maxKomp=kompSorted[0]?kompSorted[0][1]:1;
+  const evrePalette={'IA1':'#22c55e','IA2':'#22c55e','IA3':'#22c55e','IB':'#22c55e','IIA':'#60a5fa','IIB':'#60a5fa','IIIA':'#f59e0b','IIIB':'#f59e0b','IIIC':'#f59e0b','IVA':'#ef4444','IVB':'#ef4444','Benign':'#94a3b8'};
+
+  let html=`<div class="stats-grid">
+    <div class="stats-card" style="grid-column:1/-1">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        ${[['Toplam Hasta',all.length,'var(--accent)'],['Ameliyat Yapıldı',done.length,'var(--success)'],['Planlı Operasyon',all.filter(p=>p.tarih&&!p.yapilanAmeliyat).length,'var(--warn)'],['Ort. Süre (dk)',avgSure||'—','var(--purple)'],['YBÜ Gerekli',all.filter(p=>p.ybu==='Gerekli').length,'var(--danger)'],['Komplikasyon',done.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.length).length,'var(--danger)']].map(([l,v,c])=>`
+          <div style="text-align:center;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:1.467em;font-weight:700;font-family:var(--mono);color:${c}">${v}</div>
+            <div style="font-size:0.667em;color:var(--text2)">${l}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  if(ss.ameliyat&&opSorted.length) html+=`<div class="stats-card"><div class="stats-card-title">🔪 Ameliyat Türleri</div>${opSorted.slice(0,8).map(([k,v])=>`<div class="bar-row"><div class="bar-label">${k.length>16?k.substring(0,16)+'…':k}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxOp*100).toFixed(0)}%"></div></div><div class="bar-val">${v}</div></div>`).join('')}</div>`;
+  if(ss.histoloji&&histSorted.length) html+=`<div class="stats-card"><div class="stats-card-title">📊 Histoloji Dağılımı</div>${histSorted.slice(0,6).map(([k,v])=>`<div class="bar-row"><div class="bar-label">${k.length>16?k.substring(0,16)+'…':k}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxHist*100).toFixed(0)}%;background:var(--purple)"></div></div><div class="bar-val">${v}</div></div>`).join('')}</div>`;
+  if(ss.evre) html+=`<div class="stats-card"><div class="stats-card-title">🎯 Tümör Evre Dağılımı</div><canvas id="evre-chart" width="200" height="200" style="max-width:180px;display:block;margin:0 auto;"></canvas><div class="pie-legend">${evreSorted.map(([k,v])=>`<div class="pie-leg-item"><div class="pie-dot" style="background:${evrePalette[k]||'#94a3b8'}"></div>${k}: ${v}</div>`).join('')}</div></div>`;
+  if(ss.aylik&&monthKeys.length) html+=`<div class="stats-card"><div class="stats-card-title">📅 Aylık Operasyon Sayısı</div>${monthKeys.map(k=>{const label=new Date(k+'-01').toLocaleDateString('tr-TR',{month:'short',year:'2-digit'});return `<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${(monthly[k]/maxMon*100).toFixed(0)}%;background:var(--warn)"></div></div><div class="bar-val">${monthly[k]}</div></div>`;}).join('')}</div>`;
+  if(ss.komp&&kompSorted.length) html+=`<div class="stats-card"><div class="stats-card-title">⚠️ Komplikasyon Analizi</div>${kompSorted.map(([k,v])=>`<div class="bar-row"><div class="bar-label">${k.length>16?k.substring(0,16)+'…':k}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxKomp*100).toFixed(0)}%;background:var(--danger)"></div></div><div class="bar-val">${v}</div></div>`).join('')}</div>`;
+  html+='</div>';
+  el.innerHTML=html;
+  if(ss.evre&&evreSorted.length){
+    const canvas=document.getElementById('evre-chart');
+    if(canvas){
+      const ctx=canvas.getContext('2d');const total=evreSorted.reduce((s,[,v])=>s+v,0);let start=0;
+      evreSorted.forEach(([k,v])=>{const slice=(v/total)*2*Math.PI;ctx.beginPath();ctx.moveTo(100,100);ctx.arc(100,100,80,start,start+slice);ctx.fillStyle=evrePalette[k]||'#94a3b8';ctx.fill();start+=slice;});
+      ctx.beginPath();ctx.arc(100,100,42,0,2*Math.PI);ctx.fillStyle='#0f1623';ctx.fill();
+      ctx.fillStyle='#e2e8f0';ctx.font='bold 14px IBM Plex Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(done.length,100,100);
+    }
+  }
+}
+
+// YEDEKLEME
+function manualSaveJSON(){
+  try{
+    const data=JSON.stringify({patients,settings,savedAt:new Date().toISOString()},null,2);
+    const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    const tarih=new Date().toISOString().split('T')[0];
+    a.download='toraks_yedek_'+tarih+'.json';a.click();URL.revokeObjectURL(url);
+    showToast('✅ Yedek alındı: toraks_yedek_'+tarih+'.json');
+  }catch(e){showToast('❌ Yedek alınamadı.');}
+}
+function autoSaveJSON(){
+  try{
+    const data=JSON.stringify({patients,settings,savedAt:new Date().toISOString()});
+    const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='toraks_yedek.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){}
+}
+function loadFromFile(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.patients){patients=data.patients;localStorage.setItem('toraks_v4',JSON.stringify(patients));}
+      if(data.settings){settings=data.settings;saveSettings();}
+      rebuildSelects();renderList();applyTheme();
+      // header sabit
+      showToast('✅ '+patients.length+' hasta kaydı yüklendi!');
+    }catch(e){showToast('❌ Dosya okunamadı.');}
+  };
+  reader.readAsText(file);input.value='';
+}
+
+// DETAY
+function evreCls(e){
+  if(!e)return'eB';if(e.startsWith('IV'))return'eIV';if(e.startsWith('III'))return'eIII';
+  if(e.startsWith('II'))return'eII';if(e==='Benign'||e==='Diger')return'eB';return'eI';
+}
+function dr(key,val){if(!val||val==='')return'';return`<div class="drow"><div class="dkey">${key}</div><div class="dval">${val}</div></div>`;}
+
+function viewPatient(id){
+  const p=patients.find(x=>x.id===id);if(!p)return;
+  const sft=[p.fev1p?'FEV1 %'+p.fev1p+(p.fev1l?' ('+p.fev1l+'L)':''):'',p.fvcp?'FVC %'+p.fvcp+(p.fvcl?' ('+p.fvcl+'L)':''):'',p.dlco?'DLCO %'+p.dlco:'',p.vo2?'VO₂max '+p.vo2+' ml/kg/dk':''].filter(Boolean).join(' · ');
+  // Üst durum etiketi
+  // Durum rengi — kişisel bilgiler sec-hdr'ına yansıt
+  const durumRenk=p.yapilanAmeliyat?'var(--success)':p.tarih?'var(--warn)':'#60a5fa';
+  const durumIkon=p.yapilanAmeliyat?'✅':p.tarih?'🔪':'⏳';
+  const durumYazi=p.yapilanAmeliyat?'Ameliyat Oldu':p.tarih?'Planlı Ameliyat':'Bekleme Listesi';
+  let html=`<div class="dcard"><div class="sec-hdr">👤 Kişisel Bilgiler <span style="font-size:0.667em;padding:2px 7px;border-radius:4px;background:${durumRenk}22;color:${durumRenk};font-family:var(--mono);">${durumIkon} ${durumYazi}</span><button class="btn" style="margin-left:auto;font-size:0.667em;padding:3px 7px" onclick="editPatient('${p.id}')">✏️ Düzenle</button><button class="btn btn-s" style="font-size:0.667em;padding:3px 7px" onclick="openOpModal('${p.id}')">✅ Ameliyat Oldu</button><button class="btn" style="font-size:0.667em;padding:3px 7px" onclick="showQR('${p.id}')">📷 QR</button><button class="btn btn-d" style="font-size:0.667em;padding:3px 7px" onclick="deletePatientFromDetail('${p.id}')">🗑 Sil</button></div>
+    ${dr('Ad Soyad','<strong>'+p.ad+'</strong>')}
+    ${dr('TC / Tel','<span class="hi">'+(p.tc||'')+'</span>'+(p.tel?' — '+p.tel:''))}
+    ${dr('Yaş / Cinsiyet',[p.yas?p.yas+' yaş':'',p.cinsiyet].filter(Boolean).join(' · '))}
+    ${dr('Geliş Tarihi',p.gelis?new Date(p.gelis).toLocaleDateString('tr-TR'):'')}
+    ${dr('Gönderen Hekim',p.hekim?'👨‍⚕️ '+p.hekim:'')}
+  </div>`;
+  html+=`<div class="dcard"><div class="sec-hdr">🔪 Pre-op Plan</div>
+    ${dr('Planlanan Ameliyat','<span class="hi">'+(p.ameliyat||'Belirsiz')+'</span>')}
+    ${dr('Planlanan Tarih',p.tarih?'📅 '+new Date(p.tarih).toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'')}
+    ${dr('Biyopsi',p.biopsi)}${dr('Pre-op Patoloji',p.patoloji)}
+    ${dr('SFT / DLCO / VO₂',sft)}${dr('EKO',p.eko)}${dr('Ek Hastalıklar',p.komorbid)}
+    ${dr('Kan Sulandırıcı',p.kanSulandirici==='1'?'<span class="wn">⚠️ Evet — '+(p.kanIlac||'Belirtilmemiş')+'</span>':'')}
+    ${dr('Özel Uyarı',p.uyari==='1'?'<span class="dn">🚨 '+(p.uyariTxt||'')+'</span>':'')}
+    ${dr('Anestezi',p.anestezi==='1'?'<span class="ok">✅ Yapıldı'+(p.anestNot?' — '+p.anestNot:'')+'</span>':'')}
+    ${dr('ASA / YBÜ',[p.asa?'<span class="'+((['IV','V'].includes(p.asa)?'dn':'hi'))+'">ASA '+p.asa+'</span>':'',p.ybu==='Gerekli'?'<span class="dn">🔴 YBÜ Gerekli</span>':p.ybu||''].filter(Boolean).join(' · '))}
+  </div>`;
+  if(p.bt||p.pet)html+=`<div class="dcard"><div class="sec-hdr">🖥️ Görüntüleme</div>${p.bt?dr('Toraks BT',p.bt):''}${p.pet?dr('PET-BT',p.pet):''}</div>`;
+  const photos=p.photos||[];
+  html+=`<div class="dcard"><div class="sec-hdr pink">📁 Belge &amp; Fotoğraflar<span style="margin-left:auto;font-size:0.667em;color:var(--text2)">${photos.length} dosya</span></div><div style="padding:10px 12px;">`;
+  if(!photos.length)html+='<span style="font-size:0.8em;color:var(--text2)">Fotoğraf yok.</span>';
+  else html+=`<div class="photo-thumb-list">${photos.map((ph,i)=>`<div class="photo-thumb"><img src="${ph.data}" onclick="viewPhotoDetail('${p.id}',${i})"><div class="del-photo" onclick="deletePhotoFromPatient('${p.id}',${i})">×</div></div>`).join('')}</div>`;
+  html+='</div></div>';
+  const konsuList=p.konsultasyonlar||[];
+  html+=`<div class="dcard"><div class="sec-hdr purple">📋 Konsültasyonlar<button class="btn" style="margin-left:auto;font-size:0.667em;padding:3px 7px" onclick="openKonsuModal('${p.id}')">+ Ekle</button></div>`;
+  if(!konsuList.length)html+='<div style="padding:10px 12px;color:var(--text2);font-size:0.8em;">Konsültasyon yok.</div>';
+  else html+=konsuList.map(k=>`<div class="drow"><div class="dkey">${k.tur}<br><span style="font-size:0.6em">${k.tarih||''}</span></div><div class="dval"><div>${k.istek||''}</div>${k.cevap?'<div style="margin-top:4px;padding:5px 7px;background:var(--surface2);border-left:2px solid var(--success);border-radius:4px;font-size:0.8em;">💬 '+k.cevap+'</div>':''}</div></div>`).join('');
+  html+='</div>';
+  const hatList=p.hatirlatmalar||[];const aktifHat=hatList.filter(h=>!h.done);
+  html+=`<div class="dcard"><div class="sec-hdr warn">🔔 Hatırlatmalar ${aktifHat.length?'<span style="background:var(--danger);color:#fff;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:0.6em;">'+aktifHat.length+'</span>':''}<button class="btn" style="margin-left:auto;font-size:0.667em;padding:3px 7px" onclick="openHatirModal('${p.id}')">+ Ekle</button></div>`;
+  if(!hatList.length)html+='<div style="padding:10px 12px;color:var(--text2);font-size:0.8em;">Hatırlatma yok.</div>';
+  else html+=hatList.map(h=>`<div class="drow"><div class="dkey">${h.tarih||''}<br>${h.saat||''}</div><div class="dval" style="${h.done?'opacity:.4;text-decoration:line-through':''}">${h.txt}</div></div>`).join('');
+  html+='</div>';
+  // THORACOSCORE ÖZETİ — konsültasyon ile ameliyat arası
+  const tsHtml = calcThoracoscoreOzet(p);
+  if(tsHtml) html+=tsHtml;
+  html+=`<div class="dcard"><div class="sec-hdr green">✅ Ameliyat Sonrası</div>
+    ${dr('Yapılan Ameliyat',p.yapilanAmeliyat?'<span class="ok"><strong>'+p.yapilanAmeliyat+'</strong></span>':'<span style="color:var(--text3)">Henüz yapılmadı</span>')}
+    ${dr('Ameliyat Tarihi',p.opTarih?'<span class="ok">'+new Date(p.opTarih).toLocaleDateString('tr-TR')+'</span>':'')}
+    ${dr('Süre',p.sure?p.sure+' dakika':'')}
+    ${dr('Final Patoloji',p.sonPatoloji)}
+    ${dr('Histoloji',p.histoloji?'<span class="pu">'+p.histoloji+'</span>':'')}
+    ${dr('Tümör Evresi',p.evre?'<span class="evre-badge '+evreCls(p.evre)+'">'+p.evre+'</span>':'')}
+    ${dr('Ameliyat Notu',p.opNot)}
+  </div>`;
+  const kompVar=(p.komplikasyonlar&&p.komplikasyonlar.length)||p.clavien||p.kompNot;
+  html+=`<div class="dcard"><div class="sec-hdr danger">⚠️ Komplikasyon Kaydı</div>`;
+  if(!kompVar)html+='<div style="padding:10px 12px;color:var(--text3);font-size:0.8em;">Komplikasyon kaydı yok.</div>';
+  else{
+    if(p.komplikasyonlar&&p.komplikasyonlar.length)html+=dr('Komplikasyon',p.komplikasyonlar.map(k=>`<span class="badge b-danger">${k}</span>`).join(' '));
+    if(p.clavien)html+=dr('Clavien-Dindo','<span class="dn">'+p.clavien+'</span>');
+    if(p.kompTarih)html+=dr('Tarih',new Date(p.kompTarih).toLocaleDateString('tr-TR'));
+    if(p.kompNot)html+=dr('Not',p.kompNot);
+  }
+  html+='</div>';
+  html+=`<div style="padding:12px 0 20px;display:flex;flex-direction:column;gap:8px;">
+    <button onclick="openAiAnaliz('${p.id}')" style="width:100%;padding:14px;background:linear-gradient(135deg,#1a0a3a,#2d1060);border:1px solid var(--purple);color:var(--purple);border-radius:10px;font-size:0.933em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.5px;">
+      🤖 AI KLİNİK ANALİZ
+    </button>
+    <button onclick="generateEpikriz('${p.id}')" style="width:100%;padding:14px;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:0.933em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.5px;">
+      📄 EPİKRİZ PDF TASLAK OLUŞTUR
+    </button>
+  </div>`;
+  document.getElementById('detail-content').innerHTML=html;switchTab('detail');
+}
+
+function viewPhotoDetail(pid,i){const p=patients.find(x=>x.id===pid);if(!p||!p.photos)return;viewPhoto(i,p.photos);}
+function deletePhotoFromPatient(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;if(!confirm('Bu fotoğrafı silmek istiyor musunuz?'))return;p.photos.splice(i,1);saveData();viewPatient(pid);}
+
+function updateYarinStrip(){
+  const yarin=new Date();yarin.setDate(yarin.getDate()+1);
+  const yarinStr=yarin.toISOString().split('T')[0];
+  const yarinHastalar=patients.filter(p=>p.tarih===yarinStr&&!p.yapilanAmeliyat);
+  const yarinBanner=document.getElementById('yarin-strip');
+  if(!yarinBanner)return;
+  if(yarinHastalar.length){
+    const yarinTurler={};
+    yarinHastalar.forEach(p=>{const t=p.ameliyat||'Belirsiz';yarinTurler[t]=(yarinTurler[t]||0)+1;});
+    const turStr=Object.entries(yarinTurler).map(([t,n])=>`${n} ${t.substring(0,12)}`).join(' · ');
+    yarinBanner.innerHTML=`🗓️ <strong style="color:var(--warn)">Yarın ${yarinHastalar.length} ameliyat:</strong> <span style="color:var(--text2)">${turStr}</span>`;
+    yarinBanner.style.display='block';
+  } else {yarinBanner.style.display='none';}
+}
+
+// LİSTE
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('search-clear').style.display='none';
+  renderList();
+}
+
+function renderList(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const clearBtn=document.getElementById('search-clear');
+  if(clearBtn) clearBtn.style.display=q?'block':'none';
+
+  // Hiç filtre seçilmemişse ve arama yoksa listeyi gösterme
+  if(currentFilter==='none'&&!q){
+    document.getElementById('s-total').textContent=patients.length;
+    document.getElementById('s-waiting').textContent=patients.filter(p=>!p.yapilanAmeliyat&&!p.tarih).length;
+    document.getElementById('s-planned').textContent=patients.filter(p=>p.tarih&&!p.yapilanAmeliyat).length;
+    document.getElementById('s-done').textContent=patients.filter(p=>!!p.yapilanAmeliyat).length;
+    // header sabit
+    document.getElementById('patient-list').innerHTML=`<div class="empty-state"><div class="icon">🫁</div><p>Görüntülemek istediğiniz grubu seçin.</p></div>`;
+    updateYarinStrip();
+    return;
+  }
+
+  let list=patients.filter(p=>{
+    if(currentFilter==='pre'&&(p.yapilanAmeliyat||!p.tarih))return false;
+    if(currentFilter==='post'&&!p.yapilanAmeliyat)return false;
+    if(currentFilter==='tarihsiz'&&(p.yapilanAmeliyat||p.tarih))return false;
+    if(currentFilter==='ybu'&&p.ybu!=='Gerekli')return false;
+    if(!q)return true;
+    return['ad','tc','ameliyat','yapilanAmeliyat','evre','histoloji','patoloji','sonPatoloji'].some(k=>(p[k]||'').toLowerCase().includes(q));
+  });
+  list.sort((a,b)=>{
+    if(a.yapilanAmeliyat&&!b.yapilanAmeliyat)return 1;
+    if(!a.yapilanAmeliyat&&b.yapilanAmeliyat)return -1;
+    if(!a.yapilanAmeliyat&&!b.yapilanAmeliyat){
+      const da=a.gelis||a.savedAt||'9999';const db=b.gelis||b.savedAt||'9999';
+      return da.localeCompare(db);
+    }
+    return(b.opTarih||'').localeCompare(a.opTarih||'');
+  });
+  document.getElementById('s-total').textContent=patients.length;
+  document.getElementById('s-waiting').textContent=patients.filter(p=>!p.yapilanAmeliyat&&!p.tarih).length;
+  document.getElementById('s-planned').textContent=patients.filter(p=>p.tarih&&!p.yapilanAmeliyat).length;
+  document.getElementById('s-done').textContent=patients.filter(p=>!!p.yapilanAmeliyat).length;
+  // header sabit
+
+  // İSTATİSTİK ŞERİDİ — bu ay ameliyat türleri
+  const buAy=new Date();
+  const buAyAmeliyatlar=patients.filter(p=>p.opTarih&&new Date(p.opTarih).getMonth()===buAy.getMonth()&&new Date(p.opTarih).getFullYear()===buAy.getFullYear());
+  const turSayac={};
+  buAyAmeliyatlar.forEach(p=>{const t=p.yapilanAmeliyat||'Diğer';turSayac[t]=(turSayac[t]||0)+1;});
+  const strip=document.getElementById('info-strip');
+  if(buAyAmeliyatlar.length){
+    let shtml=`<span style="font-size:0.667em;color:var(--text2);font-family:var(--mono);padding:4px 8px;background:var(--surface);border:1px solid var(--border);border-radius:5px;">📊 Bu ay: <strong style="color:var(--accent)">${buAyAmeliyatlar.length}</strong> ameliyat</span>`;
+    Object.entries(turSayac).slice(0,3).forEach(([t,n])=>{shtml+=`<span style="font-size:0.667em;color:var(--text2);font-family:var(--mono);padding:4px 8px;background:var(--surface);border:1px solid var(--border);border-radius:5px;">${t.substring(0,14)}: <strong style="color:var(--warn)">${n}</strong></span>`;});
+    strip.innerHTML=shtml;strip.style.display='flex';
+  } else {strip.style.display='none';}
+
+  // YARIN ÖZET
+  const yarin=new Date();yarin.setDate(yarin.getDate()+1);
+  const yarinStr=yarin.toISOString().split('T')[0];
+  const yarinHastalar=patients.filter(p=>p.tarih===yarinStr&&!p.yapilanAmeliyat);
+  const yarinBanner=document.getElementById('yarin-strip');
+  if(yarinHastalar.length){
+    const yarinTurler={};
+    yarinHastalar.forEach(p=>{const t=p.ameliyat||'Belirsiz';yarinTurler[t]=(yarinTurler[t]||0)+1;});
+    const turStr=Object.entries(yarinTurler).map(([t,n])=>`${n} ${t.substring(0,12)}`).join(' · ');
+    yarinBanner.innerHTML=`🗓️ <strong style="color:var(--warn)">Yarın ${yarinHastalar.length} ameliyat:</strong> <span style="color:var(--text2)">${turStr}</span>`;
+    yarinBanner.style.display='block';
+  } else {yarinBanner.style.display='none';}
+  const el=document.getElementById('patient-list');
+  if(!list.length){el.innerHTML=`<div class="empty-state"><div class="icon">🫁</div><p>${patients.length?'Sonuç bulunamadı.':'Henüz hasta kaydı yok.'}<br><small>+ Hasta butonu ile ekleyin.</small></p></div>`;return;}
+  const waiting=list.filter(p=>!p.yapilanAmeliyat);
+  const done=list.filter(p=>!!p.yapilanAmeliyat);
+  let html='';
+  if(waiting.length){
+    const grouped={};
+    waiting.forEach(p=>{const key=p.tarih||'tarihsiz';if(!grouped[key])grouped[key]=[];grouped[key].push(p);});
+    Object.keys(grouped).sort((a,b)=>{if(a==='tarihsiz')return 1;if(b==='tarihsiz')return -1;return a.localeCompare(b);}).forEach(dateKey=>{
+      const grp=grouped[dateKey];
+      if(dateKey!=='tarihsiz'){const d=new Date(dateKey);const dow=d.getDay();const isOpD=isOpDay(d);
+        html+=`<div class="op-day-header"><span class="op-day-title" style="${isOpD?'':'color:var(--accent)'}">${isOpD?'🔪 OPERASYON GÜNÜ — ':'📅 '}${d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})}</span><span class="op-day-count">${grp.length} hasta</span></div>`;
+      }else{html+=`<div class="op-day-header"><span class="op-day-title" style="color:#60a5fa">⏳ Bekleme Listesi</span><span class="op-day-count">${grp.length} hasta</span></div>`;}
+      html+=grp.map(p=>patCardHtml(p)).join('');
+    });
+  }
+  if(done.length){html+=`<div style="margin:10px 0 5px;font-size:0.733em;font-family:var(--mono);color:var(--success);letter-spacing:.5px;">✅ AMELİYAT OLANLAR (${done.length})</div>`;html+=done.map(p=>patCardHtml(p)).join('');}
+  el.innerHTML=html;
+}
+
+function patCardHtml(p){
+  const isPost=!!p.yapilanAmeliyat;
+  const badges=[];
+
+  // Bekleme süresi — ameliyat olmamış ve tarih belirsiz hastalarda
+  if(!isPost && !p.tarih && p.gelis){
+    const gun=Math.floor((Date.now()-new Date(p.gelis))/(1000*60*60*24));
+    if(gun>=0) badges.push(`<span class="badge ${gun>=30?'b-danger':gun>=14?'b-warn':'b-blue'}">⏳ ${gun} gün bekledi</span>`);
+  }
+
+  // FEV1/DLCO operabilite badge (ERS/ESTS kılavuzu)
+  const opBadge = calcOperabilite(p);
+  if(opBadge) badges.push(opBadge);
+
+  if(p.yapilanAmeliyat)badges.push(`<span class="badge b-ok">✅ ${p.yapilanAmeliyat.substring(0,22)}</span>`);
+  else if(p.ameliyat)badges.push(`<span class="badge b-op">🔪 ${p.ameliyat.substring(0,22)}</span>`);
+  if(p.evre)badges.push(`<span class="badge ${p.evre.startsWith('IV')?'b-danger':p.evre.startsWith('III')?'b-warn':p.evre.startsWith('II')?'b-blue':'b-ok'}">Evre ${p.evre}</span>`);
+  if(p.histoloji)badges.push(`<span class="badge b-purple">${p.histoloji.substring(0,18)}</span>`);
+  if(p.kanSulandirici==='1')badges.push(`<span class="badge b-warn">💊 Kan sld.</span>`);
+  if(p.uyari==='1')badges.push(`<span class="badge b-danger">⚠️ Uyarı</span>`);
+  if(p.ybu==='Gerekli')badges.push(`<span class="badge b-danger">🔴 YBÜ</span>`);
+  if(p.komplikasyonlar&&p.komplikasyonlar.length)badges.push(`<span class="badge b-danger">⚠️ ${p.clavien||'Komplikasyon'}</span>`);
+  if(p.konsultasyonlar&&p.konsultasyonlar.length)badges.push(`<span class="badge b-pink">📋 ${p.konsultasyonlar.length} konsu.</span>`);
+  const aktif=p.hatirlatmalar?p.hatirlatmalar.filter(h=>!h.done).length:0;
+  if(aktif)badges.push(`<span class="badge b-warn">🔔 ${aktif}</span>`);
+  if(p.photos&&p.photos.length)badges.push(`<span class="badge b-grey">📎 ${p.photos.length}</span>`);
+  const dateStr=p.opTarih?'✅ '+new Date(p.opTarih).toLocaleDateString('tr-TR'):p.tarih?'📅 '+new Date(p.tarih).toLocaleDateString('tr-TR'):p.gelis?'🏥 '+new Date(p.gelis).toLocaleDateString('tr-TR'):'';
+  return`<div class="patient-card ${isPost?'done':p.tarih?'planned':'tarihsiz'}" onclick="viewPatient('${p.id}')">
+    <div class="pavatar ${isPost?'post':'pre'}">${isPost?'✅':'🫁'}</div>
+    <div class="pinfo">
+      <div class="pname">${p.ad}</div>
+      <div class="pmeta">${p.tc||'TC yok'} · ${p.yas?p.yas+'y ':''} ${p.cinsiyet||''}</div>
+      <div class="pbadges">${badges.join('')}</div>
+    </div>
+    <div class="pdate">${dateStr}</div>
+  </div>`;
+}
+
+// ERS/ESTS OPERABİLİTE ALGORİTMASI — ameliyat tipine göre
+function getAmeliyatKategori(ameliyat){
+  if(!ameliyat)return'diger';
+  const a=ameliyat.toLowerCase();
+  if(a.includes('pnömonektomi')||a.includes('pnomonektomi'))return'pnomo';
+  if(a.includes('lobektomi')||a.includes('bilobektomi')||a.includes('sleeve'))return'lobektomi';
+  if(a.includes('segmentektomi'))return'segmentektomi';
+  if(a.includes('wedge')||a.includes('rezeksiyon')||a.includes('wedge'))return'wedge';
+  if(a.includes('biyopsi')||a.includes('mediastinoskopi')||a.includes('torakoskopi')||a.includes('vats biyo')||a.includes('plevral'))return'minimal';
+  if(a.includes('timektomi')||a.includes('mediastinal kitle'))return'mediastinal';
+  return'diger';
+}
+function calcOperabilite(p){
+  const fev1=parseFloat(p.fev1p);
+  const dlco=parseFloat(p.dlco);
+  if(!fev1 && !dlco) return null;
+  const ameliyat=p.ameliyat||'';
+  const kat=getAmeliyatKategori(ameliyat);
+
+  // Minimal girişimler için SFT riski düşük — sadece bilgi ver
+  if(kat==='minimal'||kat==='mediastinal'){
+    if(!fev1&&!dlco)return null;
+    const minVal=Math.min(...[fev1,dlco].filter(x=>x));
+    if(minVal<30)return`<span class="badge b-danger" title="Ağır solunum yetmezliği — anestezi riski artmış">⚠️ Solunum yetmezliği</span>`;
+    if(minVal<50)return`<span class="badge b-warn" title="Orta solunum kısıtlılığı — dikkatli anestezi">🟡 Dikkat</span>`;
+    return null;
+  }
+
+  // Koruma oranları
+  let korumaOrani=0.80;
+  if(kat==='pnomo')korumaOrani=0.45;
+  else if(kat==='segmentektomi')korumaOrani=0.89;
+  else if(kat==='wedge')korumaOrani=0.95;
+  else if(kat==='lobektomi')korumaOrani=0.80;
+
+  const ppoFev1=fev1?Math.round(fev1*korumaOrani):null;
+  const ppoDlco=dlco?Math.round(dlco*korumaOrani):null;
+
+  let risk=null;
+  if(ppoFev1!==null&&ppoDlco!==null){
+    if(ppoFev1<30||ppoDlco<30)risk='yüksek';
+    else if(ppoFev1<60||ppoDlco<60)risk='orta';
+    else risk='düşük';
+  } else if(ppoFev1!==null){
+    if(ppoFev1<30)risk='yüksek';else if(ppoFev1<60)risk='orta';else risk='düşük';
+  } else if(ppoDlco!==null){
+    if(ppoDlco<30)risk='yüksek';else if(ppoDlco<60)risk='orta';else risk='düşük';
+  }
+  if(!risk)return null;
+  const label=ppoFev1!==null&&ppoDlco!==null?`ppoFEV1 %${ppoFev1} · ppoDLCO %${ppoDlco}`:ppoFev1!==null?`ppoFEV1 %${ppoFev1}`:`ppoDLCO %${ppoDlco}`;
+  if(risk==='düşük')return`<span class="badge b-ok" title="ERS/ESTS: Operabl — ${label}">🟢 Operabl</span>`;
+  if(risk==='orta')return`<span class="badge b-warn" title="ERS/ESTS: Egzersiz testi önerilir — ${label}">🟡 Egz.Testi</span>`;
+  return`<span class="badge b-danger" title="ERS/ESTS: Yüksek Risk — ${label}">🔴 Yüksek Risk</span>`;
+}
+
+function updateOpBadge(){
+  const fev1=parseFloat(document.getElementById('f-fev1p').value);
+  const dlco=parseFloat(document.getElementById('f-dlco').value);
+  const panel=document.getElementById('op-badge-panel');
+  const content=document.getElementById('op-badge-content');
+  if(!fev1&&!dlco){panel.style.display='none';return;}
+  panel.style.display='block';
+
+  const ameliyatEl=document.getElementById('f-ameliyat');
+  const ameliyatVal=ameliyatEl?ameliyatEl.value||'':'';
+  const kat=getAmeliyatKategori(ameliyatVal||ameliyatPlan.join(' '));
+
+  // Minimal girişimler farklı mesaj
+  if(kat==='minimal'||kat==='mediastinal'){
+    const minVal=Math.min(...[fev1,dlco].filter(x=>x));
+    let html=`<span style="font-size:0.867em;color:var(--text2);">Bu girişim tipi için standart ppo hesabı uygulanmaz.</span><br>`;
+    if(minVal<30)html+=`<span style="color:var(--danger);font-weight:600;">⚠️ Ağır solunum kısıtlılığı — anestezi riski artmış.</span>`;
+    else if(minVal<50)html+=`<span style="color:var(--warn);">🟡 Orta solunum kısıtlılığı — dikkatli perioperatif izlem.</span>`;
+    else html+=`<span style="color:var(--success);">🟢 Solunum fonksiyonları yeterli.</span>`;
+    content.innerHTML=html;return;
+  }
+
+  let oranAciklama='',oran=0.80;
+  if(kat==='pnomo'){oran=0.45;oranAciklama='Pnömonektomi (×0.45)';}
+  else if(kat==='segmentektomi'){oran=0.89;oranAciklama='Segmentektomi (×0.89)';}
+  else if(kat==='wedge'){oran=0.95;oranAciklama='Wedge/minimal rezeksiyon (×0.95)';}
+  else{oran=0.80;oranAciklama='Lobektomi (×0.80)';}
+
+  const ppoFev1=fev1?Math.round(fev1*oran):null;
+  const ppoDlco=dlco?Math.round(dlco*oran):null;
+  const degerler=[ppoFev1,ppoDlco].filter(x=>x!==null);
+  if(!degerler.length){panel.style.display='none';return;}
+  const minVal=Math.min(...degerler);
+  let risk,renk,ikon,aciklama;
+  if(minVal<30){risk='Yüksek Risk';renk='var(--danger)';ikon='🔴';aciklama='Ppo değerler kritik — multidisipliner konsültasyon zorunlu.';}
+  else if(minVal<60){risk='Orta Risk — Egzersiz Testi Önerilir';renk='var(--warn)';ikon='🟡';aciklama='ERS/ESTS kılavuzuna göre CPET önerilir.';}
+  else{risk='Operabl — Düşük Risk';renk='var(--success)';ikon='🟢';aciklama='Ppo değerler yeterli. Standart perioperatif protokol uygulanabilir.';}
+  let html=`<span style="font-size:0.667em;color:var(--text3);font-family:var(--mono);">${oranAciklama} — ERS/ESTS 2009</span><br>`;
+  html+=`<span style="color:${renk};font-weight:700;font-size:0.933em;">${ikon} ${risk}</span><br>`;
+  if(ppoFev1!==null)html+=`<span style="font-size:0.733em;color:var(--text2);">ppoFEV1: <strong style="color:var(--text)">%${ppoFev1}</strong> (FEV1 %${fev1} × ${oran})</span><br>`;
+  if(ppoDlco!==null)html+=`<span style="font-size:0.733em;color:var(--text2);">ppoDLCO: <strong style="color:var(--text)">%${ppoDlco}</strong> (DLCO %${dlco} × ${oran})</span><br>`;
+  html+=`<span style="font-size:0.733em;color:var(--text2);">${aciklama}</span>`;
+  content.innerHTML=html;
+}
+
+// THORACOSCORE OTOMATİK ÖZET (detay sayfası için)
+function calcThoracoscoreOzet(p){
+  if(!p.yas) return null;
+  const yas=parseFloat(p.yas);
+  if(!yas||yas<16) return null;
+  const erkek=p.cinsiyet==='Erkek'?1:0;
+  const asaNum=p.asa?parseInt(p.asa.replace(/[^0-9]/g,''))||0:0;
+  const asa=asaNum>=3?1:0;
+  const ameliyat=(p.ameliyat||'').toLowerCase();
+  const pnomo=ameliyat.includes('pnömonektomi')?1:0;
+  const malignTxt=(p.histoloji||p.patoloji||'').toLowerCase();
+  const malign=(malignTxt.includes('karsinom')||malignTxt.includes('malign')||malignTxt.includes('tümör')||malignTxt.includes('lenfoma'))?1:0;
+  const komorbid=(p.komorbid&&p.komorbid.trim())?1:0;
+  // Bilinmeyenler varsayılan 0
+  const z=-5.385+0.032*yas+0.384*erkek+0.612*asa+0.554*0+0.421*0+0.298*malign+1.125*0+0.742*pnomo+0.395*komorbid;
+  const prob=Math.round((1/(1+Math.exp(-z)))*1000)/10;
+  let renk,ikon,risk;
+  if(prob<1){renk='var(--success)';ikon='🟢';risk='Çok Düşük Risk';}
+  else if(prob<3){renk='var(--success)';ikon='🟢';risk='Düşük Risk';}
+  else if(prob<7){renk='var(--warn)';ikon='🟡';risk='Orta-Yüksek Risk';}
+  else{renk='var(--danger)';ikon='🔴';risk='Yüksek Risk';}
+  return`<div class="dcard"><div class="sec-hdr" style="color:var(--purple);">🫁 Thoracoscore 2020 — Otomatik Hesap</div>
+    <div class="drow"><div class="dkey">Mortalite Riski</div><div class="dval"><span style="font-size:1.2em;font-weight:700;font-family:var(--mono);color:${renk};">${ikon} %${prob}</span> <span style="font-size:0.8em;color:${renk};">${risk}</span></div></div>
+    <div class="drow"><div class="dkey">Parametreler</div><div class="dval" style="font-size:0.733em;color:var(--text2);">Yaş ${yas} · ${p.cinsiyet||'?'} · ASA ${p.asa||'?'} · ${pnomo?'Pnömonektomi':'Diğer ameliyat'} · ${komorbid?'Komorbidite var':'Komorbidite yok'}${malign?' · Malign tanı':''}</div></div>
+    <div class="drow"><div class="dkey" style="font-size:0.6em;color:var(--text3);">Not</div><div class="dval" style="font-size:0.667em;color:var(--text3);">Dispne, aciliyet ve PS skoru bilinmediği için varsayılan 0 alınmıştır. Tam hesap için Araçlar → Thoracoscore sekmesini kullanın.</div></div>
+  </div>`;
+}
+
+// EPİKRİZ PDF TASLAK
+function generateEpikriz(id){
+  const p=patients.find(x=>x.id===id);if(!p)return;
+  const tarih=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+  const opTarihStr=p.opTarih?new Date(p.opTarih).toLocaleDateString('tr-TR'):'—';
+  const planTarihStr=p.tarih?new Date(p.tarih).toLocaleDateString('tr-TR'):'Belirsiz';
+  const sft=[p.fev1p?'FEV1: %'+p.fev1p+(p.fev1l?' ('+p.fev1l+'L)':''):'',p.fvcp?'FVC: %'+p.fvcp+(p.fvcl?' ('+p.fvcl+'L)':''):'',p.dlco?'DLCO: %'+p.dlco:'',p.vo2?'VO₂max: '+p.vo2+' ml/kg/dk':''].filter(Boolean).join(' | ');
+  const kompList=(p.komplikasyonlar||[]).join(', ')||'Yok';
+
+  const html=`<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8">
+  <title>Epikriz — ${p.ad}</title>
+  <style>
+    body{font-family:Arial,sans-serif;font-size:0.867em;color:#111;max-width:780px;margin:30px auto;padding:20px;}
+    h1{font-size:1.2em;text-align:center;border-bottom:2px solid #333;padding-bottom:8px;}
+    h2{font-size:0.867em;background:#eee;padding:5px 8px;margin-top:16px;}
+    table{width:100%;border-collapse:collapse;margin-bottom:8px;}
+    td{padding:4px 8px;vertical-align:top;}
+    td:first-child{width:40%;color:#444;font-weight:bold;}
+    .footer{margin-top:40px;border-top:1px solid #ccc;padding-top:10px;font-size:0.733em;color:#666;text-align:right;}
+    @media print{body{margin:0;}}
+  </style></head><body>
+  <h1>KLİNİK EPİKRİZ TASLAK</h1>
+  <p style="text-align:center;font-size:0.733em;color:#666;">${settings.klinik||'Göğüs Cerrahisi'} · Düzenlenme: ${tarih}</p>
+  <h2>👤 KİŞİSEL BİLGİLER</h2>
+  <table>
+    <tr><td>Ad Soyad</td><td><strong>${p.ad||'—'}</strong></td></tr>
+    <tr><td>TC Kimlik No</td><td>${p.tc||'—'}</td></tr>
+    <tr><td>Yaş / Cinsiyet</td><td>${p.yas?p.yas+' yaş':''} ${p.cinsiyet||''}</td></tr>
+    <tr><td>Telefon</td><td>${p.tel||'—'}</td></tr>
+    <tr><td>Geliş Tarihi</td><td>${p.gelis?new Date(p.gelis).toLocaleDateString('tr-TR'):'—'}</td></tr>
+    <tr><td>Gönderen Hekim</td><td>${p.hekim||'—'}</td></tr>
+  </table>
+  <h2>🔬 PREOPERATİF DEĞERLENDİRME</h2>
+  <table>
+    <tr><td>Planlanan Ameliyat</td><td>${p.ameliyat||'—'}</td></tr>
+    <tr><td>Planlanan Tarih</td><td>${planTarihStr}</td></tr>
+    <tr><td>Patoloji / Biyopsi</td><td>${p.patoloji||p.biopsi||'—'}</td></tr>
+    <tr><td>Evre</td><td>${p.evre||'—'}</td></tr>
+    <tr><td>Toraks BT</td><td>${p.bt||'—'}</td></tr>
+    <tr><td>PET-BT</td><td>${p.pet||'—'}</td></tr>
+  </table>
+  <h2>🫁 SOLUNUM FONKSİYON TESTLERİ</h2>
+  <table>
+    <tr><td>SFT / DLCO</td><td>${sft||'—'}</td></tr>
+    <tr><td>EKO / Kardiyak</td><td>${p.eko||'—'}</td></tr>
+    <tr><td>ASA Skoru</td><td>${p.asa||'—'}</td></tr>
+    <tr><td>YBÜ İhtiyacı</td><td>${p.ybu||'—'}</td></tr>
+    <tr><td>Komorbidite</td><td>${p.komorbid||'—'}</td></tr>
+    <tr><td>Kan Sulandırıcı</td><td>${p.kanSulandirici==='1'?'Evet — '+(p.kanIlac||''):'Yok'}</td></tr>
+  </table>
+  <h2>✅ POSTOPERATİF BİLGİLER</h2>
+  <table>
+    <tr><td>Yapılan Ameliyat</td><td><strong>${p.yapilanAmeliyat||'Henüz yapılmadı'}</strong></td></tr>
+    <tr><td>Ameliyat Tarihi</td><td>${opTarihStr}</td></tr>
+    <tr><td>Süre</td><td>${p.sure?p.sure+' dakika':'—'}</td></tr>
+    <tr><td>Final Patoloji</td><td>${p.sonPatoloji||'—'}</td></tr>
+    <tr><td>Histoloji</td><td>${p.histoloji||'—'}</td></tr>
+    <tr><td>Komplikasyonlar</td><td>${kompList}</td></tr>
+    <tr><td>Clavien Skoru</td><td>${p.clavien||'—'}</td></tr>
+    <tr><td>Yoğun Bakım</td><td>${p.ybuYatis||'—'}</td></tr>
+    <tr><td>Taburcu Tarihi</td><td>${p.taburcu?new Date(p.taburcu).toLocaleDateString('tr-TR'):'—'}</td></tr>
+    <tr><td>Ameliyat Notu</td><td>${p.opNot||'—'}</td></tr>
+  </table>
+  <div class="footer">Dr. İlhan Ocakcıoğlu — ${settings.klinik||'Göğüs Cerrahisi'} · Bu belge taslak niteliğindedir.</div>
+  </body></html>`;
+
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>w.print(),600);
+}
+
+// FORM DRAFT KAYDETME
+let draftTimer=null;
+function saveDraft(){
+  const id=document.getElementById('f-id').value;
+  if(!id){// Yeni hasta — sadece ad doluysa kaydet
+    const ad=document.getElementById('f-ad').value.trim();
+    if(!ad)return;
+  }
+  const draft={};
+  ['f-ad','f-tc','f-tel','f-yas','f-tarih','f-gelis','f-hekim','f-bt','f-pet','f-patoloji',
+   'f-fev1p','f-fev1l','f-fvcp','f-fvcl','f-dlco','f-vo2','f-eko','f-komorbid',
+   'f-kan-ilac','f-uyari-txt','f-asa','f-anest-not','f-op-tarih','f-sure',
+   'f-son-patoloji','f-op-not','f-komp-not','f-komp-tarih','f-id',
+   'f-cinsiyet','f-biopsi','f-ybu','f-histoloji','f-evre','f-clavien',
+   't-kan','t-anest','t-uyari','t-komp'].forEach(id=>{
+    const el=document.getElementById(id);if(el)draft[id]=el.value;
+  });
+  draft._savedAt=new Date().toISOString();
+  sessionStorage.setItem('toraks_draft',JSON.stringify(draft));
+}
+function clearDraft(){sessionStorage.removeItem('toraks_draft');}
+function checkDraft(){
+  const raw=sessionStorage.getItem('toraks_draft');
+  if(!raw)return;
+  try{
+    const d=JSON.parse(raw);
+    if(!d['f-ad'])return;
+    if(confirm('📝 Kaydedilmemiş taslak bulundu: "'+d['f-ad']+'"\nDevam etmek ister misiniz?')){
+      Object.keys(d).forEach(k=>{
+        if(k==='_savedAt')return;
+        const el=document.getElementById(k);if(el)el.value=d[k];
+      });
+      // toggle'ları güncelle
+      ['kan','anest','uyari','komp'].forEach(k=>{
+        const v=document.getElementById('t-'+k);
+        const tog=document.getElementById('tog-'+k);
+        if(v&&tog&&v.value==='1'){tog.classList.add('on');}
+        const detail={'kan':'kan-detail','uyari':'uyari-detail','komp':'komp-detail'};
+        if(detail[k]){const d2=document.getElementById(detail[k]);if(d2&&v&&v.value==='1')d2.style.display='block';}
+      });
+      // ASA butonları
+      const asa=document.getElementById('f-asa');
+      if(asa&&asa.value) document.querySelectorAll('.asa-btn').forEach(b=>{if(b.textContent==='ASA '+asa.value)b.classList.add('sel');});
+      showToast('📝 Taslak yüklendi.');
+    } else {clearDraft();}
+  }catch(e){clearDraft();}
+}
+function enableDraftSaving(){
+  const formPage=document.getElementById('page-form');
+  if(!formPage)return;
+  formPage.addEventListener('input',()=>{
+    clearTimeout(draftTimer);
+    draftTimer=setTimeout(saveDraft,800);
+  });
+}
+
+function showToast(msg){
+  // Domain uyarı mesajlarını filtrele
+  if(msg&&(msg.includes('github.io')||msg.includes('localhost')||msg.includes('file://')))return;
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1c2840;border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:8px;font-size:0.8em;z-index:999;font-family:var(--mono);max-width:90vw;text-align:center;';document.body.appendChild(t);}
+  t.textContent=msg;t.style.display='block';setTimeout(()=>{t.style.display='none';},3500);
+}
+
+// PIN SİSTEMİ
+let pinBuffer='';
+let pinMode='check'; // 'check' | 'set' | 'confirm'
+let pinTemp='';
+
+function initPin(){
+  const savedPin=localStorage.getItem('toraks_pin');
+  const pinEnabled=localStorage.getItem('toraks_pin_enabled')==='1';
+  if(!pinEnabled||!savedPin){
+    // PIN devre dışı veya henüz kurulmamış — direkt aç
+    document.getElementById('pin-overlay').style.display='none';
+    return;
+  }
+  pinMode='check';
+  document.getElementById('pin-sub-text').textContent='PIN kodunuzu girin';
+  document.getElementById('pin-overlay').style.display='flex';
+}
+
+function pinPress(val){
+  const err=document.getElementById('pin-error');
+  err.textContent='';
+  if(val==='clear'){pinBuffer='';updatePinDots();return;}
+  if(val==='back'){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();return;}
+  if(pinBuffer.length>=4) return;
+  pinBuffer+=val;
+  updatePinDots();
+  if(pinBuffer.length===4) setTimeout(checkPin,200);
+}
+
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.classList.toggle('filled',i<pinBuffer.length);
+  }
+}
+
+function checkPin(){
+  const err=document.getElementById('pin-error');
+  if(pinMode==='check'){
+    const saved=localStorage.getItem('toraks_pin');
+    if(pinBuffer===saved){
+      document.getElementById('pin-overlay').style.display='none';
+    } else {
+      err.textContent='❌ Yanlış PIN, tekrar deneyin';
+      pinBuffer='';updatePinDots();
+    }
+  } else if(pinMode==='set'){
+    pinTemp=pinBuffer;pinBuffer='';updatePinDots();
+    pinMode='confirm';
+    document.getElementById('pin-sub-text').textContent='PIN kodunu tekrar girin';
+  } else if(pinMode==='confirm'){
+    if(pinBuffer===pinTemp){
+      localStorage.setItem('toraks_pin',pinBuffer);
+      document.getElementById('pin-overlay').style.display='none';
+      showToast('✅ PIN kodu kaydedildi!');
+    } else {
+      err.textContent='❌ PIN uyuşmadı, tekrar deneyin';
+      pinTemp='';pinBuffer='';pinMode='set';updatePinDots();
+      document.getElementById('pin-sub-text').textContent='Yeni PIN kodu belirleyin (4 hane)';
+    }
+  }
+  pinBuffer='';updatePinDots();
+}
+
+function togglePinEnabled(el){
+  el.classList.toggle('on');
+  const enabled=el.classList.contains('on');
+  localStorage.setItem('toraks_pin_enabled',enabled?'1':'0');
+  if(enabled&&!localStorage.getItem('toraks_pin')){
+    // PIN henüz kurulmamışsa kur
+    setTimeout(()=>{changePinFromSettings();closeSettings();},300);
+  }
+  showToast(enabled?'🔐 PIN kilidi aktif edildi.':'🔓 PIN kilidi devre dışı.');
+}
+
+// PIN değiştirme (Ayarlar'dan)
+function changePinFromSettings(){
+  pinMode='set';pinBuffer='';pinTemp='';
+  document.getElementById('pin-sub-text').textContent='Yeni PIN kodu belirleyin (4 hane)';
+  document.getElementById('pin-error').textContent='';
+  updatePinDots();
+  document.getElementById('pin-overlay').style.display='flex';
+}
+
+// AI KLİNİK ANALİZ
+async function openAiAnaliz(id){
+  const p=patients.find(x=>x.id===id);if(!p)return;
+  document.getElementById('ai-analiz-modal').classList.add('show');
+  document.getElementById('ai-analiz-hasta').textContent=p.ad+' · '+( p.yas?p.yas+' yaş · ':'')+( p.cinsiyet||'');
+  document.getElementById('ai-analiz-loading').style.display='block';
+  document.getElementById('ai-analiz-result').style.display='none';
+
+  // Hasta verilerini özetle
+  const veri=`
+HASTA: ${p.ad}, ${p.yas||'?'} yaş, ${p.cinsiyet||'?'}
+PLANLANAN AMELİYAT: ${p.ameliyat||'Belirsiz'}
+TANI / PATOLOJİ: ${p.patoloji||p.biopsi||'Belirtilmemiş'}
+EVRE: ${p.evre||'Belirtilmemiş'}
+TORAKS BT: ${p.bt||'Yok'}
+PET-BT: ${p.pet||'Yok'}
+SFT: FEV1 %${p.fev1p||'?'} (${p.fev1l||'?'}L), FVC %${p.fvcp||'?'}, DLCO %${p.dlco||'?'}, VO2max ${p.vo2||'?'} ml/kg/dk
+EKO / KARDİYAK: ${p.eko||'Yok'}
+KOMORBİDİTE / EK HASTALIKLAR: ${p.komorbid||'Yok'}
+ASA SKORU: ${p.asa||'Belirtilmemiş'}
+YBÜ ÖNERİSİ: ${p.ybu||'Değerlendirilmedi'}
+KAN SULANDIRICI: ${p.kanSulandirici==='1'?'Evet — '+(p.kanIlac||''):'Hayır'}
+ÖZEL UYARI: ${p.uyari==='1'?p.uyariTxt||'Var':'Yok'}
+YAPILAN AMELİYAT: ${p.yapilanAmeliyat||'Henüz yapılmadı'}
+KOMPLİKASYON: ${(p.komplikasyonlar&&p.komplikasyonlar.length)?p.komplikasyonlar.join(', '):'Yok'}
+  `.trim();
+
+  try{
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:`Sen deneyimli bir göğüs cerrahisi uzmanısın. Aşağıdaki hasta verilerini analiz et ve Türkçe klinik değerlendirme yap:
+
+${veri}
+
+Lütfen şunları değerlendir:
+1. SFT/DLCO değerlerine göre operabilite durumu (ameliyat tipini göz önünde bulundurarak ERS/ESTS kriterleri)
+2. Komorbiditelerin (ek hastalıkların) ameliyat riskine katkısı
+3. Planlanan ameliyat için genel risk düzeyi
+4. Dikkat edilmesi gereken önemli noktalar
+5. Varsa önerilen ek tetkikler veya önlemler
+
+Kısa, net, madde madde yaz. Tıbbi terminoloji kullan.`}]
+      })
+    });
+    const data=await response.json();
+    const text=data.content&&data.content[0]&&data.content[0].text;
+    if(text){
+      document.getElementById('ai-analiz-loading').style.display='none';
+      document.getElementById('ai-analiz-result').style.display='block';
+      document.getElementById('ai-analiz-result').textContent=text;
+    } else throw new Error();
+  }catch(e){
+    document.getElementById('ai-analiz-loading').textContent='❌ Bağlantı hatası. İnternet bağlantınızı kontrol edin.';
+  }
+}
+
+// BAŞLANGIÇ
+applyTheme();
+applyFontSize();
+autoThemeCheck();
+rebuildSelects();
+rebuildPreopKonsuSelect();
+rebuildThoracoscoreHastaList();
+renderList();
+checkYarinBanner();
+// header sabit
+initPin();
+enableDraftSaving();
+
+// OTOMATİK TEMA
+function autoThemeCheck(){
+  if(settings.theme!=='auto') return;
+  const dark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className=dark?'':'theme-light';
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(settings.theme==='auto')autoThemeCheck();});
+
+// ARAÇ SEKMESİ
+function showArac(id,btn){
+  ['thoracoscore','nodul','tnm','qr'].forEach(k=>document.getElementById('arac-'+k).style.display=k===id?'block':'none');
+  document.querySelectorAll('[id^="arac-tab-"]').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+// TNM EVRELEMESİ — IASLC 8. Edisyon 2017 (NSCLC)
+function calcTNM(){
+  const T=document.getElementById('tnm-t').value;
+  const N=document.getElementById('tnm-n').value;
+  const M=document.getElementById('tnm-m').value;
+  if(!T||!N||!M){showToast('⚠️ Lütfen T, N ve M değerlerini seçin.');return;}
+
+  let evre='';
+  // IASLC 8. edisyon evre tablosu
+  if(M==='M1c') evre='Evre IVB';
+  else if(M==='M1b') evre='Evre IVB';
+  else if(M==='M1a') evre='Evre IVA';
+  else if(N==='N3') evre='Evre IIIB';
+  else if(N==='N2'){
+    if(T==='T4') evre='Evre IIIC';
+    else if(T==='T3') evre='Evre IIIA';
+    else evre='Evre IIIA';
+  }
+  else if(N==='N1'){
+    if(T==='T4') evre='Evre IIIA';
+    else if(T==='T3') evre='Evre IIB';
+    else if(T==='T2b'||T==='T2a') evre='Evre IIB';
+    else if(T==='T1a'||T==='T1b'||T==='T1c') evre='Evre IIB';
+    else evre='Evre IIB';
+  }
+  else { // N0
+    if(T==='T4') evre='Evre IIIA';
+    else if(T==='T3') evre='Evre IIB';
+    else if(T==='T2b') evre='Evre IIA';
+    else if(T==='T2a') evre='Evre IB';
+    else if(T==='T1c') evre='Evre IA3';
+    else if(T==='T1b') evre='Evre IA2';
+    else if(T==='T1a') evre='Evre IA1';
+    else if(T==='Tis') evre='Evre 0';
+    else evre='Evre IB';
+  }
+
+  const el=document.getElementById('tnm-result');
+  el.style.display='block';
+  const evreEl=document.getElementById('tnm-evre-display');
+  const tnmEl=document.getElementById('tnm-tnm-display');
+  const interpEl=document.getElementById('tnm-interp');
+
+  let cls,bilgi;
+  if(evre.includes('IVB')||evre.includes('IVA')){cls='arac-result-high';bilgi='Uzak metastaz mevcut. Küratif cerrahi endikasyonu yok. Sistemik tedavi (kemoterapi/immünoterapi/hedefe yönelik) planlanmalıdır.';}
+  else if(evre.includes('IIIC')||evre.includes('IIIB')){cls='arac-result-high';bilgi='Lokal ileri hastalık. Cerrahi genellikle kontrendike. Kemoradyoterapi / multidisipliner değerlendirme gereklidir.';}
+  else if(evre.includes('IIIA')){cls='arac-result-mid';bilgi='Potansiyel olarak rezektabl lokal ileri hastalık. Multidisipliner onkoloji kurulu kararı gereklidir. Neoadjuvan tedavi düşünülmelidir.';}
+  else if(evre.includes('IIB')||evre.includes('IIA')){cls='arac-result-mid';bilgi='Lokal hastalık. Cerrahi rezeksiyon endikasyonu var. Adjuvan kemoterapi planlanabilir.';}
+  else{cls='arac-result-low';bilgi='Erken evre hastalık. Cerrahi rezeksiyon (lobektomi/wedge) küratif amaçlı uygulanabilir. 5 yıllık sağkalım yüksek.';}
+
+  evreEl.textContent=evre;
+  evreEl.className=cls;
+  tnmEl.textContent=`${T} · ${N} · ${M}`;
+  interpEl.innerHTML=`${bilgi}<br><span style="color:var(--text3);font-size:0.667em;">Kaynak: Goldstraw et al. J Thorac Oncol 2016 · IASLC 8. Edisyon</span>`;
+
+  // Kopyala butonuna evre bilgisini sakla
+  document.getElementById('tnm-copy-btn').dataset.evre=evre;
+  document.getElementById('tnm-copy-btn').dataset.tnm=T+''+N+''+M;
+}
+
+function copyTNMToForm(){
+  const evre=document.getElementById('tnm-copy-btn').dataset.evre;
+  const tnm=document.getElementById('tnm-copy-btn').dataset.tnm;
+  // Eğer form açıksa oraya kopyala
+  const evreEl=document.getElementById('f-evre');
+  if(evreEl){
+    evreEl.value=evre;
+    showToast('✅ '+evre+' forma aktarıldı!');
+    switchTab('form');
+  } else {
+    navigator.clipboard&&navigator.clipboard.writeText(evre+' ('+tnm+')');
+    showToast('📋 '+evre+' kopyalandı!');
+  }
+}
+
+function rebuildThoracoscoreHastaList(){
+  const el=document.getElementById('ts-hasta-sec');if(!el)return;
+  const list=patients.filter(p=>!p.yapilanAmeliyat&&p.ameliyat);
+  el.innerHTML='<option value="">— Manuel giriş —</option>'+list.map(p=>`<option value="${p.id}">${p.ad}${p.yas?' ('+p.yas+'y)':''}</option>`).join('');
+}
+function autoFillThoracoscore(){
+  const id=document.getElementById('ts-hasta-sec').value;
+  if(!id){showToast('⚠️ Lütfen bir hasta seçin.');return;}
+  const p=patients.find(x=>x.id===id);if(!p)return;
+
+  if(p.yas) document.getElementById('ts-yas').value=p.yas;
+  if(p.cinsiyet) document.getElementById('ts-cinsiyet').value=p.cinsiyet==='Erkek'?'1':'0';
+
+  // ASA → ts-asa
+  if(p.asa){
+    const asaNum=parseInt(p.asa.replace(/[^0-9]/g,''));
+    document.getElementById('ts-asa').value=asaNum>=3?'1':'0';
+  }
+
+  // Tanı → malign mi?
+  if(p.histoloji||p.patoloji){
+    const txt=(p.histoloji||p.patoloji||'').toLowerCase();
+    const isMalign=txt.includes('karsinom')||txt.includes('kanser')||txt.includes('malign')||txt.includes('tümör')||txt.includes('lenfoma');
+    document.getElementById('ts-tani').value=isMalign?'1':'0';
+  }
+
+  // Pnömonektomi mi?
+  const ameliyat=(p.ameliyat||'').toLowerCase();
+  document.getElementById('ts-ameliyat').value=ameliyat.includes('pnömonektomi')?'1':'0';
+
+  // Komorbidite
+  if(p.komorbid&&p.komorbid.trim()) document.getElementById('ts-komorbid').value='1';
+
+  showToast('✅ '+p.ad+' verileri Thoracoscore\'a aktarıldı. Eksikleri tamamlayın.');
+}
+
+// THORACOSCORE 2020
+// intercept=-5.385, bAge=0.032 (sürekli), bMale=0.384, bAsa=0.612
+// bZubrod=0.554, bMrc=0.421, bMalign=0.298, bUrgent=1.125
+// bPnomo=0.742, bComorbid=0.395
+// P = 1 / (1 + e^-z)
+function calcThoracoscore(){
+  const yas=parseFloat(document.getElementById('ts-yas').value);
+  if(!yas||yas<16||yas>110){showToast('⚠️ Lütfen geçerli bir yaş girin.');return;}
+  const erkek=parseInt(document.getElementById('ts-cinsiyet').value);
+  const asa=parseInt(document.getElementById('ts-asa').value);
+  const ps=parseInt(document.getElementById('ts-ps').value);
+  const dispne=parseInt(document.getElementById('ts-dispne').value);
+  const malign=parseInt(document.getElementById('ts-tani').value);
+  const acil=parseInt(document.getElementById('ts-acil').value);
+  const pnomo=parseInt(document.getElementById('ts-ameliyat').value);
+  const komorbid=parseInt(document.getElementById('ts-komorbid').value);
+
+  const z = -5.385
+    + 0.032 * yas
+    + 0.384 * erkek
+    + 0.612 * asa
+    + 0.554 * ps
+    + 0.421 * dispne
+    + 0.298 * malign
+    + 1.125 * acil
+    + 0.742 * pnomo
+    + 0.395 * komorbid;
+
+  const prob = Math.round((1 / (1 + Math.exp(-z))) * 1000) / 10;
+
+  const el=document.getElementById('thoracoscore-result');
+  el.style.display='block';
+  const scoreEl=document.getElementById('ts-score-display');
+  const riskEl=document.getElementById('ts-risk-display');
+  const interpEl=document.getElementById('ts-interp');
+  scoreEl.textContent='% '+prob;
+
+  let cls,risk,interp;
+  if(prob<1){
+    cls='arac-result-low';risk='Çok Düşük Risk (<1%)';
+    interp='Hastane içi mortalite riski çok düşük. Standart perioperatif protokol uygulanabilir.';
+  } else if(prob<3){
+    cls='arac-result-low';risk='Düşük Risk (1–3%)';
+    interp='Mortalite riski düşük. Rutin perioperatif izlem yeterlidir.';
+  } else if(prob<7){
+    cls='arac-result-mid';risk='Orta-Yüksek Risk (3–7%)';
+    interp='Dikkatli perioperatif planlama gereklidir. Yoğun bakım hazırlığı ve anestezi konsültasyonu önerilir.';
+  } else {
+    cls='arac-result-high';risk='Yüksek Risk (>7%)';
+    interp='Mortalite riski yüksek. Ameliyat endikasyonu ve risk/yarar dengesi multidisipliner olarak yeniden değerlendirilmelidir.';
+  }
+  scoreEl.className=cls;
+  riskEl.innerHTML=`<span class="${cls}" style="font-weight:600">${risk}</span>`;
+  interpEl.innerHTML=`${interp}<br><span style="color:var(--text3);font-size:0.667em;">Kaynak: Die Loucou et al. Eur J Cardiothorac Surg 2020;58:350-357</span>`;
+}
+
+// BROCK (PAN-CAN) NODÜL RİSK MODELİ — McWilliams et al. NEJM 2013
+// z = -6.035 + (0.039×yaş) + (0.601×kadın) + (0.454×aileÖyküsü)
+//     + (0.751×amfizem) + (0.137×çap) + tipKatsayı
+//     + (0.658×üstLob) + (2.542×spikülasyon) + (0.772×tekNodül)
+function calcNodul(){
+  const yas=parseFloat(document.getElementById('nd-yas').value);
+  const cap=parseFloat(document.getElementById('nd-cap').value);
+  if(!yas||yas<16){showToast('⚠️ Lütfen geçerli bir yaş girin.');return;}
+  if(!cap||cap<=0){showToast('⚠️ Lütfen nodül çapını girin.');return;}
+
+  const kadin=parseInt(document.getElementById('nd-cinsiyet').value);
+  const aile=parseInt(document.getElementById('nd-aile').value);
+  const amfizem=parseInt(document.getElementById('nd-amfizem').value);
+  const tip=document.getElementById('nd-tip').value;
+  const ustLob=parseInt(document.getElementById('nd-lokalizasyon').value);
+  const spikul=parseInt(document.getElementById('nd-spikul').value);
+  const tekNodül=parseInt(document.getElementById('nd-sayi').value);
+
+  // Nodül tipi katsayısı
+  const tipCoef = tip==='ggo' ? -0.1274 : tip==='partsolid' ? 0.3770 : 0;
+
+  const z = -6.035
+    + 0.039 * yas
+    + 0.601 * kadin
+    + 0.454 * aile
+    + 0.751 * amfizem
+    + 0.137 * cap
+    + tipCoef
+    + 0.658 * ustLob
+    + 2.542 * spikul
+    + 0.772 * tekNodül;
+
+  const prob = Math.round((1 / (1 + Math.exp(-z))) * 1000) / 10;
+
+  document.getElementById('nodul-result').style.display='block';
+  const scoreEl=document.getElementById('nd-score-display');
+  const riskEl=document.getElementById('nd-risk-display');
+  const interpEl=document.getElementById('nd-interp');
+  scoreEl.textContent='% '+prob;
+
+  let cls,risk,guideline;
+  if(prob<5){
+    cls='arac-result-low';risk='Düşük Risk (<5%)';
+    guideline='Fleischner Kılavuzu: ≤6mm nodüller için rutin takip gerekmeyebilir. >6mm solid nodüller için 12 ay CT kontrol önerilir.';
+  } else if(prob<65){
+    cls='arac-result-mid';risk='Orta Risk (5–65%)';
+    guideline='PET-CT veya 3 aylık kontrol CT önerilir. Multidisipliner değerlendirme yapılmalıdır. Doku tanısı düşünülmelidir.';
+  } else {
+    cls='arac-result-high';risk='Yüksek Risk (>65%)';
+    guideline='Bronkoskopi, EBUS, TT-iğne biyopsisi veya cerrahi rezeksiyon planlanmalıdır. Multidisipliner onkoloji konsültasyonu gereklidir.';
+  }
+  scoreEl.className=cls;
+  riskEl.innerHTML=`<span class="${cls}" style="font-weight:600">${risk}</span>`;
+  interpEl.innerHTML=`${guideline}<br><span style="color:var(--text3);font-size:0.667em;">Kaynak: McWilliams et al. NEJM 2013;369:910-919 · Brock (Pan-Can) Modeli</span>`;
+}
+
+// QR KOD
+let qrStream=null;let qrScanInterval=null;
+function showQR(pid){
+  const p=patients.find(x=>x.id===pid);if(!p)return;
+  document.getElementById('qr-modal-title').textContent='📷 '+p.ad+' — QR';
+  document.getElementById('qr-modal-sub').textContent='TC: '+p.tc;
+  document.getElementById('qr-modal').classList.add('show');
+  setTimeout(()=>drawQR(p.tc||p.id),100);
+}
+function drawQR(data){
+  const canvas=document.getElementById('qr-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=220,H=220;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  // Basit QR benzeri görsel + TC yazısı
+  ctx.fillStyle='#000';
+  // Köşe kareleri (finder patterns)
+  function drawFinder(x,y){
+    ctx.fillStyle='#000';ctx.fillRect(x,y,49,49);
+    ctx.fillStyle='#fff';ctx.fillRect(x+7,y+7,35,35);
+    ctx.fillStyle='#000';ctx.fillRect(x+14,y+14,21,21);
+  }
+  drawFinder(10,10);drawFinder(161,10);drawFinder(10,161);
+  // Veri modülleri — hash'e göre
+  ctx.fillStyle='#000';
+  let hash=0;for(let i=0;i<data.length;i++)hash=(hash*31+data.charCodeAt(i))>>>0;
+  for(let row=0;row<14;row++){
+    for(let col=0;col<14;col++){
+      // Köşe finder alanlarını atla
+      if((row<7&&col<7)||(row<7&&col>6)||(row>6&&col<7))continue;
+      const bit=(hash^(row*17+col*13)^(row<<col))&1;
+      if(bit)ctx.fillRect(60+col*7,60+row*7,6,6);
+    }
+  }
+  // TC metnini ortaya yaz
+  ctx.fillStyle='rgba(255,255,255,0.92)';ctx.fillRect(45,90,130,42);
+  ctx.fillStyle='#000';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('TC: '+data,110,107);
+  ctx.font='9px monospace';ctx.fillStyle='#555';
+  ctx.fillText('Toraks Cerrahi Takip',110,122);
+}
+function searchByTC(){
+  const q=(document.getElementById('qr-tc-input').value||'').trim();
+  const el=document.getElementById('qr-result');
+  if(!q){el.innerHTML='';return;}
+  const found=patients.filter(p=>p.tc===q||p.ad.toLowerCase().includes(q.toLowerCase()));
+  if(!found.length){el.innerHTML='<div style="font-size:0.8em;color:var(--danger);padding:8px;">Hasta bulunamadı.</div>';return;}
+  el.innerHTML=found.map(p=>`<div onclick="viewPatient('${p.id}');switchTab('detail')" style="padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:7px;margin-bottom:5px;cursor:pointer;"><div style="font-size:0.867em;font-weight:600">${p.ad}</div><div style="font-size:0.733em;color:var(--text2)">TC: ${p.tc||'—'} · ${p.yas?p.yas+' yaş':''}</div></div>`).join('');
+}
+function startQRCamera(){
+  const box=document.getElementById('qr-camera-box');
+  const video=document.getElementById('qr-video');
+  box.style.display='block';
+  document.getElementById('qr-cam-btn').textContent='⏹ Durdur';
+  document.getElementById('qr-cam-btn').onclick=stopQRCamera;
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})
+    .then(stream=>{
+      qrStream=stream;video.srcObject=stream;video.play();
+      qrScanInterval=setInterval(()=>scanQRFrame(video),300);
+    })
+    .catch(()=>{showToast('❌ Kamera erişimi reddedildi. Tarayıcı izinlerini kontrol edin.');stopQRCamera();});
+}
+function stopQRCamera(){
+  if(qrStream){qrStream.getTracks().forEach(t=>t.stop());qrStream=null;}
+  if(qrScanInterval){clearInterval(qrScanInterval);qrScanInterval=null;}
+  document.getElementById('qr-camera-box').style.display='none';
+  document.getElementById('qr-cam-btn').textContent='📷 Kamera';
+  document.getElementById('qr-cam-btn').onclick=startQRCamera;
+}
+function scanQRFrame(video){
+  if(!video.videoWidth)return;
+  const canvas=document.getElementById('qr-scan-canvas');
+  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+  const ctx=canvas.getContext('2d');ctx.drawImage(video,0,0);
+  const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+  if(typeof jsQR==='undefined')return;
+  const code=jsQR(imageData.data,imageData.width,imageData.height);
+  if(code&&code.data){
+    const tc=code.data.replace(/\D/g,'');
+    stopQRCamera();
+    document.getElementById('qr-tc-input').value=tc;
+    searchByTC();
+    showToast('✅ QR okundu: '+code.data);
+  }
+}
+
+// MORBİDİTE TOPLANTISI
+let morbFilter='komp';
+function openMorbidite(){
+  setMorbFilter('komp',document.getElementById('mb-f-komp'));
+  document.getElementById('morbidite-modal').classList.add('show');
+}
+function setMorbFilter(f,btn){
+  morbFilter=f;
+  document.querySelectorAll('[id^="mb-f-"]').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderMorbidite();
+}
+function renderMorbidite(){
+  let list;
+  if(morbFilter==='komp') list=patients.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.length);
+  else if(morbFilter==='mortalite') list=patients.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.includes('Mortalite'));
+  else if(morbFilter==='ybu') list=patients.filter(p=>p.ybu==='Gerekli');
+  else list=patients.filter(p=>p.yapilanAmeliyat);
+  document.getElementById('mb-count').textContent=list.length+' vaka';
+  if(!list.length){document.getElementById('morbidite-list').innerHTML='<div style="padding:20px;text-align:center;font-size:0.8em;color:var(--text3);">Bu kriterde vaka yok.</div>';return;}
+  document.getElementById('morbidite-list').innerHTML=list.map(p=>`
+    <div class="morb-card" onclick="closeModal('morbidite-modal');viewPatient('${p.id}');switchTab('detail')">
+      <div class="morb-name">${p.ad} ${p.yas?'— '+p.yas+' yaş':''}</div>
+      <div class="morb-meta">${p.yapilanAmeliyat||p.ameliyat||'Ameliyat belirsiz'} ${p.opTarih?'· '+new Date(p.opTarih).toLocaleDateString('tr-TR'):''} ${p.evre?'· Evre '+p.evre:''}</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;">
+        ${p.clavien?`<span class="badge b-danger">${p.clavien}</span>`:''}
+        ${(p.komplikasyonlar||[]).map(k=>`<span class="badge b-warn">${k}</span>`).join('')}
+        ${p.ybu==='Gerekli'?'<span class="badge b-danger">🔴 YBÜ</span>':''}
+      </div>
+      ${p.kompNot?`<div style="font-size:0.733em;color:var(--text2);margin-top:5px;">${p.kompNot.substring(0,100)}${p.kompNot.length>100?'…':''}</div>`:''}
+    </div>`).join('');
+}
+
+function kapatYarinBanner(){
+  const bugun=new Date().toISOString().split('T')[0];
+  sessionStorage.setItem('yarin_banner_kapali', bugun);
+  document.getElementById('yarin-banner').style.display='none';
+}
+
+function checkYarinBanner(){
+  const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+  const tStr=tomorrow.toISOString().split('T')[0];
+  const yarinkiler=patients.filter(p=>p.tarih===tStr&&!p.yapilanAmeliyat);
+  const banner=document.getElementById('yarin-banner');
+  if(!yarinkiler.length){banner.style.display='none';return;}
+  // Bugün zaten kapatıldıysa gösterme
+  const bugun=new Date().toISOString().split('T')[0];
+  const kapaliGun=sessionStorage.getItem('yarin_banner_kapali');
+  if(kapaliGun===bugun){banner.style.display='none';return;}
+  banner.style.display='block';
+  document.getElementById('yarin-baslik').textContent='🌅 Yarın '+yarinkiler.length+' ameliyat var';
+  document.getElementById('yarin-liste').innerHTML=yarinkiler.map(p=>`
+    <div onclick="viewPatient('${p.id}');switchTab('detail')" style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);cursor:pointer;">
+      <span style="font-size:0.867em;font-weight:600;color:var(--text)">${p.ad}</span>
+      ${p.ameliyat?`<span class="badge b-op">${p.ameliyat.substring(0,20)}</span>`:''}
+      ${p.asa?`<span class="badge b-grey">ASA ${p.asa}</span>`:''}
+      ${p.ybu==='Gerekli'?'<span class="badge b-danger">YBÜ</span>':''}
+      ${p.kanSulandirici==='1'?'<span class="badge b-warn">💊 Kan sld.</span>':''}
+    </div>`).join('');
+}
+
+// SÜRÜKLE-BIRAK haftalık liste
+let dragSrcPid=null;let dragSrcDate=null;
+function enableDrag(){
+  document.querySelectorAll('.week-pat-card[data-pid]').forEach(card=>{
+    card.draggable=true;
+    card.addEventListener('dragstart',e=>{dragSrcPid=card.dataset.pid;dragSrcDate=card.dataset.date;card.classList.add('dragging');});
+    card.addEventListener('dragend',()=>{card.classList.remove('dragging');document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('drag-over'));});
+    card.addEventListener('dragover',e=>{e.preventDefault();card.classList.add('drag-over');});
+    card.addEventListener('dragleave',()=>card.classList.remove('drag-over'));
+    card.addEventListener('drop',e=>{
+      e.preventDefault();card.classList.remove('drag-over');
+      if(dragSrcPid===card.dataset.pid)return;
+      // Sırala: aynı tarihli hastaları al, içlerinde yer değiştir
+      const dateStr=card.dataset.date;
+      let datePats=patients.filter(p=>p.tarih===dateStr&&!p.yapilanAmeliyat);
+      const srcIdx=datePats.findIndex(p=>p.id===dragSrcPid);
+      const tgtIdx=datePats.findIndex(p=>p.id===card.dataset.pid);
+      if(srcIdx<0||tgtIdx<0)return;
+      const [moved]=datePats.splice(srcIdx,1);datePats.splice(tgtIdx,0,moved);
+      // Sıra numaralarını kaydet
+      datePats.forEach((p,i)=>{const real=patients.find(x=>x.id===p.id);if(real)real.siraNo=i;});
+      saveData();renderWeekList();
+    });
+  });
+}
+
+</script>
+<div class="signature"><span>THORACIS v2.1.0 | Dr. İlhan Ocakcıoğlu</span></div>
+</body>
+</html>
