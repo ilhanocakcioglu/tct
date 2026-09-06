@@ -1,7 +1,7 @@
 <!--
   ============================================================
   THORACIS - Surgical Tracker
-  Version: TCT v2.1.0
+  Version: TCT v2.2.0
   Developer: Dr. İlhan Ocakcıoğlu
 
   © 2026 Dr. İlhan Ocakcıoğlu. All rights reserved.
@@ -63,14 +63,6 @@ body.theme-light .b-grey{background:#e6f7f4;color:#3d8c82;}
 body.theme-light .b-purple{background:#ede9fe;color:#5b21b6;}
 body.theme-light .b-blue{background:#dbeafe;color:#1e40af;}
 body.theme-light .b-pink{background:#fce7f3;color:#9d174d;}
-body.theme-teal{--bg:#0d2e2e;--surface:#1a4a4a;--surface2:#1f5555;--surface3:#256060;--border:#2a6060;--accent:#00c9b1;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#d4f5ef;--text2:#5dbfb5;--text3:#3d9e90;}
-body.theme-wine{--bg:#2d0a14;--surface:#4a1525;--surface2:#561a2c;--surface3:#622035;--border:#6b2035;--accent:#ff6b9d;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#ffd6e7;--text2:#d4638a;--text3:#a84d6e;}
-body.theme-navy{--bg:#0d1a35;--surface:#1a2f55;--surface2:#1f3660;--surface3:#253d6b;--border:#2a4470;--accent:#5b9af5;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#d6e8ff;--text2:#6b8fcc;--text3:#4a6fa8;}
-body.theme-forest{--bg:#0a2010;--surface:#1a3d20;--surface2:#1f4525;--surface3:#254d2a;--border:#2a5530;--accent:#00d48a;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#d4f5e0;--text2:#5db87a;--text3:#3d9e5a;}
-/* SOMON 1 — pembe kırmızı */
-body.theme-salmon1{--bg:#1f0d14;--surface:#3a1825;--surface2:#45202e;--surface3:#502838;--border:#5a2838;--accent:#ff6f8a;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#ffd6de;--text2:#c05070;--text3:#a03858;}
-/* SOMON 2 — turuncu somon */
-body.theme-salmon2{--bg:#1f1008;--surface:#3a2010;--surface2:#452818;--surface3:#503020;--border:#5a3018;--accent:#ff9472;--success:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#ffdacc;--text2:#c06040;--text3:#a04828;}
 
 /* ORTA GÜMÜŞ */
 body.theme-silver{--bg:#dde2e8;--surface:#edf0f4;--surface2:#e0e4ea;--surface3:#d4d8de;--border:#c8d0da;--accent:#64748b;--success:#059669;--warn:#d97706;--danger:#dc2626;--text:#1a202c;--text2:#718096;--text3:#a0aec0;}
@@ -225,6 +217,9 @@ main{padding:10px;max-width:960px;margin:0 auto;}
 .b-blue{background:#1e3a5f;color:#60a5fa;}
 .b-pink{background:#500724;color:var(--pink);}
 .pdate{font-size:0.667em;color:var(--text2);text-align:right;font-family:var(--mono);min-width:62px;}
+.btn-icon-danger{width:23px;height:23px;flex-shrink:0;border-radius:6px;border:none;background:transparent;color:var(--text3);font-size:0.8em;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:all .15s;}
+.btn-icon-danger:hover{background:var(--danger);color:#fff;}
+@media(max-width:600px){.btn-icon-danger{width:18px;height:18px;font-size:0.65em;}}
 .form-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;}
 .sec-hdr{background:var(--surface2);padding:8px 13px;font-size:0.667em;font-weight:600;color:var(--accent);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
 .sec-hdr.green{color:var(--success);}
@@ -311,6 +306,15 @@ select option{background:var(--surface);}
 .settings-label.open .s-arrow{transform:rotate(90deg);}
 .settings-body{display:none;padding:10px 14px;border-top:1px solid var(--border);background:var(--surface);font-size:1rem;}
 .settings-body.open{display:block;}
+.settings-cat{margin-bottom:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.settings-cat-label{font-size:0.8em;font-weight:700;font-family:var(--mono);color:var(--text);text-transform:uppercase;letter-spacing:.5px;padding:12px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;background:var(--surface3);}
+.settings-cat-label:hover{background:var(--surface2);}
+.settings-cat-label .cat-count{color:var(--text3);font-weight:400;font-family:var(--sans);font-size:0.85em;margin-left:auto;}
+.settings-cat-label .s-arrow{font-size:0.667em;color:var(--text3);transition:transform .2s;flex-shrink:0;}
+.settings-cat-label.open .s-arrow{transform:rotate(90deg);}
+.settings-cat-body{display:none;padding:8px;background:var(--bg);}
+.settings-cat-body.open{display:block;}
+.settings-cat-body .settings-section:last-child{margin-bottom:0;}
 .tag-list{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}
 .tag-item{padding:4px 10px;border-radius:5px;background:var(--surface2);border:1px solid var(--border);font-size:0.8em;display:flex;align-items:center;gap:5px;}
 .tag-del{cursor:pointer;color:var(--danger);font-size:0.8em;opacity:.6;}
@@ -363,26 +367,15 @@ body.theme-emerald .cal-day.op-day .day-num,
 body.theme-slate .cal-day.op-day .day-num,
 body.theme-indigo .cal-day.op-day .day-num,
 body.theme-silver .cal-day.op-day .day-num{color:var(--accent);}
-/* Orta ve somon temalar — accent border, surface3 arka plan */
-body.theme-teal .cal-day.op-day,
-body.theme-wine .cal-day.op-day,
-body.theme-navy .cal-day.op-day,
-body.theme-forest .cal-day.op-day,
-body.theme-salmon1 .cal-day.op-day,
-body.theme-salmon2 .cal-day.op-day{border-color:var(--accent);border-width:2px;background:var(--surface3);}
-body.theme-teal .cal-day.op-day .day-num,
-body.theme-wine .cal-day.op-day .day-num,
-body.theme-navy .cal-day.op-day .day-num,
-body.theme-forest .cal-day.op-day .day-num,
-body.theme-salmon1 .cal-day.op-day .day-num,
-body.theme-salmon2 .cal-day.op-day .day-num{color:var(--accent);}
 .cal-pat-badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:11px;font-size:0.8em;font-weight:700;font-family:var(--mono);background:var(--warn);color:#000;}
 .cal-pat-badge.done{background:var(--success);color:#000;}
 .cal-badges{display:flex;gap:3px;flex-wrap:wrap;align-items:center;justify-content:center;width:100;}
 /* HAFTALIK AMELİYAT KARTLARI */
-.week-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-@media(max-width:500px){.week-cols{grid-template-columns:1fr;}}
-.day-col{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.week-cols{display:flex;align-items:flex-start;gap:10px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;}
+.week-cols::-webkit-scrollbar{height:8px;}
+.week-cols::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.day-col{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;flex:0 0 270px;width:270px;scroll-snap-align:start;}
+@media(max-width:400px){.day-col{flex-basis:88vw;width:88vw;}}
 .day-col.op-col{border-color:var(--warn);}
 .day-col-hdr{padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .day-col-title{font-size:0.733em;font-family:var(--mono);color:var(--warn);font-weight:600;}
@@ -413,6 +406,17 @@ body.theme-salmon2 .cal-day.op-day .day-num{color:var(--accent);}
 #photo-viewer.show{display:flex;}
 #photo-viewer img{max-width:95vw;max-height:85vh;border-radius:8px;}
 #photo-viewer .close-pv{position:absolute;top:14px;right:18px;font-size:1.867em;cursor:pointer;color:#fff;opacity:.7;}
+/* AMELİYAT YAKLAŞIMI (VATS/Açık/Robotik) */
+.yak-group{display:flex;gap:6px;margin-top:9px;}
+.yak-btn{flex:1;padding:3px 4px;border-radius:6px;border:1px solid var(--border);background:color-mix(in srgb, var(--surface2) 50%, transparent);color:var(--text2);font-size:0.7em;font-family:var(--mono);font-weight:600;cursor:pointer;text-align:center;transition:all .15s;}
+.yak-btn.vats.sel{background:rgba(0,194,212,0.14);border-color:rgba(0,194,212,0.5);color:var(--accent);}
+.yak-btn.acik.sel{background:rgba(245,158,11,0.14);border-color:rgba(245,158,11,0.5);color:var(--warn);}
+.yak-btn.robot.sel{background:rgba(167,139,250,0.14);border-color:rgba(167,139,250,0.5);color:var(--purple);}
+.yak-badge{font-size:0.85em;padding:0 5px;border-radius:6px;font-weight:600;margin-left:3px;}
+.yak-badge.vats{background:rgba(0,194,212,0.18);color:var(--accent);}
+.yak-badge.acik{background:rgba(245,158,11,0.18);color:var(--warn);}
+.yak-badge.robot{background:rgba(167,139,250,0.18);color:var(--purple);}
+
 /* SES KAYIT */
 .mic-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8em;}
 .mic-btn.recording{border-color:var(--danger);color:var(--danger);animation:pulse 1s infinite;}
@@ -687,7 +691,11 @@ body{padding-bottom:40px;}
         <select id="f-ameliyat" style="flex:1;background:transparent;border:none;color:var(--text);font-family:var(--sans);font-size:0.867em;outline:none;"><option value="">Seçiniz</option></select>
         <button class="btn" style="font-size:0.733em;padding:4px 8px;white-space:nowrap;" onclick="addAmeliyatPlan()">+ Ekle</button>
       </div>
-      <input type="text" id="f-ameliyat-serbest" placeholder="Serbest metin: örn. Mediastinoskopi → frozen → Lobektomi" style="margin-top:5px;font-size:0.8em;">
+      <div class="yak-group" id="yak-group-plan">
+        <button type="button" class="yak-btn vats" onclick="setYak('plan','VATS',this)">VATS</button>
+        <button type="button" class="yak-btn acik" onclick="setYak('plan','Açık',this)">Açık</button>
+        <button type="button" class="yak-btn robot" onclick="setYak('plan','Robotik',this)">Robotik</button>
+      </div>
       <input type="hidden" id="f-ameliyat-plan-json">
     </div>
   </div>
@@ -695,6 +703,17 @@ body{padding-bottom:40px;}
   <div class="sec-hdr">🏥 Geçirilmiş Ameliyatlar</div>
   <div style="padding:8px 12px;border-bottom:1px solid var(--border);">
     <textarea id="f-gecirilmis-ameliyat" rows="3" placeholder="Örn: 2018 - Sağ alt lob lobektomi · 2020 - Kolesistektomi · 2022 - Kalça protezi..." style="width:100%;font-size:0.8em;resize:vertical;"></textarea>
+  </div>
+
+  <div class="sec-hdr">📋 Anamnez</div>
+  <div class="fgrid">
+    <div class="ff full">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="flabel" style="margin-bottom:0;">Anamnez</div>
+        <button class="mic-btn" id="mic-anamnez" onclick="toggleMic('f-anamnez','mic-anamnez')">🎙️ Sesle Yaz</button>
+      </div>
+      <textarea id="f-anamnez" rows="4" placeholder="Hastanın anamnezi / hikayesi..."></textarea>
+    </div>
   </div>
 
   <div class="sec-hdr">🫁 Görüntüleme &amp; Pre-op Tanı</div>
@@ -731,12 +750,27 @@ body{padding-bottom:40px;}
     <div class="ff"><div class="flabel">Biyopsi Yöntemi</div>
       <select id="f-biopsi">
         <option value="">Yok / Bilinmiyor</option><option>Tru-cut biyopsi</option>
-        <option>Bronkoskopik biyopsi (DOB/Bx)</option><option>EBUS</option>
+        <option>Bronkoskopik biyopsi (FOB/Bx)</option><option>EBUS</option>
         <option>VATS biyopsi</option><option>Mediastinoskopi</option>
         <option>İnce iğne aspirasyon (İİAB)</option><option>Torakoskopi</option>
         <option>Açık biyopsi</option><option>Diğer</option>
       </select></div>
     <div class="ff"><div class="flabel">Pre-op Patoloji Sonucu</div><textarea id="f-patoloji" style="min-height:45px" placeholder="Pre-op patoloji..."></textarea></div>
+  </div>
+
+  <div class="sec-hdr">🧪 Diğer Görüntüleme / Tetkikler</div>
+  <div id="diger-tetkik-list" style="min-height:0;"></div>
+  <div style="padding:10px 12px;border-bottom:1px solid var(--border);">
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
+      <select id="f-tetkik-tur" style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;"></select>
+      <input type="date" id="f-tetkik-tarih" style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;">
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="flabel" style="margin-bottom:0;">Bulgu</div>
+      <button class="mic-btn" id="mic-tetkik-bulgu" onclick="toggleMic('f-tetkik-bulgu','mic-tetkik-bulgu')">🎙️ Sesle Yaz</button>
+    </div>
+    <textarea id="f-tetkik-bulgu" placeholder="Tetkik bulgusu..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:0.8em;font-family:var(--sans);resize:vertical;margin-bottom:6px;"></textarea>
+    <button class="btn btn-p" onclick="addDigerTetkik()" style="width:100%;font-size:0.8em;">+ Tetkik Ekle</button>
   </div>
 
   <div class="sec-hdr">📊 Solunum Fonksiyon Testi (SFT)</div>
@@ -818,11 +852,11 @@ body{padding-bottom:40px;}
   </div>
 
   <div class="sec-hdr">🩺 Anestezi &amp; ASA</div>
-  <div class="toggle-row"><span class="tlabel">Anestezi Değerlendirmesi Yapıldı</span><div class="toggle" id="tog-anest" onclick="toggleIt(this,'t-anest',null)"></div></div>
+  <div class="toggle-row"><span class="tlabel">Anestezi Değerlendirmesi Yapıldı</span><div class="toggle" id="tog-anest" onclick="toggleIt(this,'t-anest',null);updateAnestNotAuto()"></div></div>
   <input type="hidden" id="t-anest" value="0">
   <div class="fgrid">
     <div class="ff"><div class="flabel">YBÜ İhtiyacı Önerisi</div>
-      <select id="f-ybu"><option value="">Değerlendirilmedi</option><option value="Gerekli">Gerekli</option><option value="Muhtemelen gerekli">Muhtemelen gerekli</option><option value="Gerekmez">Gerekmez</option></select></div>
+      <select id="f-ybu" onchange="updateAnestNotAuto()"><option value="">Değerlendirilmedi</option><option value="Gerekli">Gerekli</option><option value="Gerekmez">Gerekmez</option></select></div>
     <div class="ff"><div class="flabel">Anestezi Notu</div><input type="text" id="f-anest-not" placeholder="Anestezi notu..."></div>
   </div>
   <div class="asa-wrap">
@@ -880,8 +914,7 @@ body{padding-bottom:40px;}
       <select id="f-prekonsu-tur" style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;"></select>
       <input type="date" id="f-prekonsu-tarih" style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:0.8em;">
     </div>
-    <textarea id="f-prekonsu-istek" placeholder="Konsültasyon isteği..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:0.8em;font-family:var(--sans);resize:vertical;margin-bottom:4px;"></textarea>
-    <textarea id="f-prekonsu-cevap" placeholder="Konsültan cevabı (varsa)..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:0.8em;font-family:var(--sans);resize:vertical;margin-bottom:6px;"></textarea>
+    <textarea id="f-prekonsu-cevap" placeholder="Konsültan cevabı..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:0.8em;font-family:var(--sans);resize:vertical;margin-bottom:6px;"></textarea>
     <button class="btn btn-p" onclick="addPreopKonsu()" style="width:100%;font-size:0.8em;">+ Konsültasyon Ekle</button>
   </div>
 
@@ -899,6 +932,11 @@ body{padding-bottom:40px;}
       <div style="display:flex;gap:5px;">
         <select id="f-yapilan" style="flex:1;background:transparent;border:none;color:var(--text);font-family:var(--sans);font-size:0.867em;outline:none;"><option value="">Henüz yapılmadı</option></select>
         <button class="btn" style="font-size:0.733em;padding:4px 8px;white-space:nowrap;" onclick="addYapilanPlan()">+ Ekle</button>
+      </div>
+      <div class="yak-group" id="yak-group-yapilan">
+        <button type="button" class="yak-btn vats" onclick="setYak('yapilan','VATS',this)">VATS</button>
+        <button type="button" class="yak-btn acik" onclick="setYak('yapilan','Açık',this)">Açık</button>
+        <button type="button" class="yak-btn robot" onclick="setYak('yapilan','Robotik',this)">Robotik</button>
       </div>
       <input type="hidden" id="f-yapilan-json">
     </div>
@@ -971,7 +1009,7 @@ body{padding-bottom:40px;}
     <button class="cal-nav" onclick="calPrev()">◀</button>
     <div class="cal-title" id="cal-title"></div>
     <button class="cal-nav" onclick="calNext()">▶</button>
-    <span style="font-size:0.667em;color:var(--warn);margin-left:4px;">🟡 Pzt &amp; Çrş = Operasyon Günü</span>
+    <span style="font-size:0.667em;color:var(--warn);margin-left:4px;" id="op-gun-label"></span>
   </div>
   <div class="cal-grid" id="cal-grid"></div>
   <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px;">
@@ -1439,20 +1477,6 @@ body{padding-bottom:40px;}
 </div>
 
 <!-- QR MODAL -->
-<div class="modal-overlay" id="qr-modal">
-  <div class="modal" style="max-width:340px;">
-    <div class="modal-hdr">
-      <div class="modal-title" id="qr-modal-title">📷 QR Kod</div>
-      <div class="modal-close" onclick="closeModal('qr-modal')">×</div>
-    </div>
-    <div class="modal-body" style="text-align:center;padding:20px;">
-      <canvas id="qr-canvas" width="220" height="220" style="border:8px solid #fff;border-radius:6px;"></canvas>
-      <div style="font-size:0.733em;color:var(--text2);margin-top:10px;" id="qr-modal-sub"></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-p" onclick="closeModal('qr-modal')">✓ Tamam</button></div>
-  </div>
-</div>
-
 
 
 <!-- DETAY -->
@@ -1487,174 +1511,210 @@ body{padding-bottom:40px;}
       <div class="modal-close" onclick="closeSettings()">×</div>
     </div>
     <div class="modal-body" style="padding:8px;">
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">🔐 PIN Güvenlik <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div class="toggle-row" style="padding:0 0 10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
-            <span class="tlabel" style="font-size:0.8em;">PIN Kilidi Aktif</span>
-            <div class="toggle" id="tog-pin-enabled" onclick="togglePinEnabled(this)"></div>
-          </div>
-          <button class="btn btn-w" id="pin-change-btn" onclick="changePinFromSettings();closeSettings();" style="width:100%;">🔑 PIN Kodunu Belirle / Değiştir</button>
-          <div style="font-size:0.667em;color:var(--text2);margin-top:6px;">PIN aktifken uygulama açılışında 4 haneli kod istenir.</div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">💾 Veri Yedekleme <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button class="btn btn-w" onclick="manualSaveJSON()" style="flex:1;">📤 Yedek Al (.json)</button>
-            <label class="btn btn-p" style="flex:1;cursor:pointer;text-align:center;">📂 Yedek Yükle<input type="file" accept=".json" onchange="loadFromFile(this)" style="display:none"></label>
-          </div>
-          <div style="font-size:0.667em;color:var(--text2);margin-top:6px;line-height:1.5;">Her hasta kaydında otomatik <strong style="color:var(--accent)">toraks_yedek.json</strong> indirilir.</div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">🎨 Ekran Teması <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div class="theme-grid">
-            <div class="theme-dot" id="td-dark" onclick="setTheme('dark')" title="Lacivert Koyu (Varsayılan)" style="background:linear-gradient(135deg,#07090f,#0f1623);"></div>
-            <div class="theme-dot" id="td-light" onclick="setTheme('light')" title="Açık Mint" style="background:linear-gradient(135deg,#f0fafa,#00c9a7);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-teal" onclick="setTheme('teal')" title="Orta Teal" style="background:linear-gradient(135deg,#0d2e2e,#00c9b1);"></div>
-            <div class="theme-dot" id="td-wine" onclick="setTheme('wine')" title="Orta Bordo" style="background:linear-gradient(135deg,#2d0a14,#ff6b9d);"></div>
-            <div class="theme-dot" id="td-navy" onclick="setTheme('navy')" title="Orta Navy" style="background:linear-gradient(135deg,#0d1a35,#5b9af5);"></div>
-            <div class="theme-dot" id="td-forest" onclick="setTheme('forest')" title="Orta Yeşil" style="background:linear-gradient(135deg,#0a2010,#00d48a);"></div>
-            <div class="theme-dot" id="td-salmon1" onclick="setTheme('salmon1')" title="Somon Pembe" style="background:linear-gradient(135deg,#1f0d14,#ff6f8a);"></div>
-            <div class="theme-dot" id="td-salmon2" onclick="setTheme('salmon2')" title="Somon Turuncu" style="background:linear-gradient(135deg,#1f1008,#ff9472);"></div>
-            <div class="theme-dot" id="td-silver" onclick="setTheme('silver')" title="Orta Gümüş" style="background:linear-gradient(135deg,#dde2e8,#64748b);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-lightblue" onclick="setTheme('lightblue')" title="Açık Mavi" style="background:linear-gradient(135deg,#f0f6ff,#3b82f6);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-lightred" onclick="setTheme('lightred')" title="Açık Kırmızı" style="background:linear-gradient(135deg,#fff5f5,#f43f5e);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-lavender" onclick="setTheme('lavender')" title="Açık Mor" style="background:linear-gradient(135deg,#faf5ff,#8b5cf6);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-amber" onclick="setTheme('amber')" title="Açık Turuncu" style="background:linear-gradient(135deg,#fffbf0,#f59e0b);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-emerald" onclick="setTheme('emerald')" title="Açık Zümrüt" style="background:linear-gradient(135deg,#f0fdf4,#10b981);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-slate" onclick="setTheme('slate')" title="Açık Gri" style="background:linear-gradient(135deg,#f8fafc,#64748b);border:1px solid #ccc;"></div>
-            <div class="theme-dot" id="td-indigo" onclick="setTheme('indigo')" title="Açık İndigo" style="background:linear-gradient(135deg,#f5f3ff,#6366f1);border:1px solid #ccc;"></div>
-          </div>
-          <div style="font-size:0.667em;color:var(--text2);margin-top:8px;" id="theme-name-label">Lacivert Koyu</div>
-          <div style="margin-top:8px;">
-            <label style="display:flex;align-items:center;gap:8px;font-size:0.8em;cursor:pointer;">
-              <input type="checkbox" id="theme-auto-check" onchange="toggleAutoTheme(this)">
-              Cihaz temasına göre otomatik (Açık/Koyu)
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">🔤 Yazı Boyutu <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button class="btn" id="font-btn-small" onclick="setFontSize('small')" style="flex:1;">Küçük</button>
-            <button class="btn" id="font-btn-medium" onclick="setFontSize('medium')" style="flex:1;">Orta</button>
-            <button class="btn" id="font-btn-large" onclick="setFontSize('large')" style="flex:1;">Büyük</button>
-          </div>
-          <div style="font-size:0.667em;color:var(--text2);margin-top:6px;" id="font-size-label">Seçili: Orta</div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">🔪 Ameliyat Seçenekleri <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div class="tag-list" id="ameliyat-tags"></div>
-          <div class="add-tag-row">
-            <input type="text" id="new-ameliyat" placeholder="Yeni ameliyat adı..." onkeydown="if(event.key==='Enter')addAmeliyatOption()">
-            <button class="btn btn-p" onclick="addAmeliyatOption()">+ Ekle</button>
-          </div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">📋 Konsültasyon Türleri <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div class="tag-list" id="konsu-tags"></div>
-          <div class="add-tag-row">
-            <input type="text" id="new-konsu-set" placeholder="örn. Kardiyoloji..." onkeydown="if(event.key==='Enter')addKonsuOption()">
-            <button class="btn btn-p" onclick="addKonsuOption()">+ Ekle</button>
-          </div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">⚠️ Komplikasyon Türleri <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div class="tag-list" id="komp-tags"></div>
-          <div class="add-tag-row">
-            <input type="text" id="new-komp-set" placeholder="örn. Şilotoraks, Empiyem..." onkeydown="if(event.key==='Enter')addKompOption()">
-            <button class="btn btn-p" onclick="addKompOption()">+ Ekle</button>
-          </div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">🔬 Biyopsi Yöntemleri <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div style="font-size:0.733em;color:var(--text2);margin-bottom:8px;">Biyopsi yöntemi listesine özel seçenek ekleyin.</div>
-          <div id="biyopsi-tag-list" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;"></div>
-          <div class="add-tag-row">
-            <input type="text" id="new-biyopsi-input" placeholder="Örn: Kriyobiyopsi..." style="flex:1;">
-            <button class="btn btn-p" onclick="addCustomBiyopsi()">+ Ekle</button>
-          </div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">📊 İstatistik <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div class="tag-list" id="stat-tags"></div>
-          <div class="add-tag-row">
-            <select id="new-stat-select" style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.8em;">
-              <option value="ameliyat">Ameliyat türleri</option>
-              <option value="histoloji">Histoloji dağılımı</option>
-              <option value="evre">Tümör evre dağılımı</option>
-              <option value="aylik">Aylık operasyon sayısı</option>
-              <option value="komp">Komplikasyon analizi</option>
-            </select>
-            <button class="btn btn-p" onclick="toggleStatItem()">Aç/Kapat</button>
-          </div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">✅ Checklist <span class="s-arrow">▶</span></div>
-        <div class="settings-body" style="padding-top:6px;">
-          <!-- Checklist Maddeleri -->
-          <div style="font-size:0.72em;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;">Checklist Maddeleri</div>
-          <div style="font-size:0.72em;color:var(--text3);margin-bottom:7px;line-height:1.4;">Madde ekle veya sil. <span style="color:var(--warn);">Temel</span> işaretli maddeler her ameliyatta zorunlu sayılır; ameliyat bazlı ek zorunlu alanlar bir alt bölümden ayarlanır.</div>
-          <div id="cl-items-list" style="display:flex;flex-direction:column;gap:3px;margin-bottom:7px;"></div>
-          <div style="display:flex;gap:5px;margin-bottom:14px;">
-            <input type="text" id="new-cl-item" placeholder="Yeni madde adı..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.8em;" onkeydown="if(event.key==='Enter')addClItem()">
-            <button class="btn btn-p" onclick="addClItem()">+ Ekle</button>
-          </div>
-          <!-- Ameliyat Bazlı Zorunlu Alanlar -->
-          <div style="font-size:0.72em;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;">Ameliyat Bazlı Zorunlu Alanlar</div>
-          <div style="font-size:0.72em;color:var(--text3);margin-bottom:7px;line-height:1.4;">Ameliyat seçin, o ameliyat için hangi maddeler zorunlu olsun işaretleyin.</div>
-          <select id="cl-rules-select" onchange="onClRulesSelectChange()" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;margin-bottom:8px;">
-            <option value="">— Ameliyat seçin —</option>
-          </select>
-          <div id="cl-rules-detail" style="display:none;border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--surface);"></div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-label" onclick="toggleSection(this)">🤖 AI API Ayarları <span class="s-arrow">▶</span></div>
-        <div class="settings-body">
-          <div style="margin-bottom:10px;">
-            <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">AI Sağlayıcı</label>
-            <select id="ai-provider-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onProviderChange()">
-              <option value="anthropic">Anthropic (Claude)</option>
-              <option value="gemini">Google (Gemini)</option>
-              <option value="openai">OpenAI (GPT)</option>
-              <option value="groq">Groq</option>
-            </select>
-          </div>
-          <div style="margin-bottom:10px;">
-            <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">API Key</label>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <input type="password" id="ai-api-key-input" placeholder="API key giriniz..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;font-family:var(--mono);">
-              <button class="btn" id="ai-key-toggle" onclick="toggleApiKeyVisibility()" style="padding:7px 10px;font-size:0.82em;">👁</button>
+      <div class="settings-cat">
+        <div class="settings-cat-label" onclick="toggleCategory(this)">🎨 Görünüm <span class="cat-count">(2)</span><span class="s-arrow">▶</span></div>
+        <div class="settings-cat-body">
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🎨 Ekran Teması <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="theme-grid">
+                <div class="theme-dot" id="td-dark" onclick="setTheme('dark')" title="Lacivert Koyu (Varsayılan)" style="background:linear-gradient(135deg,#07090f,#0f1623);"></div>
+                <div class="theme-dot" id="td-light" onclick="setTheme('light')" title="Açık Mint" style="background:linear-gradient(135deg,#f0fafa,#00c9a7);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-silver" onclick="setTheme('silver')" title="Orta Gümüş" style="background:linear-gradient(135deg,#dde2e8,#64748b);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-lightblue" onclick="setTheme('lightblue')" title="Açık Mavi" style="background:linear-gradient(135deg,#f0f6ff,#3b82f6);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-lightred" onclick="setTheme('lightred')" title="Açık Kırmızı" style="background:linear-gradient(135deg,#fff5f5,#f43f5e);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-lavender" onclick="setTheme('lavender')" title="Açık Mor" style="background:linear-gradient(135deg,#faf5ff,#8b5cf6);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-amber" onclick="setTheme('amber')" title="Açık Turuncu" style="background:linear-gradient(135deg,#fffbf0,#f59e0b);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-emerald" onclick="setTheme('emerald')" title="Açık Zümrüt" style="background:linear-gradient(135deg,#f0fdf4,#10b981);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-slate" onclick="setTheme('slate')" title="Açık Gri" style="background:linear-gradient(135deg,#f8fafc,#64748b);border:1px solid #ccc;"></div>
+                <div class="theme-dot" id="td-indigo" onclick="setTheme('indigo')" title="Açık İndigo" style="background:linear-gradient(135deg,#f5f3ff,#6366f1);border:1px solid #ccc;"></div>
+              </div>
+              <div style="font-size:0.667em;color:var(--text2);margin-top:8px;" id="theme-name-label">Lacivert Koyu</div>
+              <div style="margin-top:8px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:0.8em;cursor:pointer;">
+                  <input type="checkbox" id="theme-auto-check" onchange="toggleAutoTheme(this)">
+                  Cihaz temasına göre otomatik (Açık/Koyu)
+                </label>
+              </div>
             </div>
           </div>
-          <div style="display:flex;gap:6px;">
-            <button class="btn btn-p" onclick="saveApiKey()" style="flex:1;">💾 Kaydet</button>
-            <button class="btn" onclick="clearApiKey()" style="flex:1;">🗑 Sil</button>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🔤 Yazı Boyutu <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="btn" id="font-btn-small" onclick="setFontSize('small')" style="flex:1;">Küçük</button>
+                <button class="btn" id="font-btn-medium" onclick="setFontSize('medium')" style="flex:1;">Orta</button>
+                <button class="btn" id="font-btn-large" onclick="setFontSize('large')" style="flex:1;">Büyük</button>
+              </div>
+              <div style="font-size:0.667em;color:var(--text2);margin-top:6px;" id="font-size-label">Seçili: Orta</div>
+            </div>
           </div>
-          <div id="ai-key-status" style="margin-top:8px;font-size:0.75em;font-family:var(--mono);color:var(--text2);"></div>
+        </div>
+      </div>
+      <div class="settings-cat">
+        <div class="settings-cat-label" onclick="toggleCategory(this)">🔪 Ameliyat Ayarları <span class="cat-count">(2)</span><span class="s-arrow">▶</span></div>
+        <div class="settings-cat-body">
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">📅 Ameliyat Günleri <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div style="font-size:0.733em;color:var(--text2);margin-bottom:8px;">Takvimde ve haftalık listede hangi günler "operasyon günü" olarak işaretlensin?</div>
+              <div class="tag-list" id="op-gun-tags"></div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🔪 Ameliyat Seçenekleri <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="tag-list" id="ameliyat-tags"></div>
+              <div class="add-tag-row">
+                <input type="text" id="new-ameliyat" placeholder="Yeni ameliyat adı..." onkeydown="if(event.key==='Enter')addAmeliyatOption()">
+                <button class="btn btn-p" onclick="addAmeliyatOption()">+ Ekle</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-cat">
+        <div class="settings-cat-label" onclick="toggleCategory(this)">🧪 Klinik Listeler <span class="cat-count">(4)</span><span class="s-arrow">▶</span></div>
+        <div class="settings-cat-body">
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">📋 Konsültasyon Türleri <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="tag-list" id="konsu-tags"></div>
+              <div class="add-tag-row">
+                <input type="text" id="new-konsu-set" placeholder="örn. Kardiyoloji..." onkeydown="if(event.key==='Enter')addKonsuOption()">
+                <button class="btn btn-p" onclick="addKonsuOption()">+ Ekle</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🧪 Diğer Görüntüleme Türleri <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="tag-list" id="tetkik-tags"></div>
+              <div class="add-tag-row">
+                <input type="text" id="new-tetkik-set" placeholder="örn. Boyun MR..." onkeydown="if(event.key==='Enter')addTetkikOption()">
+                <button class="btn btn-p" onclick="addTetkikOption()">+ Ekle</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">⚠️ Komplikasyon Türleri <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="tag-list" id="komp-tags"></div>
+              <div class="add-tag-row">
+                <input type="text" id="new-komp-set" placeholder="örn. Şilotoraks, Empiyem..." onkeydown="if(event.key==='Enter')addKompOption()">
+                <button class="btn btn-p" onclick="addKompOption()">+ Ekle</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🔬 Biyopsi Yöntemleri <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div style="font-size:0.733em;color:var(--text2);margin-bottom:8px;">Biyopsi yöntemi listesine özel seçenek ekleyin.</div>
+              <div id="biyopsi-tag-list" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;"></div>
+              <div class="add-tag-row">
+                <input type="text" id="new-biyopsi-input" placeholder="Örn: Kriyobiyopsi..." style="flex:1;">
+                <button class="btn btn-p" onclick="addCustomBiyopsi()">+ Ekle</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-cat">
+        <div class="settings-cat-label" onclick="toggleCategory(this)">📊 İstatistik &amp; Checklist <span class="cat-count">(2)</span><span class="s-arrow">▶</span></div>
+        <div class="settings-cat-body">
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">📊 İstatistik <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="tag-list" id="stat-tags"></div>
+              <div class="add-tag-row">
+                <select id="new-stat-select" style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.8em;">
+                  <option value="ameliyat">Ameliyat türleri</option>
+                  <option value="histoloji">Histoloji dağılımı</option>
+                  <option value="evre">Tümör evre dağılımı</option>
+                  <option value="aylik">Aylık operasyon sayısı</option>
+                  <option value="komp">Komplikasyon analizi</option>
+                </select>
+                <button class="btn btn-p" onclick="toggleStatItem()">Aç/Kapat</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">✅ Checklist <span class="s-arrow">▶</span></div>
+            <div class="settings-body" style="padding-top:6px;">
+              <!-- Checklist Maddeleri -->
+              <div style="font-size:0.72em;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;">Checklist Maddeleri</div>
+              <div style="font-size:0.72em;color:var(--text3);margin-bottom:7px;line-height:1.4;">Madde ekle veya sil. <span style="color:var(--warn);">Temel</span> işaretli maddeler her ameliyatta zorunlu sayılır; ameliyat bazlı ek zorunlu alanlar bir alt bölümden ayarlanır.</div>
+              <div id="cl-items-list" style="display:flex;flex-direction:column;gap:3px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:5px;margin-bottom:14px;">
+                <input type="text" id="new-cl-item" placeholder="Yeni madde adı..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.8em;" onkeydown="if(event.key==='Enter')addClItem()">
+                <button class="btn btn-p" onclick="addClItem()">+ Ekle</button>
+              </div>
+              <!-- Ameliyat Bazlı Zorunlu Alanlar -->
+              <div style="font-size:0.72em;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;">Ameliyat Bazlı Zorunlu Alanlar</div>
+              <div style="font-size:0.72em;color:var(--text3);margin-bottom:7px;line-height:1.4;">Ameliyat seçin, o ameliyat için hangi maddeler zorunlu olsun işaretleyin.</div>
+              <select id="cl-rules-select" onchange="onClRulesSelectChange()" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;margin-bottom:8px;">
+                <option value="">— Ameliyat seçin —</option>
+              </select>
+              <div id="cl-rules-detail" style="display:none;border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--surface);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-cat">
+        <div class="settings-cat-label" onclick="toggleCategory(this)">🔐 Veri &amp; Güvenlik <span class="cat-count">(3)</span><span class="s-arrow">▶</span></div>
+        <div class="settings-cat-body">
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🔐 PIN Güvenlik <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div class="toggle-row" style="padding:0 0 10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
+                <span class="tlabel" style="font-size:0.8em;">PIN Kilidi Aktif</span>
+                <div class="toggle" id="tog-pin-enabled" onclick="togglePinEnabled(this)"></div>
+              </div>
+              <button class="btn btn-w" id="pin-change-btn" onclick="changePinFromSettings();closeSettings();" style="width:100%;">🔑 PIN Kodunu Belirle / Değiştir</button>
+              <div style="font-size:0.667em;color:var(--text2);margin-top:6px;">PIN aktifken uygulama açılışında 4 haneli kod istenir.</div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">💾 Veri Yedekleme <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="btn btn-w" onclick="manualSaveJSON()" style="flex:1;">📤 Yedek Al (.json)</button>
+                <label class="btn btn-p" style="flex:1;cursor:pointer;text-align:center;">📂 Yedek Yükle<input type="file" accept=".json" onchange="loadFromFile(this)" style="display:none"></label>
+              </div>
+              <div style="font-size:0.667em;color:var(--text2);margin-top:6px;line-height:1.5;">Her hasta kaydında otomatik <strong style="color:var(--accent)">toraks_yedek.json</strong> indirilir. Yedek yüklerken hastalar üzerine yazılmaz — akıllıca birleştirilir: hangi cihazda son değişiklik yapıldıysa o kazanır, diğer cihazdaki yeni hastalar da eklenir.</div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-label" onclick="toggleSection(this)">🤖 AI API Ayarları <span class="s-arrow">▶</span></div>
+            <div class="settings-body">
+              <div style="margin-bottom:10px;">
+                <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">AI Sağlayıcı</label>
+                <select id="ai-provider-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onProviderChange()">
+                  <option value="anthropic">Anthropic (Claude)</option>
+                  <option value="gemini">Google (Gemini)</option>
+                  <option value="openai">OpenAI (GPT)</option>
+                  <option value="groq">Groq</option>
+                </select>
+              </div>
+              <div style="margin-bottom:10px;">
+                <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">API Key</label>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <input type="password" id="ai-api-key-input" placeholder="API key giriniz..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;font-family:var(--mono);">
+                  <button class="btn" id="ai-key-toggle" onclick="toggleApiKeyVisibility()" style="padding:7px 10px;font-size:0.82em;">👁</button>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-p" onclick="saveApiKey()" style="flex:1;">💾 Kaydet</button>
+                <button class="btn" onclick="clearApiKey()" style="flex:1;">🗑 Sil</button>
+              </div>
+              <div id="ai-key-status" style="margin-top:8px;font-size:0.75em;font-family:var(--mono);color:var(--text2);"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <div style="flex:1;font-size:0.667em;color:var(--text3);font-family:var(--mono);">v2.1.0 · Dr. İlhan Ocakcıoğlu</div>
+      <div style="flex:1;font-size:0.667em;color:var(--text3);font-family:var(--mono);">v2.2.0 · Dr. İlhan Ocakcıoğlu</div>
       <button class="btn btn-p" onclick="closeSettings()">✓ Tamam</button>
     </div>
   </div>
@@ -1722,6 +1782,11 @@ body{padding-bottom:40px;}
             <select id="om-yapilan-sel" style="flex:1;background:transparent;border:none;color:var(--text);font-family:var(--sans);font-size:0.867em;outline:none;"><option value="">Listeden seç...</option></select>
             <button class="btn" style="font-size:0.733em;padding:4px 8px;white-space:nowrap;" onclick="omAddAmeliyat()">+ Ekle</button>
           </div>
+          <div class="yak-group" id="yak-group-om">
+            <button type="button" class="yak-btn vats" onclick="setYak('om','VATS',this)">VATS</button>
+            <button type="button" class="yak-btn acik" onclick="setYak('om','Açık',this)">Açık</button>
+            <button type="button" class="yak-btn robot" onclick="setYak('om','Robotik',this)">Robotik</button>
+          </div>
           <input type="text" id="om-yapilan-serbest" placeholder="Serbest metin (listede yoksa)..." style="margin-top:5px;font-size:0.8em;background:transparent;border:none;border-top:1px solid var(--border);padding-top:5px;color:var(--text);width:100%;outline:none;">
         </div>
         <div class="ff"><div class="flabel">Ameliyat Tarihi</div><input type="date" id="om-tarih"></div>
@@ -1736,33 +1801,54 @@ body{padding-bottom:40px;}
   </div>
 </div>
 
+<div class="modal-overlay" id="quick-tarih-modal">
+  <div class="modal" style="max-width:340px;">
+    <div class="modal-hdr">
+      <div class="modal-title">📅 Ameliyat Günü Ata</div>
+      <div class="modal-close" onclick="closeModal('quick-tarih-modal')">×</div>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:0.8em;color:var(--text2);margin-bottom:10px;" id="qt-modal-pname"></div>
+      <div class="fgrid" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface2);">
+        <div class="ff full"><div class="flabel">Ameliyat Tarihi</div><input type="date" id="qt-tarih" onkeydown="if(event.key==='Enter')saveQuickTarih()"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('quick-tarih-modal')">İptal</button>
+      <button class="btn btn-s" onclick="saveQuickTarih()">✅ Kaydet</button>
+    </div>
+  </div>
+</div>
+
 <!-- AMELİYAT TAMAMLA MODAL -->
 <div class="modal-overlay" id="tamamla-modal">
   <div class="modal">
     <div class="modal-hdr">
-      <div class="modal-title">🔔 Ameliyat Tamamlandı mı?</div>
+      <div class="modal-title" id="tamamla-modal-title">🔔 Ameliyat Tamamlandı mı?</div>
       <div class="modal-close" onclick="closeModal('tamamla-modal')">×</div>
     </div>
     <div class="modal-body">
       <div style="font-size:0.933em;font-weight:600;color:var(--text);margin-bottom:12px;" id="tamamla-pname"></div>
       <input type="hidden" id="tamamla-pid">
-      <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <div style="display:flex;gap:8px;margin-bottom:16px;" id="tamamla-yapildi-row">
         <button class="btn btn-s" style="flex:1;padding:12px;" onclick="tamamlaYapildi()">✅ Yapıldı</button>
         <button class="btn btn-d" style="flex:1;padding:12px;" onclick="tamamlaIptal()">❌ İptal / Ertelendi</button>
       </div>
       <!-- İptal detay -->
       <div id="tamamla-iptal-detay" style="display:none;border-top:1px solid var(--border);padding-top:12px;">
-        <div class="flabel" style="margin-bottom:6px;">İptal Nedeni</div>
-        <select id="tamamla-iptal-neden" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:7px;font-size:0.867em;margin-bottom:8px;">
-          <option value="">Seçiniz (zorunlu değil)</option>
-          <option>Hasta vazgeçti</option>
-          <option>Anestezi sorunu</option>
-          <option>Liste doldu</option>
-          <option>Hasta hazır değil</option>
-          <option>Teknik sorun</option>
-          <option>Diğer</option>
-        </select>
-        <textarea id="tamamla-iptal-not" placeholder="Açıklama (isteğe bağlı)..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:7px;font-size:0.867em;font-family:var(--sans);resize:vertical;margin-bottom:8px;"></textarea>
+        <div id="tamamla-neden-blok">
+          <div class="flabel" style="margin-bottom:6px;">İptal Nedeni</div>
+          <select id="tamamla-iptal-neden" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:7px;font-size:0.867em;margin-bottom:8px;">
+            <option value="">Seçiniz (zorunlu değil)</option>
+            <option>Hasta vazgeçti</option>
+            <option>Anestezi sorunu</option>
+            <option>Liste doldu</option>
+            <option>Hasta hazır değil</option>
+            <option>Teknik sorun</option>
+            <option>Diğer</option>
+          </select>
+          <textarea id="tamamla-iptal-not" placeholder="Açıklama (isteğe bağlı)..." rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:7px;font-size:0.867em;font-family:var(--sans);resize:vertical;margin-bottom:8px;"></textarea>
+        </div>
         <div class="flabel" style="margin-bottom:6px;">Yeni Ameliyat Tarihi <span style="color:var(--text3);font-size:0.9em;">(girilmezse bekleme listesine alınır)</span></div>
         <input type="date" id="tamamla-yeni-tarih" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:7px;font-size:0.867em;margin-bottom:12px;">
         <button class="btn btn-p" style="width:100%;" onclick="tamamlaIptalKaydet()">💾 Kaydet</button>
@@ -1810,11 +1896,18 @@ let _idb=null;
 function idbOpen(){
   return new Promise((res,rej)=>{
     if(_idb){res(_idb);return;}
-    const req=indexedDB.open(IDB_NAME,1);
+    const req=indexedDB.open(IDB_NAME,2); // version 2: adds pid index
     req.onupgradeneeded=e=>{
       const db=e.target.result;
       if(!db.objectStoreNames.contains(IDB_STORE)){
-        db.createObjectStore(IDB_STORE,{keyPath:'key'});
+        const store=db.createObjectStore(IDB_STORE,{keyPath:'key'});
+        store.createIndex('pid','pid',{unique:false});
+      } else {
+        // Mevcut store'a index ekle (v1→v2 migration)
+        const store=e.target.transaction.objectStore(IDB_STORE);
+        if(!store.indexNames.contains('pid')){
+          store.createIndex('pid','pid',{unique:false});
+        }
       }
     };
     req.onsuccess=e=>{_idb=e.target.result;res(_idb);};
@@ -1826,7 +1919,8 @@ async function idbSavePhoto(pid,idx,photoObj){
   const db=await idbOpen();
   return new Promise((res,rej)=>{
     const tx=db.transaction(IDB_STORE,'readwrite');
-    tx.objectStore(IDB_STORE).put({key:pid+'_'+idx,...photoObj});
+    // pid alanını ekle — index sorguları için gerekli
+    tx.objectStore(IDB_STORE).put({key:pid+'_'+idx, pid:pid, idx:idx, ...photoObj});
     tx.oncomplete=()=>res();
     tx.onerror=e=>rej(e.target.error);
   });
@@ -1847,19 +1941,31 @@ async function idbGetAllPhotos(pid){
   return new Promise((res,rej)=>{
     const tx=db.transaction(IDB_STORE,'readonly');
     const store=tx.objectStore(IDB_STORE);
-    const results=[];
-    const req=store.openCursor();
-    req.onsuccess=e=>{
-      const cur=e.target.result;
-      if(cur){
-        if(cur.value.key.startsWith(pid+'_')) results.push(cur.value);
-        cur.continue();
-      } else {
-        results.sort((a,b)=>a.idx-b.idx);
+    // pid index varsa kullan (O(log n)); yoksa fallback olarak cursor tara
+    if(store.indexNames.contains('pid')){
+      const idx=store.index('pid');
+      const req=idx.getAll(pid);
+      req.onsuccess=()=>{
+        const results=(req.result||[]).sort((a,b)=>(a.idx||0)-(b.idx||0));
         res(results);
-      }
-    };
-    req.onerror=e=>rej(e.target.error);
+      };
+      req.onerror=e=>rej(e.target.error);
+    } else {
+      // Fallback: tam tarama (eski IDB versiyonu)
+      const results=[];
+      const req=store.openCursor();
+      req.onsuccess=e=>{
+        const cur=e.target.result;
+        if(cur){
+          if(cur.value.key.startsWith(pid+'_')) results.push(cur.value);
+          cur.continue();
+        } else {
+          results.sort((a,b)=>(a.idx||0)-(b.idx||0));
+          res(results);
+        }
+      };
+      req.onerror=e=>rej(e.target.error);
+    }
   });
 }
 
@@ -1878,15 +1984,29 @@ async function idbDeleteAllPhotos(pid){
   return new Promise((res,rej)=>{
     const tx=db.transaction(IDB_STORE,'readwrite');
     const store=tx.objectStore(IDB_STORE);
-    const req=store.openCursor();
-    req.onsuccess=e=>{
-      const cur=e.target.result;
-      if(cur){
-        if(cur.value.key.startsWith(pid+'_')) cur.delete();
-        cur.continue();
-      } else res();
-    };
-    req.onerror=e=>rej(e.target.error);
+    if(store.indexNames.contains('pid')){
+      // Index üzerinden tüm pid kayıtlarını bul ve sil
+      const idx=store.index('pid');
+      const req=idx.openCursor(IDBKeyRange.only(pid));
+      req.onsuccess=e=>{
+        const cur=e.target.result;
+        if(cur){cur.delete();cur.continue();}
+      };
+      tx.oncomplete=()=>res();
+      tx.onerror=e=>rej(e.target.error);
+    } else {
+      // Fallback
+      const req=store.openCursor();
+      req.onsuccess=e=>{
+        const cur=e.target.result;
+        if(cur){
+          if(cur.value.key.startsWith(pid+'_')) cur.delete();
+          cur.continue();
+        }
+      };
+      tx.oncomplete=()=>res();
+      tx.onerror=e=>rej(e.target.error);
+    }
   });
 }
 
@@ -1897,7 +2017,7 @@ async function savePhotosToIdb(pid, photos){
   const refs=[];
   for(let i=0;i<photos.length;i++){
     const ph=photos[i];
-    await idbSavePhoto(pid,i,{key:pid+'_'+i,idx:i,data:ph.data,name:ph.name,date:ph.date});
+    await idbSavePhoto(pid,i,{data:ph.data,name:ph.name,date:ph.date});
     refs.push({idb:true,idx:i,name:ph.name,date:ph.date});
   }
   return refs;
@@ -1923,8 +2043,10 @@ let patients = JSON.parse(localStorage.getItem('toraks_v4') || '[]');
 let settings = JSON.parse(localStorage.getItem('toraks_settings_v2') || JSON.stringify({
   klinik:'Göğüs Cerrahisi',
   theme:'dark',
-  ameliyatlar:['Lobektomi (VATS)','Lobektomi (Açık/Torakotomi)','Bilobektomi','Pnömonektomi','Segmentektomi (VATS)','Wedge rezeksiyon','Sleeve rezeksiyon','Mediastinal kitle eksizyonu','Timektomi','Mediastinoskopi','Plörektomi / Dekortikasyon','VATS plevral biyopsi','Özofajektomi','Göğüs duvarı rezeksiyonu','Diyafragma onarımı','Eksploratif torakotomi'],
+  opGunleri:[1,3,5],
+  ameliyatlar:['Lobektomi','Bilobektomi','Pnömonektomi','Segmentektomi','Wedge rezeksiyon','Sleeve rezeksiyon','Mediastinal kitle eksizyonu','Timektomi','Mediastinoskopi','Plörektomi / Dekortikasyon','VATS plevral biyopsi','Özofajektomi','Göğüs duvarı rezeksiyonu','Diyafragma onarımı','Eksploratif torakotomi'],
   konsultasyonlar:['Kardiyoloji','Göğüs Hastalıkları','Anestezi','Nöroloji','Endokrinoloji','Onkoloji','Radyoloji','Nükleer Tıp','Diğer'],
+  tetkikTurleri:['Beyin MR','Kemik Sintigrafisi','Batın USG','Batın BT','Boyun USG','Diğer'],
   komplikasyonlar:['Uzamış hava kaçağı','Pnömoni','Atelektazi','Kanama / Hemotoraks','Pnömotoraks','Kardiyak aritmi','Yara yeri enfeksiyonu','Pulmoner emboli','Bronkoplevral fistül','Solunum yetmezliği','Mortalite'],
   statShow:{ameliyat:true,histoloji:true,evre:true,aylik:true,komp:true},
   clItems:[
@@ -1971,6 +2093,34 @@ if(!settings.clItems) settings.clItems=[
   {id:'dvt',label:'DVT profilaksisi'},
 ];
 if(!settings.clRules) settings.clRules={};
+// Eski kayıtlarda ameliyat günleri yoksa ekle (varsayılan: Pzt/Çrş/Cuma)
+if(!settings.opGunleri) settings.opGunleri=[1,3,5];
+// Eski kayıtlarda tetkik türleri listesi yoksa ekle
+if(!settings.tetkikTurleri) settings.tetkikTurleri=['Beyin MR','Kemik Sintigrafisi','Batın USG','Batın BT','Boyun USG','Diğer'];
+// "Diğer" listede nerede olursa olsun her zaman en sona alınsın (açılır menüde de)
+if(settings.tetkikTurleri.includes('Diğer')){
+  settings.tetkikTurleri=settings.tetkikTurleri.filter(t=>t!=='Diğer');
+  settings.tetkikTurleri.push('Diğer');
+}
+// Eski kayıtlarda ameliyat isimlerine gömülü (VATS)/(Açık)/(Robotik) eklerini temizle
+// — artık yaklaşım ayrı seçildiği için isim listesi sade kalmalı, tekrarları birleştir
+if(settings.ameliyatlar&&settings.ameliyatlar.length){
+  const temiz=settings.ameliyatlar.map(a=>a.replace(/\s*\((VATS|Açık\/Torakotomi|Açık|Robotik)\)\s*$/,'').trim());
+  settings.ameliyatlar=[...new Set(temiz)];
+}
+// Kaldırılan ekran temaları — bu temalardan biri seçiliyse varsayılana dön
+if(['teal','wine','navy','forest','salmon1','salmon2'].includes(settings.theme)){
+  settings.theme='dark';
+}
+// "Bronkoskopik biyopsi (DOB/Bx)" → doğru kısaltma "FOB/Bx" olarak düzeltildi
+if(settings.customBiyopsi&&settings.customBiyopsi.length){
+  settings.customBiyopsi=settings.customBiyopsi.map(b=>b==='Bronkoskopik biyopsi (DOB/Bx)'?'Bronkoskopik biyopsi (FOB/Bx)':b);
+}
+if(patients&&patients.length){
+  patients.forEach(p=>{
+    if(p.biopsi==='Bronkoskopik biyopsi (DOB/Bx)') p.biopsi='Bronkoskopik biyopsi (FOB/Bx)';
+  });
+}
 let calDate = new Date();
 let currentFilter = 'none';
 let currentKonsuPid = null;
@@ -2019,23 +2169,29 @@ function clGetRequiredExtras(ameliyat){
   const rules=settings.clRules||{};
   const a=(ameliyat||'').trim();
   const mandatory=clGetMandatory();
-  // Eğer bu ameliyat için özel kural varsa onu kullan
-  if(rules[a]!==undefined){
+
+  // Bu ameliyat için açıkça tanımlanmış kural varsa kullan
+  if(rules.hasOwnProperty(a)){
     return (rules[a]||[]).filter(id=>!mandatory.includes(id));
   }
-  // Hiç kural tanımlı değilse (settings.clRules tamamen boşsa) eski hardcoded mantık
-  if(Object.keys(rules).length===0){
-    const al=a.toLowerCase();
-    if(al.includes('sempatektomi')||al.includes('plevral biyopsi')||al.includes('plevra biyopsi')) return [];
-    if(al.includes('büllektomi')) return ['sft'];
-    if(al.includes('bar çek')||al.includes('nuss')||al.includes('abramson')||al.includes('ravitch')||al.includes('pektus')) return ['kan'];
-    if(al.includes('göğüs duvarı')||al.includes('diyafragma')) return ['bt','sft'];
-    if(al.includes('eksploratif')) return ['sft','kan'];
-    if(al.includes('tos')||al.includes('thoracic outlet')) return ['bt','kan'];
-    return ['bt','sft','kan'];
+
+  // Hiçbir kural tanımlanmamışsa hardcoded fallback (geriye dönük uyumluluk)
+  // Not: Herhangi bir ameliyat için bile olsa kural varsa fallback ÇALIŞMAZ.
+  // Bu beklenmedik regresyonu önlemek için: kural VAR ama bu ameliyat için
+  // tanımsız → boş döndür (kullanıcı bilinçli bırakmıştır)
+  if(Object.keys(rules).length>0){
+    return [];
   }
-  // Kural var ama bu ameliyat için tanımlanmamış — boş dön
-  return [];
+
+  // Hiç kural yoksa hardcoded mantık (eski davranış)
+  const al=a.toLowerCase();
+  if(al.includes('sempatektomi')||al.includes('plevral biyopsi')||al.includes('plevra biyopsi')) return [];
+  if(al.includes('büllektomi')) return ['sft'];
+  if(al.includes('bar çek')||al.includes('nuss')||al.includes('abramson')||al.includes('ravitch')||al.includes('pektus')) return ['kan'];
+  if(al.includes('göğüs duvarı')||al.includes('diyafragma')) return ['bt','sft'];
+  if(al.includes('eksploratif')) return ['sft','kan'];
+  if(al.includes('tos')||al.includes('thoracic outlet')) return ['bt','kan'];
+  return ['bt','sft','kan'];
 }
 
 // Hastanın checklist verisi
@@ -2266,7 +2422,7 @@ function setFontSize(f){
 }
 
 // TEMA
-const themeNames={dark:'Lacivert Koyu',light:'Açık Mint',teal:'Orta Teal',wine:'Orta Bordo',navy:'Orta Navy',forest:'Orta Yeşil',salmon1:'Somon Pembe',salmon2:'Somon Turuncu',silver:'Orta Gümüş',lightblue:'Açık Mavi',lightred:'Açık Kırmızı',lavender:'Açık Mor',amber:'Açık Turuncu',emerald:'Açık Zümrüt',slate:'Açık Gri',indigo:'Açık İndigo'};
+const themeNames={dark:'Lacivert Koyu',light:'Açık Mint',silver:'Orta Gümüş',lightblue:'Açık Mavi',lightred:'Açık Kırmızı',lavender:'Açık Mor',amber:'Açık Turuncu',emerald:'Açık Zümrüt',slate:'Açık Gri',indigo:'Açık İndigo'};
 function setTheme(t){
   settings.theme=t;saveSettings();
   document.body.className=t==='dark'?'':('theme-'+t);
@@ -2276,10 +2432,24 @@ function setTheme(t){
 }
 function applyTheme(){
   const t=settings.theme||'dark';
+  if(t==='auto'){ autoThemeCheck(); return; }
   document.body.className=t==='dark'?'':('theme-'+t);
   document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));
   const td=document.getElementById('td-'+t);if(td)td.classList.add('active');
-  const lbl=document.getElementById('theme-name-label');if(lbl)lbl.textContent=themeNames[t]||t;
+  const lbl=document.getElementById('theme-name-label');
+  if(lbl) lbl.textContent=themeNames[t]||t;
+}
+
+function autoThemeCheck(){
+  if(settings.theme!=='auto') return;
+  const dark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className=dark?'':'theme-light';
+  // DOM hazır olduğunda dot'ları güncelle
+  const target=dark?'dark':'light';
+  const td=document.getElementById('td-'+target);
+  if(td){ document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active')); td.classList.add('active'); }
+  const lbl=document.getElementById('theme-name-label');
+  if(lbl) lbl.textContent=dark?'Lacivert Koyu':'Açık Mint';
 }
 
 // İSTATİSTİK AYARLARI
@@ -2426,9 +2596,34 @@ function selAsa(el,val){
   document.querySelectorAll('.asa-btn').forEach(b=>b.classList.remove('sel'));
   el.classList.add('sel');
   document.getElementById('f-asa').value=val;
+  updateAnestNotAuto();
+}
+// Anestezi Notu — ASA/YBÜ/değerlendirme durumuna göre otomatik özet cümlesi
+let anestNotAutoPart='';
+function updateAnestNotAuto(){
+  const anestOn=document.getElementById('t-anest').value==='1';
+  const asaVal=document.getElementById('f-asa').value;
+  const ybuVal=document.getElementById('f-ybu').value;
+  const el=document.getElementById('f-anest-not');
+  if(!el)return;
+  let newAuto='';
+  if(anestOn&&asaVal){
+    const asaNum={I:'1',II:'2',III:'3',IV:'4',V:'5'}[asaVal]||asaVal;
+    newAuto='ASA '+asaNum+(ybuVal==='Gerekli'?' YBÜ':'')+' opere olabilir';
+  }
+  const cur=el.value||'';
+  let remainder=cur.startsWith(anestNotAutoPart)?cur.slice(anestNotAutoPart.length):cur;
+  remainder=remainder.replace(/^\s+/,'');
+  el.value=newAuto?(newAuto+(remainder?(' '+remainder):'')):remainder;
+  anestNotAutoPart=newAuto;
 }
 
 function toggleSection(labelEl){
+  labelEl.classList.toggle('open');
+  const body=labelEl.nextElementSibling;
+  if(body) body.classList.toggle('open');
+}
+function toggleCategory(labelEl){
   labelEl.classList.toggle('open');
   const body=labelEl.nextElementSibling;
   if(body) body.classList.toggle('open');
@@ -2439,8 +2634,13 @@ function toggleAutoTheme(el){
   else{settings.theme='dark';saveSettings();applyTheme();}
 }
 function openSettings(){
-  // Her açılışta tüm bölümleri kapat
+  // Her açılışta tüm bölümleri ve kategorileri kapat
   document.querySelectorAll('.settings-label.open').forEach(el=>{
+    el.classList.remove('open');
+    const body=el.nextElementSibling;
+    if(body) body.classList.remove('open');
+  });
+  document.querySelectorAll('.settings-cat-label.open').forEach(el=>{
     el.classList.remove('open');
     const body=el.nextElementSibling;
     if(body) body.classList.remove('open');
@@ -2493,16 +2693,57 @@ function removeCustomBiyopsi(i){
 function rebuildBiyopsiSelect(){
   const sel=document.getElementById('f-biopsi');if(!sel)return;
   const cur=sel.value;
-  const def=['','Tru-cut biyopsi','Bronkoskopik biyopsi (DOB/Bx)','EBUS','VATS biyopsi','Mediastinoskopi','İnce iğne aspirasyon (İİAB)','Torakoskopi','Açık biyopsi','Diğer'];
+  const def=['','Tru-cut biyopsi','Bronkoskopik biyopsi (FOB/Bx)','EBUS','VATS biyopsi','Mediastinoskopi','İnce iğne aspirasyon (İİAB)','Torakoskopi','Açık biyopsi','Diğer'];
   sel.innerHTML=def.map((o,i)=>`<option value="${o}">${i===0?'Yok / Bilinmiyor':o}</option>`).join('');
   (settings.customBiyopsi||[]).forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b;sel.appendChild(o);});
   sel.value=cur;
 }
+const opGunAdlari=[{d:1,k:'Pzt',u:'Pazartesi'},{d:2,k:'Sal',u:'Salı'},{d:3,k:'Çrş',u:'Çarşamba'},{d:4,k:'Per',u:'Perşembe'},{d:5,k:'Cum',u:'Cuma'},{d:6,k:'Cmt',u:'Cumartesi'},{d:0,k:'Paz',u:'Pazar'}];
+function opGunLabelText(){
+  const secili=[...(settings.opGunleri||[1,3,5])].sort((a,b)=>a-b);
+  if(!secili.length) return '🟡 Operasyon günü seçilmedi';
+  const eq=(arr)=>secili.length===arr.length&&arr.every(x=>secili.includes(x));
+  let etiket;
+  if(eq([1,2,3,4,5])) etiket='Hafta içi';
+  else if(eq([0,6])) etiket='Hafta sonu';
+  else if(eq([0,1,2,3,4,5,6])) etiket='Her gün';
+  else{
+    // Pzt→Paz sırasına göre kısaltmaları diz, sonuncudan önce "ve" bağlacı kullan
+    const sirali=[1,2,3,4,5,6,0].filter(d=>secili.includes(d)).map(d=>opGunAdlari.find(o=>o.d===d).k);
+    etiket=sirali.length===1?sirali[0]:sirali.slice(0,-1).join(', ')+' ve '+sirali[sirali.length-1];
+  }
+  return `🟡 ${etiket} = Operasyon Günü`;
+}
+function renderOpGunLabel(){
+  const el=document.getElementById('op-gun-label');
+  if(el) el.textContent=opGunLabelText();
+}
+function renderOpGunTags(){
+  const el=document.getElementById('op-gun-tags');if(!el)return;
+  const secili=settings.opGunleri||[1,3,5];
+  el.innerHTML=opGunAdlari.map(({d,k,u})=>`
+    <div class="tag-item" title="${u}" style="${secili.includes(d)?'':'opacity:.4'}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${secili.includes(d)?'var(--success)':'var(--text3)'};display:inline-block;"></span>
+      ${k}
+      <span class="tag-del" onclick="toggleOpGun(${d})">${secili.includes(d)?'✓':'✗'}</span>
+    </div>`).join('');
+}
+function toggleOpGun(d){
+  if(!settings.opGunleri) settings.opGunleri=[1,3,5];
+  if(settings.opGunleri.includes(d)) settings.opGunleri=settings.opGunleri.filter(x=>x!==d);
+  else settings.opGunleri=[...settings.opGunleri,d].sort();
+  saveSettings();
+  renderOpGunTags();
+  if(document.getElementById('cal-title')) renderCalendar();
+}
 function renderSettingsTags(){
+  renderOpGunTags();
   document.getElementById('ameliyat-tags').innerHTML=settings.ameliyatlar.map((a,i)=>
     `<div class="tag-item">${a}<span class="tag-del" onclick="removeAmeliyat(${i})">×</span></div>`).join('');
   document.getElementById('konsu-tags').innerHTML=settings.konsultasyonlar.map((k,i)=>
     `<div class="tag-item">${k}<span class="tag-del" onclick="removeKonsuSet(${i})">×</span></div>`).join('');
+  document.getElementById('tetkik-tags').innerHTML=settings.tetkikTurleri.map((t,i)=>
+    `<div class="tag-item">${t}<span class="tag-del" onclick="removeTetkikSet(${i})">×</span></div>`).join('');
   document.getElementById('komp-tags').innerHTML=settings.komplikasyonlar.map((k,i)=>
     `<div class="tag-item">${k}<span class="tag-del" onclick="removeKompSet(${i})">×</span></div>`).join('');
   renderClSettings();
@@ -2630,6 +2871,15 @@ function addAmeliyatOption(){const v=document.getElementById('new-ameliyat').val
 function removeAmeliyat(i){settings.ameliyatlar.splice(i,1);saveSettings();renderSettingsTags();}
 function addKonsuOption(){const v=document.getElementById('new-konsu-set').value.trim();if(!v)return;settings.konsultasyonlar.push(v);saveSettings();document.getElementById('new-konsu-set').value='';renderSettingsTags();}
 function removeKonsuSet(i){settings.konsultasyonlar.splice(i,1);saveSettings();renderSettingsTags();}
+function addTetkikOption(){
+  const v=document.getElementById('new-tetkik-set').value.trim();if(!v)return;
+  // "Diğer" her zaman en altta kalsın — yeni türü onun önüne ekle
+  const digerIdx=settings.tetkikTurleri.indexOf('Diğer');
+  if(digerIdx>-1) settings.tetkikTurleri.splice(digerIdx,0,v);
+  else settings.tetkikTurleri.push(v);
+  saveSettings();document.getElementById('new-tetkik-set').value='';renderSettingsTags();rebuildTetkikTurSelect();
+}
+function removeTetkikSet(i){settings.tetkikTurleri.splice(i,1);saveSettings();renderSettingsTags();rebuildTetkikTurSelect();}
 function addKompOption(){const v=document.getElementById('new-komp-set').value.trim();if(!v)return;if(settings.komplikasyonlar.includes(v)){showToast('Bu komplikasyon zaten var.');return;}settings.komplikasyonlar.push(v);saveSettings();document.getElementById('new-komp-set').value='';renderSettingsTags();rebuildKompCheckboxes();}
 function removeKompSet(i){settings.komplikasyonlar.splice(i,1);saveSettings();renderSettingsTags();rebuildKompCheckboxes();}
 function rebuildKompCheckboxes(){
@@ -2655,13 +2905,13 @@ function rebuildSelects(){
 }
 
 // FORM
-function showNewForm(){clearForm();tempPhotos=[];tempPreopKonsu=[];tempFormHatir=[];document.getElementById('btn-del').style.display='none';renderTempPhotos();renderPreopKonsuList();rebuildPreopKonsuSelect();renderFormHatirList();switchTab('form');checkDraft();}
+function showNewForm(){clearForm();tempPhotos=[];tempPreopKonsu=[];tempDigerTetkik=[];tempFormHatir=[];document.getElementById('btn-del').style.display='none';renderTempPhotos();renderPreopKonsuList();renderDigerTetkikList();rebuildPreopKonsuSelect();rebuildTetkikTurSelect();renderFormHatirList();switchTab('form');checkDraft();}
 function clearForm(){
   ['f-ad','f-tc','f-tel','f-yas','f-tarih','f-gelis','f-hekim','f-bt','f-pet','f-patoloji',
    'f-fev1p','f-fev1l','f-fvcp','f-fvcl','f-dlco','f-vo2','f-eko','f-komorbid',
    'f-kan-ilac','f-uyari-txt','f-asa','f-anest-not','f-op-tarih','f-sure',
    'f-son-patoloji','f-op-not','f-komp-not','f-komp-tarih','f-id',
-   'f-ameliyat-serbest','f-gecirilmis-ameliyat','f-fob','f-ek-tetkik'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); 
+   'f-gecirilmis-ameliyat','f-fob','f-ek-tetkik','f-anamnez'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['f-cinsiyet','f-biopsi','f-ybu','f-histoloji','f-evre','f-clavien'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
   ['t-kan','t-anest','t-uyari','t-komp'].forEach(id=>document.getElementById(id).value='0');
   ['tog-kan','tog-anest','tog-uyari','tog-komp'].forEach(id=>document.getElementById(id).classList.remove('on'));
@@ -2679,40 +2929,56 @@ function clearForm(){
   ['f-sigara-paket','f-sigara-birakma'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.querySelectorAll('.asa-btn').forEach(b=>b.classList.remove('sel'));
   document.querySelectorAll('#komp-checkboxes input').forEach(x=>x.checked=false);
+  anestNotAutoPart='';
   tempPreopKonsu=[];
+  tempDigerTetkik=[];
   ameliyatPlan=[];
   yapilanPlan=[];
+  resetYak('plan');
+  resetYak('yapilan');
   renderAmeliyatPlan();
   renderYapilanPlan();
   renderPreopKonsuList();
+  renderDigerTetkikList();
   rebuildSelects();
   rebuildPreopKonsuSelect();
+  rebuildTetkikTurSelect();
+  if(document.getElementById('f-tetkik-tarih'))document.getElementById('f-tetkik-tarih').value=new Date().toISOString().split('T')[0];
 }
 
 let _saveLock=false;
 function savePatient(){
   if(_saveLock)return;
   _saveLock=true;
-  setTimeout(()=>{_saveLock=false;},1500);
+  _savePatientAsync().finally(()=>{ _saveLock=false; });
+}
+async function _savePatientAsync(){
   const ad=document.getElementById('f-ad').value.trim();
-  if(!ad){_saveLock=false;showToast('⚠️ Ad Soyad zorunludur.');return;}
+  if(!ad){showToast('⚠️ Ad Soyad zorunludur.');return;}
   const id=document.getElementById('f-id').value||Date.now().toString();
-  const existing=patients.find(x=>x.id===id)||{};
+  const idx=patients.findIndex(x=>x.id===id);
+  const tcVal=document.getElementById('f-tc').value.trim();
+  if(tcVal){
+    const dupTc=patients.find(x=>x.id!==id&&(x.tc||'').trim()===tcVal);
+    if(dupTc){
+      const devam=await customConfirm('⚠️ Bu TC kimlik no ile zaten bir kayıt var: '+dupTc.ad+(dupTc.tarih?' ('+dupTc.tarih+')':'')+'.\nYine de devam etmek istiyor musunuz?');
+      if(!devam) return;
+    }
+  }
   const p={
     id,ad,
     tc:document.getElementById('f-tc').value,tel:document.getElementById('f-tel').value,
     yas:document.getElementById('f-yas').value,cinsiyet:document.getElementById('f-cinsiyet').value,
     gelis:document.getElementById('f-gelis').value,hekim:document.getElementById('f-hekim').value,
     tarih:document.getElementById('f-tarih').value,
-    ameliyat:ameliyatPlan.length?ameliyatPlan.join(' + '):(document.getElementById('f-ameliyat-serbest').value||document.getElementById('f-ameliyat').value||''),
+    ameliyat:ameliyatPlan.length?ameliyatPlan.join(' + '):(document.getElementById('f-ameliyat').value||''),
     ameliyatPlanList:ameliyatPlan.length?[...ameliyatPlan]:[],
-    ameliyatSerbest:document.getElementById('f-ameliyat-serbest').value,
     bt:document.getElementById('f-bt').value,pet:document.getElementById('f-pet').value,fob:(document.getElementById('f-fob')?document.getElementById('f-fob').value:''),
     patoloji:document.getElementById('f-patoloji').value,biopsi:document.getElementById('f-biopsi').value,
     fev1p:document.getElementById('f-fev1p').value,fev1l:document.getElementById('f-fev1l').value,
     fvcp:document.getElementById('f-fvcp').value,fvcl:document.getElementById('f-fvcl').value,
     dlco:document.getElementById('f-dlco').value,vo2:document.getElementById('f-vo2').value,ekTetkik:(document.getElementById('f-ek-tetkik')?document.getElementById('f-ek-tetkik').value:''),
-    eko:document.getElementById('f-eko').value,gecirilmisAmeliyat:(document.getElementById('f-gecirilmis-ameliyat')?document.getElementById('f-gecirilmis-ameliyat').value:''),komorbid:document.getElementById('f-komorbid').value,
+    eko:document.getElementById('f-eko').value,gecirilmisAmeliyat:(document.getElementById('f-gecirilmis-ameliyat')?document.getElementById('f-gecirilmis-ameliyat').value:''),anamnez:(document.getElementById('f-anamnez')?document.getElementById('f-anamnez').value:''),komorbid:document.getElementById('f-komorbid').value,
     kanSulandirici:document.getElementById('t-kan').value,kanIlac:document.getElementById('f-kan-ilac').value,
     uyari:document.getElementById('t-uyari').value,uyariTxt:document.getElementById('f-uyari-txt').value,
     anestezi:document.getElementById('t-anest').value,anestNot:document.getElementById('f-anest-not').value,
@@ -2734,44 +3000,55 @@ function savePatient(){
     kompTarih:document.getElementById('f-komp-tarih').value,
     kompNot:document.getElementById('f-komp-not').value,
     konsultasyonlar:[...tempPreopKonsu],
+    digerTetkikler:[...tempDigerTetkik],
     hatirlatmalar:[...tempFormHatir],
     photos:[], // IDB'ye taşınacak, aşağıda doldurulur
     savedAt:new Date().toISOString()
   };
-  const idx=patients.findIndex(x=>x.id===id);
+  // Fotoğrafları IndexedDB'ye kaydet
+  // existing nesnesini patients dizisine yazmadan önce kopyala
+  const oldPhotos = (idx >= 0 ? patients[idx] : {}).photos || [];
   if(idx>=0) patients[idx]=p; else patients.unshift(p);
   clearDraft();
-  // Fotoğrafları IndexedDB'ye kaydet, hasta kaydında sadece referans tut
+
   if(tempPhotos.length){
     savePhotosToIdb(id, tempPhotos).then(refs=>{
-      p.photos=refs;
-      saveData();
+      const target=patients.find(x=>x.id===id);
+      if(target){ target.photos=refs; saveData(); }
     }).catch(()=>{
-      // IDB başarısız olursa eski yöntemle kaydet
-      p.photos=tempPhotos;
-      saveData();
+      const target=patients.find(x=>x.id===id);
+      if(target){ target.photos=tempPhotos; saveData(); }
     });
+    // Liste geçici olarak boş photos ile render edilir; async tamamlandığında kaydolur
+    p.photos=[];
+    saveData();
   } else {
-    p.photos=existing.photos||[];
+    p.photos=oldPhotos;
     saveData();
   }
   switchTab('list');
   _updateHatirBadge();
-}
+} // end _savePatientAsync
 
 async function deletePatientFromDetail(id){
   if(!await customConfirm('Bu hastayı silmek istiyor musunuz? Bu işlem geri alınamaz.'))return;
-  idbDeleteAllPhotos(id).catch(()=>{});
+  // Önce fotoğrafları temizle, sonra hasta kaydını sil
+  try{ await idbDeleteAllPhotos(id); }catch(e){}
   delete _cachedPhotos[id];
-  patients=patients.filter(p=>p.id!==id);saveData();switchTab('list');
+  // Checklist verisini de temizle
+  try{ localStorage.removeItem('cl_'+id); }catch(e){}
+  patients=patients.filter(p=>p.id!==id);
+  saveData();
+  switchTab('list');
   showToast('🗑 Hasta kaydı silindi.');
 }
 
 async function deletePatient(){
   const id=document.getElementById('f-id').value;
   if(!id||!await customConfirm('Bu hastayı silmek istiyor musunuz?')) return;
-  idbDeleteAllPhotos(id).catch(()=>{});
+  try{ await idbDeleteAllPhotos(id); }catch(e){}
   delete _cachedPhotos[id];
+  try{ localStorage.removeItem('cl_'+id); }catch(e){}
   patients=patients.filter(p=>p.id!==id);saveData();switchTab('list');
 }
 
@@ -2789,7 +3066,7 @@ function editPatient(id){
   set('f-ameliyat',p.ameliyat);set('f-bt',p.bt);set('f-pet',p.pet);if(document.getElementById('f-fob'))document.getElementById('f-fob').value=p.fob||'';
   set('f-patoloji',p.patoloji);set('f-biopsi',p.biopsi);
   set('f-fev1p',p.fev1p);set('f-fev1l',p.fev1l);set('f-fvcp',p.fvcp);set('f-fvcl',p.fvcl);
-  set('f-dlco',p.dlco);set('f-vo2',p.vo2);if(document.getElementById('f-ek-tetkik'))document.getElementById('f-ek-tetkik').value=p.ekTetkik||'';set('f-eko',p.eko);if(document.getElementById('f-gecirilmis-ameliyat'))document.getElementById('f-gecirilmis-ameliyat').value=p.gecirilmisAmeliyat||'';set('f-komorbid',p.komorbid);
+  set('f-dlco',p.dlco);set('f-vo2',p.vo2);if(document.getElementById('f-ek-tetkik'))document.getElementById('f-ek-tetkik').value=p.ekTetkik||'';set('f-eko',p.eko);if(document.getElementById('f-gecirilmis-ameliyat'))document.getElementById('f-gecirilmis-ameliyat').value=p.gecirilmisAmeliyat||'';if(document.getElementById('f-anamnez'))document.getElementById('f-anamnez').value=p.anamnez||'';set('f-komorbid',p.komorbid);
   set('f-kan-ilac',p.kanIlac);set('f-uyari-txt',p.uyariTxt);
   set('f-anest-not',p.anestNot);set('f-asa',p.asa);set('f-ybu',p.ybu);
   set('f-yapilan',p.yapilanAmeliyat);set('f-op-tarih',p.opTarih);
@@ -2824,13 +3101,16 @@ function editPatient(id){
   // Ameliyat planını yükle
   ameliyatPlan=p.ameliyatPlanList&&p.ameliyatPlanList.length?[...p.ameliyatPlanList]:[];
   renderAmeliyatPlan();
-  if(p.ameliyatSerbest) document.getElementById('f-ameliyat-serbest').value=p.ameliyatSerbest;
   // Yapılan ameliyat listesini yükle
   yapilanPlan=p.yapilanAmeliyatList&&p.yapilanAmeliyatList.length?[...p.yapilanAmeliyatList]:[];
   renderYapilanPlan();
   // Mevcut konsültasyonları preop listesine yükle
   tempPreopKonsu=p.konsultasyonlar?[...p.konsultasyonlar]:[];
   renderPreopKonsuList();
+  // Mevcut diğer tetkikleri yükle
+  tempDigerTetkik=p.digerTetkikler?[...p.digerTetkikler]:[];
+  renderDigerTetkikList();
+  if(document.getElementById('f-tetkik-tarih'))document.getElementById('f-tetkik-tarih').value=new Date().toISOString().split('T')[0];
   renderTempPhotos();switchTab('form');
 }
 
@@ -2961,20 +3241,49 @@ async function processReportPhoto(input,targetId){
   input.value='';
 }
 
+// AMELİYAT YAKLAŞIMI (VATS/Açık/Robotik) — ortak state ve yardımcılar
+let yakSel={plan:'',yapilan:'',om:''};
+function setYak(ctx,val,btn){
+  yakSel[ctx]=(yakSel[ctx]===val)?'':val;
+  const grp=document.getElementById('yak-group-'+ctx);
+  if(grp)grp.querySelectorAll('.yak-btn').forEach(b=>b.classList.remove('sel'));
+  if(yakSel[ctx])btn.classList.add('sel');
+}
+function resetYak(ctx){
+  yakSel[ctx]='';
+  const grp=document.getElementById('yak-group-'+ctx);
+  if(grp)grp.querySelectorAll('.yak-btn').forEach(b=>b.classList.remove('sel'));
+}
+function amChipHtml(a){
+  // "Ad (VATS)" / "Ad (Açık)" / "Ad (Robotik)" son ekini renkli rozet olarak göster
+  const m=a.match(/^(.*)\s\((VATS|Açık|Robotik)\)$/);
+  if(m){
+    const cls=m[2]==='VATS'?'vats':(m[2]==='Açık'?'acik':'robot');
+    return m[1]+'<span class="yak-badge '+cls+'">'+m[2]+'</span>';
+  }
+  return a;
+}
+function amDisplayHtml(str){
+  if(!str)return str;
+  return str.split(' + ').map(amChipHtml).join(' + ');
+}
+
 // YAPILAN AMELİYAT (çoklu)
 let yapilanPlan=[];
 function renderYapilanPlan(){
   const el=document.getElementById('yapilan-plan-list');if(!el)return;
   el.innerHTML=yapilanPlan.map((a,i)=>`
     <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface2);border:1px solid var(--success);border-radius:5px;font-size:0.733em;font-family:var(--mono);color:var(--success);">
-      ${a}<span onclick="removeYapilanPlan(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span>
+      ${amChipHtml(a)}<span onclick="removeYapilanPlan(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span>
     </span>`).join('');
   document.getElementById('f-yapilan-json').value=JSON.stringify(yapilanPlan);
 }
 function addYapilanPlan(){
   const sel=document.getElementById('f-yapilan').value;
   if(!sel)return;
-  if(!yapilanPlan.includes(sel))yapilanPlan.push(sel);
+  const withYak=yakSel.yapilan?sel+' ('+yakSel.yapilan+')':sel;
+  if(!yapilanPlan.includes(withYak))yapilanPlan.push(withYak);
+  resetYak('yapilan');
   renderYapilanPlan();
 }
 function removeYapilanPlan(i){yapilanPlan.splice(i,1);renderYapilanPlan();}
@@ -2985,14 +3294,16 @@ function renderAmeliyatPlan(){
   const el=document.getElementById('ameliyat-plan-list');if(!el)return;
   el.innerHTML=ameliyatPlan.map((a,i)=>`
     <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;font-size:0.733em;font-family:var(--mono);">
-      ${a}<span onclick="removeAmeliyatPlan(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span>
+      ${amChipHtml(a)}<span onclick="removeAmeliyatPlan(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span>
     </span>`).join('');
   document.getElementById('f-ameliyat-plan-json').value=JSON.stringify(ameliyatPlan);
 }
 function addAmeliyatPlan(){
   const sel=document.getElementById('f-ameliyat').value;
   if(!sel)return;
-  if(!ameliyatPlan.includes(sel)){ameliyatPlan.push(sel);}
+  const withYak=yakSel.plan?sel+' ('+yakSel.plan+')':sel;
+  if(!ameliyatPlan.includes(withYak)){ameliyatPlan.push(withYak);}
+  resetYak('plan');
   renderAmeliyatPlan();
 }
 function removeAmeliyatPlan(i){ameliyatPlan.splice(i,1);renderAmeliyatPlan();}
@@ -3004,31 +3315,58 @@ function rebuildPreopKonsuSelect(){
   if(el) el.innerHTML=settings.konsultasyonlar.map(k=>`<option>${k}</option>`).join('');
   document.getElementById('f-prekonsu-tarih').value=new Date().toISOString().split('T')[0];
 }
+function rebuildTetkikTurSelect(){
+  const el=document.getElementById('f-tetkik-tur');
+  if(el) el.innerHTML=settings.tetkikTurleri.map(t=>`<option>${t}</option>`).join('');
+}
 function renderPreopKonsuList(){
   const el=document.getElementById('preop-konsu-list');if(!el)return;
   if(!tempPreopKonsu.length){el.innerHTML='<div style="padding:8px 12px;font-size:0.8em;color:var(--text3);">Henüz konsültasyon eklenmedi.</div>';return;}
   el.innerHTML=tempPreopKonsu.map((k,i)=>`
     <div class="konsu-item">
       <div style="flex-shrink:0;"><span class="konsu-badge">${k.tur}</span><div class="konsu-date">${k.tarih||''}</div></div>
-      <div class="konsu-content"><div class="konsu-text">${k.istek||''}</div>${k.cevap?`<div class="konsu-cevap">💬 ${k.cevap}</div>`:''}</div>
+      <div class="konsu-content">${k.istek?`<div class="konsu-text">${k.istek}</div>`:''}${k.cevap?`<div class="konsu-cevap">💬 ${k.cevap}</div>`:''}</div>
       <span style="cursor:pointer;color:var(--danger);opacity:.6;font-size:0.933em;padding:2px 6px;" onclick="removePreopKonsu(${i})">×</span>
     </div>`).join('');
 }
 function addPreopKonsu(){
-  const istek=document.getElementById('f-prekonsu-istek').value.trim();
-  if(!istek){showToast('⚠️ Konsültasyon isteği boş olamaz.');return;}
+  const cevap=document.getElementById('f-prekonsu-cevap').value.trim();
+  if(!cevap){showToast('⚠️ Konsültasyon cevabı boş olamaz.');return;}
   tempPreopKonsu.push({
     tur:document.getElementById('f-prekonsu-tur').value,
     tarih:document.getElementById('f-prekonsu-tarih').value,
-    istek,
-    cevap:document.getElementById('f-prekonsu-cevap').value.trim()
+    cevap
   });
-  document.getElementById('f-prekonsu-istek').value='';
   document.getElementById('f-prekonsu-cevap').value='';
   renderPreopKonsuList();
   showToast('✅ Konsültasyon eklendi.');
 }
 function removePreopKonsu(i){tempPreopKonsu.splice(i,1);renderPreopKonsuList();}
+
+let tempDigerTetkik=[];
+function renderDigerTetkikList(){
+  const el=document.getElementById('diger-tetkik-list');if(!el)return;
+  if(!tempDigerTetkik.length){el.innerHTML='<div style="padding:8px 12px;font-size:0.8em;color:var(--text3);">Henüz tetkik eklenmedi.</div>';return;}
+  el.innerHTML=tempDigerTetkik.map((t,i)=>`
+    <div class="konsu-item">
+      <div style="flex-shrink:0;"><span class="konsu-badge">${t.tur}</span><div class="konsu-date">${t.tarih?new Date(t.tarih).toLocaleDateString('tr-TR'):''}</div></div>
+      <div class="konsu-content"><div class="konsu-text">${t.bulgu||''}</div></div>
+      <span style="cursor:pointer;color:var(--danger);opacity:.6;font-size:0.933em;padding:2px 6px;" onclick="removeDigerTetkik(${i})">×</span>
+    </div>`).join('');
+}
+function addDigerTetkik(){
+  const bulgu=document.getElementById('f-tetkik-bulgu').value.trim();
+  if(!bulgu){showToast('⚠️ Tetkik bulgusu boş olamaz.');return;}
+  tempDigerTetkik.push({
+    tur:document.getElementById('f-tetkik-tur').value,
+    tarih:document.getElementById('f-tetkik-tarih').value,
+    bulgu
+  });
+  document.getElementById('f-tetkik-bulgu').value='';
+  renderDigerTetkikList();
+  showToast('✅ Tetkik eklendi.');
+}
+function removeDigerTetkik(i){tempDigerTetkik.splice(i,1);renderDigerTetkikList();}
 
 // KONSÜLTASYONlar
 function openKonsuModal(pid){
@@ -3048,9 +3386,10 @@ function addKonsultasyon(){
   const istek=document.getElementById('new-konsu-istek').value.trim();if(!istek){showToast('⚠️ İstek boş olamaz.');return;}
   if(!p.konsultasyonlar)p.konsultasyonlar=[];
   p.konsultasyonlar.push({tur:document.getElementById('new-konsu-tur').value,tarih:document.getElementById('new-konsu-tarih').value,istek,cevap:document.getElementById('new-konsu-cevap').value.trim()});
+  p.savedAt=new Date().toISOString();
   saveData();['new-konsu-istek','new-konsu-cevap'].forEach(id=>document.getElementById(id).value='');renderKonsuList(p);
 }
-function deleteKonsu(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.konsultasyonlar.splice(i,1);saveData();renderKonsuList(p);}
+function deleteKonsu(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.konsultasyonlar.splice(i,1);p.savedAt=new Date().toISOString();saveData();renderKonsuList(p);}
 
 // HATIRLATMALAR
 function openHatirModal(pid){
@@ -3087,18 +3426,50 @@ function addHatirlatma(){
   const _tarih=_dtVal?_dtVal.split('T')[0]:'';
   const _saat=_dtVal&&_dtVal.includes('T')?_dtVal.split('T')[1]:'';
   p.hatirlatmalar.push({tarih:_tarih,saat:_saat,txt,done:false});
+  p.savedAt=new Date().toISOString();
   saveData();document.getElementById('new-hatir-txt').value='';document.getElementById('new-hatir-dt').value='';renderHatirList(p);_updateHatirBadge();if(document.getElementById('detail-content'))viewPatient(p.id);
 }
-function toggleHatir(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.hatirlatmalar[i].done=!p.hatirlatmalar[i].done;saveData();renderHatirList(p);_updateHatirBadge();if(document.getElementById('detail-content'))viewPatient(pid);}
-function deleteHatir(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.hatirlatmalar.splice(i,1);saveData();renderHatirList(p);_updateHatirBadge();if(document.getElementById('detail-content'))viewPatient(pid);}
+function toggleHatir(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.hatirlatmalar[i].done=!p.hatirlatmalar[i].done;p.savedAt=new Date().toISOString();saveData();renderHatirList(p);_updateHatirBadge();if(document.getElementById('detail-content'))viewPatient(pid);}
+function deleteHatir(pid,i){const p=patients.find(x=>x.id===pid);if(!p)return;p.hatirlatmalar.splice(i,1);p.savedAt=new Date().toISOString();saveData();renderHatirList(p);_updateHatirBadge();if(document.getElementById('detail-content'))viewPatient(pid);}
+
+// HIZLI TARİH ATAMA (Bekleme Listesi → tek adımda ameliyat günü ata)
+let currentQuickTarihPid=null;
+let iptalNedenGerekli=false; // true: gün sonu (17:00 sonrası) resmi iptal — neden sorulur ve geçmişe kaydedilir. false: planlı hastanın tarihini keyfe göre değiştirme/iptal — neden sorulmaz, kaydedilmez.
+function openQuickTarihModal(pid){
+  const p=patients.find(x=>x.id===pid);if(!p)return;
+  currentQuickTarihPid=pid;
+  document.getElementById('qt-modal-pname').textContent=p.ad;
+  document.getElementById('qt-tarih').value=p.tarih||'';
+  document.getElementById('quick-tarih-modal').classList.add('show');
+}
+function saveQuickTarih(){
+  const p=patients.find(x=>x.id===currentQuickTarihPid);if(!p)return;
+  const val=document.getElementById('qt-tarih').value;
+  if(!val){showToast('⚠️ Lütfen bir tarih seçin.');return;}
+  p.tarih=val;
+  p.savedAt=new Date().toISOString();
+  saveData();
+  closeModal('quick-tarih-modal');
+  showToast('✅ '+p.ad+' — ameliyat günü '+new Date(val+'T12:00:00').toLocaleDateString('tr-TR')+' olarak atandı.');
+  renderList();
+}
 
 // AMELİYAT ONAY
 function openOpModal(pid){
   currentOpPid=pid;const p=patients.find(x=>x.id===pid);if(!p)return;
   document.getElementById('op-modal-pname').textContent=p.ad;
-  omYapilanList=p.ameliyat?[p.ameliyat]:[];
-  omRebuildSel();omRenderList();
-  document.getElementById('om-yapilan-serbest').value='';
+  // Planlanan ameliyat listesini kullan; yoksa string'i parse et
+  if(p.ameliyatPlanList&&p.ameliyatPlanList.length){
+    omYapilanList=[...p.ameliyatPlanList];
+  } else if(p.ameliyat){
+    omYapilanList=p.ameliyat.split('+').map(s=>s.trim()).filter(Boolean);
+  } else {
+    omYapilanList=[];
+  }
+  omRebuildSel();omRenderList();resetYak('om');
+  // Serbest metin varsa serbest alana yaz
+  const serbestEl=document.getElementById('om-yapilan-serbest');
+  if(serbestEl) serbestEl.value=p.ameliyatSerbest||'';
   document.getElementById('om-tarih').value=p.tarih||new Date().toISOString().split('T')[0];
   document.getElementById('om-sure').value='';document.getElementById('om-not').value='';
   document.getElementById('op-modal').classList.add('show');
@@ -3111,13 +3482,14 @@ function omRebuildSel(){
 }
 function omRenderList(){
   const el=document.getElementById('om-yapilan-list');if(!el)return;
-  el.innerHTML=omYapilanList.map((a,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface);border:1px solid var(--success);border-radius:5px;font-size:0.733em;font-family:var(--mono);color:var(--success);">${a}<span onclick="omRemove(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span></span>`).join('');
+  el.innerHTML=omYapilanList.map((a,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface);border:1px solid var(--success);border-radius:5px;font-size:0.733em;font-family:var(--mono);color:var(--success);">${amChipHtml(a)}<span onclick="omRemove(${i})" style="cursor:pointer;color:var(--danger);margin-left:2px;">×</span></span>`).join('');
 }
 function omAddAmeliyat(){
   const sel=document.getElementById('om-yapilan-sel');
   const val=sel.value;if(!val)return;
-  if(!omYapilanList.includes(val))omYapilanList.push(val);
-  sel.value='';omRenderList();
+  const withYak=yakSel.om?val+' ('+yakSel.om+')':val;
+  if(!omYapilanList.includes(withYak))omYapilanList.push(withYak);
+  sel.value='';resetYak('om');omRenderList();
 }
 function omRemove(i){omYapilanList.splice(i,1);omRenderList();}
 
@@ -3131,6 +3503,7 @@ function confirmOperation(){
   p.opTarih=document.getElementById('om-tarih').value;
   p.sure=document.getElementById('om-sure').value;
   if(document.getElementById('om-not').value)p.opNot=document.getElementById('om-not').value;
+  p.savedAt=new Date().toISOString();
   saveData();closeModal('op-modal');viewPatient(p.id);
 }
 
@@ -3138,7 +3511,7 @@ function confirmOperation(){
 let weekOffset=0;
 function isOpDay(date){
   const d=date.getDay();
-  const opDays=settings.opGunleri||[1,3]; // 1=Pzt, 3=Çrş varsayılan
+  const opDays=settings.opGunleri||[1,3,5]; // 1=Pzt, 3=Çrş, 5=Cuma varsayılan
   return opDays.includes(d);
 }
 function calPrev(){calDate.setMonth(calDate.getMonth()-1);renderCalendar();}
@@ -3194,6 +3567,7 @@ function renderCalendar(){
     html+=`<div class="cal-day ${isOp?'op-day':''} ${isToday?'today':''}" onclick="calDayClick('${dateStr}',event)"><div class="day-num">${d}</div>${badgeHtml}</div>`;
   }
   grid.innerHTML=html;
+  renderOpGunLabel();
   renderWeekList();
 }
 function renderWeekList(){
@@ -3329,17 +3703,69 @@ function autoSaveJSON(){
     URL.revokeObjectURL(url);
   }catch(e){}
 }
+// Yedek dosyasındaki hastaları mevcut listeyle BİRLEŞTİRİR (üzerine yazmaz).
+// Her hasta kendi id'sine göre eşleştirilir; ikisinde de varsa savedAt (son değişiklik zamanı)
+// daha yeni olan kazanır. Sadece yedekte olan yeni hasta olarak eklenir.
+// Sadece yerelde olan (yedekte hiç görünmeyen) hastaya dokunulmaz — silinmez.
+function mergePatientLists(importedList){
+  let eklenen=0, guncellenen=0, atlanan=0;
+  importedList.forEach(ip=>{
+    if(!ip||!ip.id)return;
+    const idx=patients.findIndex(x=>x.id===ip.id);
+    if(idx<0){
+      patients.push(ip);
+      eklenen++;
+    } else {
+      const lp=patients[idx];
+      const lt=lp.savedAt?new Date(lp.savedAt).getTime():0;
+      const it=ip.savedAt?new Date(ip.savedAt).getTime():0;
+      if(it>lt){
+        patients[idx]=ip;
+        guncellenen++;
+      } else {
+        atlanan++;
+      }
+    }
+  });
+  return {eklenen,guncellenen,atlanan};
+}
 function loadFromFile(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=e=>{
     try{
       const data=JSON.parse(e.target.result);
-      if(data.patients){patients=data.patients;localStorage.setItem('toraks_v4',JSON.stringify(patients));}
-      if(data.settings){settings=data.settings;saveSettings();}
-      rebuildSelects();renderList();applyTheme();
-      // header sabit
-      showToast('✅ '+patients.length+' hasta kaydı yüklendi!');
+      let mergeMsg='';
+      if(data.patients&&Array.isArray(data.patients)){
+        const merge=mergePatientLists(data.patients);
+        localStorage.setItem('toraks_v4',JSON.stringify(patients));
+        const parcalar=[];
+        if(merge.eklenen)parcalar.push(merge.eklenen+' yeni');
+        if(merge.guncellenen)parcalar.push(merge.guncellenen+' güncellendi');
+        if(merge.atlanan)parcalar.push(merge.atlanan+' zaten güncel');
+        mergeMsg='✅ Hastalar birleştirildi'+(parcalar.length?' — '+parcalar.join(', '):'')+'.';
+      }
+      if(data.settings){
+        // Merge: mevcut ayarları koru, sadece yedekteki alanları üzerine yaz
+        // Kritik listeler (ameliyatlar, clItems, clRules vb.) birleştirilir
+        const s=data.settings;
+        if(s.theme) settings.theme=s.theme;
+        if(s.fontSize) settings.fontSize=s.fontSize;
+        if(s.klinik) settings.klinik=s.klinik;
+        if(s.opGunleri) settings.opGunleri=s.opGunleri;
+        if(s.statShow) settings.statShow=Object.assign({},settings.statShow,s.statShow);
+        // Listeler: yedektekini kullan ama mevcut özel eklemeleri koru
+        if(s.ameliyatlar&&s.ameliyatlar.length) settings.ameliyatlar=s.ameliyatlar;
+        if(s.konsultasyonlar&&s.konsultasyonlar.length) settings.konsultasyonlar=s.konsultasyonlar;
+        if(s.tetkikTurleri&&s.tetkikTurleri.length) settings.tetkikTurleri=s.tetkikTurleri;
+        if(s.komplikasyonlar&&s.komplikasyonlar.length) settings.komplikasyonlar=s.komplikasyonlar;
+        if(s.customBiyopsi) settings.customBiyopsi=s.customBiyopsi;
+        if(s.clItems&&s.clItems.length) settings.clItems=s.clItems;
+        if(s.clRules) settings.clRules=Object.assign({},settings.clRules,s.clRules);
+        saveSettings();
+      }
+      rebuildSelects();renderList();applyTheme();applyFontSize();
+      showToast(mergeMsg||('✅ '+patients.length+' hasta kaydı yüklendi!'));
     }catch(e){showToast('❌ Dosya okunamadı.');}
   };
   reader.readAsText(file);input.value='';
@@ -3366,7 +3792,6 @@ function viewPatient(id){
         <div style="font-size:1em;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.ad}</div>
         <div style="font-size:0.733em;color:${durumRenk};font-family:var(--mono);font-weight:600;">${durumIkon} ${durumYazi}</div>
       </div>
-      <button class="btn" style="font-size:0.85em;padding:5px 11px;" onclick="showQR('${p.id}')">📷 QR</button>
       <button class="btn" style="font-size:0.85em;padding:5px 11px;" onclick="editPatient('${p.id}')">✏️ Düzenle</button>
       <button class="btn btn-d" style="font-size:0.85em;padding:5px 11px;" onclick="deletePatientFromDetail('${p.id}')">🗑 Sil</button>
     </div>
@@ -3379,14 +3804,14 @@ function viewPatient(id){
       const display=digits.startsWith('0')?p.tel:'0'+p.tel;
       const icons='<a href="tel:+'+normalized+'" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);vertical-align:middle;text-decoration:none;" title="Ara"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.18-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>'
         +'<a href="https://wa.me/'+normalized+'" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:1px solid #25D36640;background:#25D36612;vertical-align:middle;text-decoration:none;" title="WhatsApp"><svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></a>';
-      return dr('Telefon', '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span>'+display+'</span><div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-right:-4px;">'+icons+'</div></div>');
+      return dr('Telefon', '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span onclick="flashCopy(this,\''+display+'\',\'Telefon\')" style="cursor:pointer;" title="Kopyalamak için tıklayın">'+display+'</span><div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-right:-4px;">'+icons+'</div></div>');
     })()}
     ${dr('Yaş / Cinsiyet',[p.yas?p.yas+' yaş':'',p.cinsiyet].filter(Boolean).join(' · '))}
     ${dr('Geliş Tarihi',p.gelis?new Date(p.gelis).toLocaleDateString('tr-TR'):'')}
     ${dr('Gönderen Hekim',p.hekim?'👨‍⚕️ '+p.hekim:'')}
   </div>`;
   html+=`<div class="dcard"><div class="sec-hdr">🔪 Pre-op Plan</div>
-    ${dr('Planlanan Ameliyat','<span class="hi">'+(p.ameliyat||'Belirsiz')+'</span>')}
+    ${dr('Planlanan Ameliyat','<span class="hi">'+amDisplayHtml(p.ameliyat||'Belirsiz')+'</span>')}
     ${dr('Planlanan Tarih',p.tarih?'📅 '+new Date(p.tarih).toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'')}
     ${dr('Biyopsi',p.biopsi)}${dr('Pre-op Patoloji',p.patoloji)}
     ${dr('SFT / DLCO / VO₂',sft)}${dr('EKO',p.eko)}${dr('Ek Hastalıklar',p.komorbid)}
@@ -3397,7 +3822,13 @@ function viewPatient(id){
     ${dr('Anestezi',p.anestezi==='1'?'<span class="ok">✅ Yapıldı'+(p.anestNot?' — '+p.anestNot:'')+'</span>':'')}
     ${dr('ASA / YBÜ',[p.asa?'<span class="'+((['IV','V'].includes(p.asa)?'dn':'hi'))+'">ASA '+p.asa+'</span>':'',p.ybu==='Gerekli'?'<span class="dn">🔴 YBÜ Gerekli</span>':p.ybu||''].filter(Boolean).join(' · '))}
   </div>`;
+  if(p.anamnez)html+=`<div class="dcard"><div class="sec-hdr">📋 Anamnez</div>${dr('Anamnez',p.anamnez)}</div>`;
   if(p.bt||p.pet)html+=`<div class="dcard"><div class="sec-hdr">🖥️ Görüntüleme</div>${p.bt?dr('Toraks BT',p.bt):''}${p.pet?dr('PET-BT',p.pet):''}</div>`;
+  if(p.digerTetkikler&&p.digerTetkikler.length){
+    html+=`<div class="dcard"><div class="sec-hdr">🧪 Diğer Görüntüleme / Tetkikler</div>`;
+    html+=p.digerTetkikler.map(t=>`<div class="konsu-item"><div style="flex-shrink:0;"><span class="konsu-badge">${t.tur}</span><div class="konsu-date">${t.tarih?new Date(t.tarih).toLocaleDateString('tr-TR'):''}</div></div><div class="konsu-content"><div class="konsu-text">${t.bulgu||''}</div></div></div>`).join('');
+    html+='</div>';
+  }
   const photoRefs=p.photos||[];
   html+=`<div class="dcard"><div class="sec-hdr pink">📁 Belge &amp; Fotoğraflar<span style="margin-left:auto;font-size:0.667em;color:var(--text2)">${photoRefs.length} dosya</span></div><div style="padding:10px 12px;">`;
   if(!photoRefs.length) html+='<span style="font-size:0.8em;color:var(--text2)">Fotoğraf yok.</span>';
@@ -3413,11 +3844,18 @@ function viewPatient(id){
   if(!hatList.length)html+='<div style="padding:10px 12px;color:var(--text2);font-size:0.8em;">Hatırlatma yok.</div>';
   else html+=hatList.map(h=>`<div class="drow"><div class="dkey">${h.tarih||''}<br>${h.saat||''}</div><div class="dval" style="${h.done?'opacity:.4;text-decoration:line-through':''}">${h.txt}</div></div>`).join('');
   html+='</div>';
+  // İPTAL/ERTELEME GEÇMİŞİ — eski tekil iptalNeden alanı varsa tek kayıt olarak göster
+  const iptalGecmisi=p.iptalGecmisi||(p.iptalNeden?[{kayitTarihi:'',eskiTarih:p.tarih||'',neden:p.iptalNeden,not:''}]:[]);
+  if(iptalGecmisi.length){
+    html+=`<div class="dcard"><div class="sec-hdr" style="color:var(--danger)">❌ İptal/Erteleme</div>`;
+    html+=[...iptalGecmisi].reverse().map(h=>`<div class="drow"><div class="dkey">${h.kayitTarihi?new Date(h.kayitTarihi).toLocaleDateString('tr-TR'):'—'}${h.eskiTarih?'<br><span style="font-size:0.6em;color:var(--text3)">İptal edilen: '+new Date(h.eskiTarih).toLocaleDateString('tr-TR')+'</span>':''}</div><div class="dval">${h.neden||'<span style="color:var(--text3)">Neden belirtilmemiş</span>'}${h.not?'<div style="margin-top:4px;font-size:0.8em;color:var(--text2)">'+h.not+'</div>':''}</div></div>`).join('');
+    html+='</div>';
+  }
   // THORACOSCORE ÖZETİ — konsültasyon ile ameliyat arası
   const tsHtml = calcThoracoscoreOzet(p);
   if(tsHtml) html+=tsHtml;
   html+=`<div class="dcard"><div class="sec-hdr green">✅ Ameliyat Sonrası</div>
-    ${dr('Yapılan Ameliyat',p.yapilanAmeliyat?'<span class="ok"><strong>'+p.yapilanAmeliyat+'</strong></span>':'<span style="color:var(--text3)">Henüz yapılmadı</span>')}
+    ${dr('Yapılan Ameliyat',p.yapilanAmeliyat?'<span class="ok"><strong>'+amDisplayHtml(p.yapilanAmeliyat)+'</strong></span>':'<span style="color:var(--text3)">Henüz yapılmadı</span>')}
     ${dr('Ameliyat Tarihi',p.opTarih?'<span class="ok">'+new Date(p.opTarih).toLocaleDateString('tr-TR')+'</span>':'')}
     ${dr('Süre',p.sure?p.sure+' dakika':'')}
     ${dr('Final Patoloji',p.sonPatoloji)}
@@ -3435,16 +3873,17 @@ function viewPatient(id){
     if(p.kompNot)html+=dr('Not',p.kompNot);
   }
   html+='</div>';
-  html+=`<div style="padding:12px 0 20px;display:flex;flex-direction:column;gap:8px;">
-    <button onclick="openAiAnaliz('${p.id}')" style="width:100%;padding:14px;background:linear-gradient(135deg,#1a0a3a,#2d1060);border:1px solid var(--purple);color:var(--purple);border-radius:10px;font-size:0.933em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.5px;">
-      🤖 AI KLİNİK ANALİZ
-    </button>
-    <div style="display:flex;gap:8px;">
-      <button onclick="generateEpikriz('${p.id}')" style="flex:1;padding:14px;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:0.933em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.5px;">
-        📄 EPİKRİZ PDF
+  html+=`<div class="dcard" style="margin-bottom:20px;">
+    <div class="sec-hdr">⚡ Hızlı İşlemler</div>
+    <div style="padding:10px 12px;display:flex;gap:8px;">
+      <button onclick="openAiAnaliz('${p.id}')" style="flex:1;padding:12px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--purple);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
+        🤖 AI Analiz
       </button>
-      <button onclick="shareHastaDetay('${p.id}')" style="padding:14px 18px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:1.1em;cursor:pointer;">
-        📤
+      <button onclick="generateEpikriz('${p.id}')" style="flex:1;padding:12px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--accent);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
+        📄 Epikriz
+      </button>
+      <button onclick="shareHastaDetay('${p.id}')" style="flex:1;padding:12px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
+        📤 Paylaş
       </button>
     </div>
   </div>`;
@@ -3471,21 +3910,31 @@ function viewPhotoDetail(pid,i){
 async function deletePhotoFromPatient(pid,i){
   const p=patients.find(x=>x.id===pid);if(!p)return;
   if(!await customConfirm('Bu fotoğrafı silmek istiyor musunuz?'))return;
-  // IDB'den sil, referansı da kaldır
-  const ref=p.photos[i];
-  if(ref&&ref.idb) idbDeletePhoto(pid,ref.idx).catch(()=>{});
-  p.photos.splice(i,1);
-  // Kalan photo'ların idx'lerini güncelle (IDB'deki key'ler kayıyor, en temizi tümünü yeniden yaz)
-  if(p.photos.length){
-    // Önce mevcut fotoğrafları yükle, sonra yeniden kaydet
-    loadPhotosFromIdb(pid,p.photos).then(photos=>{
-      savePhotosToIdb(pid,photos).then(refs=>{p.photos=refs;saveData();});
-    }).catch(()=>{saveData();});
+
+  // Önce IDB'den mevcut tüm fotoğrafları yükle
+  let currentPhotos=[];
+  try{ currentPhotos=await loadPhotosFromIdb(pid, p.photos||[]); }catch(e){}
+
+  // Belirtilen index'i çıkar
+  currentPhotos.splice(i,1);
+
+  // IDB'yi tamamen temizle ve yeniden yaz (index tutarlılığı için)
+  await idbDeleteAllPhotos(pid).catch(()=>{});
+
+  if(currentPhotos.length){
+    try{
+      const refs=await savePhotosToIdb(pid, currentPhotos);
+      p.photos=refs;
+    }catch(e){
+      p.photos=currentPhotos;
+    }
   } else {
-    idbDeleteAllPhotos(pid).catch(()=>{});
-    p.photos=[];saveData();
+    p.photos=[];
   }
+
   delete _cachedPhotos[pid];
+  p.savedAt=new Date().toISOString();
+  saveData();
   viewPatient(pid);
 }
 
@@ -3682,20 +4131,27 @@ function clSheetBackToList(){
   checkClNavPulse();
 }
 /* ========= END CHECKLIST SHEET ========= */
+let _clNavPulseTimer=null;
+function scheduleClNavPulse(){
+  clearTimeout(_clNavPulseTimer);
+  _clNavPulseTimer=setTimeout(checkClNavPulse, 300);
+}
+
 function renderList(){
   checkBugunBanner();
-  checkClNavPulse();
+  scheduleClNavPulse(); // debounced — arama sırasında her tuşta çalışmaz
   const q=(document.getElementById('searchInput').value||'').toLowerCase();
   const clearBtn=document.getElementById('search-clear');
   if(clearBtn) clearBtn.style.display=q?'block':'none';
 
-  // Hiç filtre seçilmemişse ve arama yoksa listeyi gösterme
+  // Stats her zaman güncellenir
+  document.getElementById('s-total').textContent=patients.length;
+  document.getElementById('s-waiting').textContent=patients.filter(p=>!p.yapilanAmeliyat&&!p.tarih).length;
+  document.getElementById('s-planned').textContent=patients.filter(p=>p.tarih&&!p.yapilanAmeliyat).length;
+  document.getElementById('s-done').textContent=patients.filter(p=>!!p.yapilanAmeliyat).length;
+
+  // Filtre yok ve arama yok: grup seçimi ekranı
   if(currentFilter==='none'&&!q){
-    document.getElementById('s-total').textContent=patients.length;
-    document.getElementById('s-waiting').textContent=patients.filter(p=>!p.yapilanAmeliyat&&!p.tarih).length;
-    document.getElementById('s-planned').textContent=patients.filter(p=>p.tarih&&!p.yapilanAmeliyat).length;
-    document.getElementById('s-done').textContent=patients.filter(p=>!!p.yapilanAmeliyat).length;
-    // header sabit
     const br2=document.getElementById('buay-row');if(br2)br2.style.display='none';
     document.getElementById('patient-list').innerHTML=`<div class="empty-state"><div class="icon">🫁</div><p>Görüntülemek istediğiniz grubu seçin.</p></div>`;
     return;
@@ -3718,12 +4174,6 @@ function renderList(){
     }
     return(b.opTarih||'').localeCompare(a.opTarih||'');
   });
-  document.getElementById('s-total').textContent=patients.length;
-  document.getElementById('s-waiting').textContent=patients.filter(p=>!p.yapilanAmeliyat&&!p.tarih).length;
-  document.getElementById('s-planned').textContent=patients.filter(p=>p.tarih&&!p.yapilanAmeliyat).length;
-  document.getElementById('s-done').textContent=patients.filter(p=>!!p.yapilanAmeliyat).length;
-  // header sabit
-
   // BU AY SATIRI — sadece "Ameliyat Oldu" filtresi aktifken göster
   const buAyRow=document.getElementById('buay-row');
   const buAySayi=document.getElementById('buay-sayi');
@@ -3791,9 +4241,18 @@ function patCardHtml(p){
   const aktif=p.hatirlatmalar?p.hatirlatmalar.filter(h=>!h.done).length:0;
   if(aktif)badges.push(`<span class="badge b-warn">🔔 ${aktif}</span>`);
   if(p.photos&&p.photos.length)badges.push(`<span class="badge b-grey">📎 ${p.photos.length}</span>`);
-  const dateStr=p.opTarih?'✅ '+new Date(p.opTarih).toLocaleDateString('tr-TR'):p.tarih?'📅 '+new Date(p.tarih).toLocaleDateString('tr-TR'):p.gelis?'🏥 '+new Date(p.gelis).toLocaleDateString('tr-TR'):'';
+  const isWaiting = !isPost && !p.tarih;
+  const dateStr=p.opTarih?'✅ '+new Date(p.opTarih).toLocaleDateString('tr-TR'):p.tarih?'📅 '+new Date(p.tarih).toLocaleDateString('tr-TR'):(isWaiting?'':(p.gelis?'🏥 '+new Date(p.gelis).toLocaleDateString('tr-TR'):''));
   // Banner: son 24 saatte zorunlu eksik varsa göster
   const clBannerHtml = !isPost ? clBanner(p.id, p.ameliyat||'', p.tarih) : '';
+  const quickTarihBtn = isWaiting ? `<button class="btn btn-p" style="font-size:0.667em;padding:4px 8px;white-space:nowrap;" onclick="event.stopPropagation();openQuickTarihModal('${p.id}')">📅 Tarih Ata</button>` : '';
+  // Planlı ama bugünkü (17:00 sonrası) ameliyat değilse — her zaman erişilebilir iptal/erteleme butonu
+  const isPlanned = !isPost && !!p.tarih;
+  const iptalBtn = (isPlanned && !bugunAmeliyat) ? `<button class="btn-icon-danger" title="İptal/Ertelendi" onclick="event.stopPropagation();openPlanliIptal('${p.id}')">✕</button>` : '';
+  // Buton + tarih aynı dar sütunda üst üste dursun ki soldaki bilgi alanı daralmasın
+  const rightSideHtml = isWaiting
+    ? quickTarihBtn
+    : (iptalBtn ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">${iptalBtn}<div class="pdate">${dateStr}</div></div>` : `<div class="pdate">${dateStr}</div>`);
   return`<div class="patient-card ${isPost?'done':p.tarih?'planned':'tarihsiz'}" onclick="viewPatient('${p.id}')">
     <div class="pavatar ${isPost?'post':'pre'}">${isPost?'✅':'🫁'}</div>
     <div class="pinfo">
@@ -3803,7 +4262,7 @@ function patCardHtml(p){
       ${bannerHtml}
       ${clBannerHtml}
     </div>
-    <div class="pdate">${dateStr}</div>
+    ${rightSideHtml}
   </div>`;
 }
 
@@ -3814,11 +4273,20 @@ function getAmeliyatKategori(ameliyat){
   if(a.includes('pnömonektomi')||a.includes('pnomonektomi'))return'pnomo';
   if(a.includes('lobektomi')||a.includes('bilobektomi')||a.includes('sleeve'))return'lobektomi';
   if(a.includes('segmentektomi'))return'segmentektomi';
-  if(a.includes('wedge')||a.includes('rezeksiyon')||a.includes('wedge'))return'wedge';
+  if(a.includes('wedge')||a.includes('rezeksiyon'))return'wedge';
   if(a.includes('biyopsi')||a.includes('mediastinoskopi')||a.includes('torakoskopi')||a.includes('vats biyo')||a.includes('plevral'))return'minimal';
   if(a.includes('timektomi')||a.includes('mediastinal kitle'))return'mediastinal';
   return'diger';
 }
+
+// Pnömonektomi tarafını inferle (BT/ameliyat metninden)
+function inferPnomSide(ameliyat, bt){
+  const hay=(ameliyat||'').toLowerCase()+(bt||'').toLowerCase();
+  if(hay.includes('sağ pnömon')||hay.includes('right pneumon')||hay.includes('sağ akciğer çıkarıl')) return 'R';
+  if(hay.includes('sol pnömon')||hay.includes('left pneumon')||hay.includes('sol akciğer çıkarıl')) return 'L';
+  return null; // bilinmiyor
+}
+
 function calcOperabilite(p){
   const fev1=parseFloat(p.fev1p);
   const dlco=parseFloat(p.dlco);
@@ -3826,7 +4294,6 @@ function calcOperabilite(p){
   const ameliyat=p.ameliyat||'';
   const kat=getAmeliyatKategori(ameliyat);
 
-  // Minimal girişimler için SFT riski düşük — sadece bilgi ver
   if(kat==='minimal'||kat==='mediastinal'){
     if(!fev1&&!dlco)return null;
     const minVal=Math.min(...[fev1,dlco].filter(x=>x));
@@ -3835,12 +4302,19 @@ function calcOperabilite(p){
     return null;
   }
 
-  // Koruma oranları
+  // Pnömonektomi için taraf bazlı oran (ERS/ESTS: rezeke edilecek akciğerin perfüzyon fraksiyonu)
+  // Sağ ~%55, Sol ~%45; bilinmiyorsa muhafazakâr %45 kullan
   let korumaOrani=0.80;
-  if(kat==='pnomo')korumaOrani=0.45;
-  else if(kat==='segmentektomi')korumaOrani=0.89;
-  else if(kat==='wedge')korumaOrani=0.95;
-  else if(kat==='lobektomi')korumaOrani=0.80;
+  let korumaAciklamasi='Lobektomi (×0.80)';
+  if(kat==='pnomo'){
+    const side=inferPnomSide(ameliyat, p.bt);
+    if(side==='R'){ korumaOrani=0.45; korumaAciklamasi='Sağ Pnömonektomi (×0.45, sağ katkı ~%55)'; }
+    else if(side==='L'){ korumaOrani=0.55; korumaAciklamasi='Sol Pnömonektomi (×0.55, sol katkı ~%45)'; }
+    else { korumaOrani=0.45; korumaAciklamasi='Pnömonektomi-taraf bilinmiyor (×0.45, muhafazakâr)'; }
+  }
+  else if(kat==='segmentektomi'){korumaOrani=0.89;korumaAciklamasi='Segmentektomi (×0.89)';}
+  else if(kat==='wedge'){korumaOrani=0.95;korumaAciklamasi='Wedge/minimal (×0.95)';}
+  else if(kat==='lobektomi'){korumaOrani=0.80;korumaAciklamasi='Lobektomi (×0.80)';}
 
   const ppoFev1=fev1?Math.round(fev1*korumaOrani):null;
   const ppoDlco=dlco?Math.round(dlco*korumaOrani):null;
@@ -3857,7 +4331,7 @@ function calcOperabilite(p){
   }
   if(!risk)return null;
   const label=ppoFev1!==null&&ppoDlco!==null?`ppoFEV1 %${ppoFev1} · ppoDLCO %${ppoDlco}`:ppoFev1!==null?`ppoFEV1 %${ppoFev1}`:`ppoDLCO %${ppoDlco}`;
-  if(risk==='düşük')return`<span class="badge b-ok" title="ERS/ESTS: Operabl — ${label}">🟢 Operabl</span>`;
+  if(risk==='düşük')return`<span class="badge b-ok" title="ERS/ESTS: Operabl — ${label} (${korumaAciklamasi})">🟢 Operabl</span>`;
   if(risk==='orta')return`<span class="badge b-warn" title="ERS/ESTS: Egzersiz testi önerilir — ${label}">🟡 Egz.Testi</span>`;
   return`<span class="badge b-danger" title="ERS/ESTS: Yüksek Risk — ${label}">🔴 Yüksek Risk</span>`;
 }
@@ -3872,9 +4346,9 @@ function updateOpBadge(){
 
   const ameliyatEl=document.getElementById('f-ameliyat');
   const ameliyatVal=ameliyatEl?ameliyatEl.value||'':'';
-  const kat=getAmeliyatKategori(ameliyatVal||ameliyatPlan.join(' '));
+  const planStr=ameliyatPlan.join(' ');
+  const kat=getAmeliyatKategori(ameliyatVal||planStr);
 
-  // Minimal girişimler farklı mesaj
   if(kat==='minimal'||kat==='mediastinal'){
     const minVal=Math.min(...[fev1,dlco].filter(x=>x));
     let html=`<span style="font-size:0.867em;color:var(--text2);">Bu girişim tipi için standart ppo hesabı uygulanmaz.</span><br>`;
@@ -3884,8 +4358,15 @@ function updateOpBadge(){
     content.innerHTML=html;return;
   }
 
-  let oranAciklama='',oran=0.80;
-  if(kat==='pnomo'){oran=0.45;oranAciklama='Pnömonektomi (×0.45)';}
+  // Pnömonektomi için taraf inferle
+  let oran=0.80,oranAciklama='Lobektomi (×0.80)';
+  if(kat==='pnomo'){
+    const btVal=(document.getElementById('f-bt')?document.getElementById('f-bt').value:'');
+    const side=inferPnomSide(ameliyatVal||planStr, btVal);
+    if(side==='R'){ oran=0.45; oranAciklama='Sağ Pnömonektomi (×0.45)'; }
+    else if(side==='L'){ oran=0.55; oranAciklama='Sol Pnömonektomi (×0.55)'; }
+    else { oran=0.45; oranAciklama='Pnömonektomi-taraf bilinmiyor (×0.45, muhafazakâr)'; }
+  }
   else if(kat==='segmentektomi'){oran=0.89;oranAciklama='Segmentektomi (×0.89)';}
   else if(kat==='wedge'){oran=0.95;oranAciklama='Wedge/minimal rezeksiyon (×0.95)';}
   else{oran=0.80;oranAciklama='Lobektomi (×0.80)';}
@@ -3901,13 +4382,13 @@ function updateOpBadge(){
   else{risk='Operabl — Düşük Risk';renk='var(--success)';ikon='🟢';aciklama='Ppo değerler yeterli. Standart perioperatif protokol uygulanabilir.';}
   let html=`<span style="font-size:0.667em;color:var(--text3);font-family:var(--mono);">${oranAciklama} — ERS/ESTS 2009</span><br>`;
   html+=`<span style="color:${renk};font-weight:700;font-size:0.933em;">${ikon} ${risk}</span><br>`;
-  if(ppoFev1!==null)html+=`<span style="font-size:0.733em;color:var(--text2);">ppoFEV1: <strong style="color:var(--text)">%${ppoFev1}</strong> (FEV1 %${fev1} × ${oran})</span><br>`;
-  if(ppoDlco!==null)html+=`<span style="font-size:0.733em;color:var(--text2);">ppoDLCO: <strong style="color:var(--text)">%${ppoDlco}</strong> (DLCO %${dlco} × ${oran})</span><br>`;
+  if(ppoFev1!==null)html+=`<span style="font-size:0.733em;color:var(--text2);">ppoFEV1: <strong style="color:var(--text)">%${ppoFev1}</strong></span><br>`;
+  if(ppoDlco!==null)html+=`<span style="font-size:0.733em;color:var(--text2);">ppoDLCO: <strong style="color:var(--text)">%${ppoDlco}</strong></span><br>`;
   html+=`<span style="font-size:0.733em;color:var(--text2);">${aciklama}</span>`;
   content.innerHTML=html;
 }
 
-// THORACOSCORE OTOMATİK ÖZET (detay sayfası için)
+// THORACOSCORE OTOMATİK ÖZET (detay sayfası için) — eksik parametreler 0 varsayılan
 function calcThoracoscoreOzet(p){
   if(!p.yas) return null;
   const yas=parseFloat(p.yas);
@@ -3920,7 +4401,7 @@ function calcThoracoscoreOzet(p){
   const malignTxt=(p.histoloji||p.patoloji||'').toLowerCase();
   const malign=(malignTxt.includes('karsinom')||malignTxt.includes('malign')||malignTxt.includes('tümör')||malignTxt.includes('lenfoma'))?1:0;
   const komorbid=(p.komorbid&&p.komorbid.trim())?1:0;
-  // Bilinmeyenler varsayılan 0
+  // Dispne, aciliyet ve PS kaydedilmediğinden 0 alınıyor — bu sonucu düşük tahmin edebilir
   const z=-5.385+0.032*yas+0.384*erkek+0.612*asa+0.554*0+0.421*0+0.298*malign+1.125*0+0.742*pnomo+0.395*komorbid;
   const prob=Math.round((1/(1+Math.exp(-z)))*1000)/10;
   let renk,ikon,risk;
@@ -3928,10 +4409,12 @@ function calcThoracoscoreOzet(p){
   else if(prob<3){renk='var(--success)';ikon='🟢';risk='Düşük Risk';}
   else if(prob<7){renk='var(--warn)';ikon='🟡';risk='Orta-Yüksek Risk';}
   else{renk='var(--danger)';ikon='🔴';risk='Yüksek Risk';}
-  return`<div class="dcard"><div class="sec-hdr" style="color:var(--purple);">🫁 Thoracoscore 2020 — Otomatik Hesap</div>
-    <div class="drow"><div class="dkey">Mortalite Riski</div><div class="dval"><span style="font-size:1.2em;font-weight:700;font-family:var(--mono);color:${renk};">${ikon} %${prob}</span> <span style="font-size:0.8em;color:${renk};">${risk}</span></div></div>
+  return`<div class="dcard"><div class="sec-hdr" style="color:var(--purple);">🫁 Thoracoscore 2020 — Otomatik Tahmin</div>
+    <div style="padding:6px 12px 4px;background:#3f1c0620;border-bottom:1px solid var(--border);">
+      <span style="font-size:0.667em;color:var(--warn);">⚠️ DİKKAT: Dispne (mMRC), aciliyet ve performans skoru bilinmediğinden 0 alınmıştır. Gerçek risk bu tahmin değerinden yüksek olabilir. Kesin hesap için Araçlar → Thoracoscore kullanın.</span>
+    </div>
+    <div class="drow"><div class="dkey">Tahmin Riski</div><div class="dval"><span style="font-size:1.2em;font-weight:700;font-family:var(--mono);color:${renk};">${ikon} %${prob}</span> <span style="font-size:0.8em;color:${renk};">${risk}</span></div></div>
     <div class="drow"><div class="dkey">Parametreler</div><div class="dval" style="font-size:0.733em;color:var(--text2);">Yaş ${yas} · ${p.cinsiyet||'?'} · ASA ${p.asa||'?'} · ${pnomo?'Pnömonektomi':'Diğer ameliyat'} · ${komorbid?'Komorbidite var':'Komorbidite yok'}${malign?' · Malign tanı':''}</div></div>
-    <div class="drow"><div class="dkey" style="font-size:0.6em;color:var(--text3);">Not</div><div class="dval" style="font-size:0.667em;color:var(--text3);">Dispne, aciliyet ve PS skoru bilinmediği için varsayılan 0 alınmıştır. Tam hesap için Araçlar → Thoracoscore sekmesini kullanın.</div></div>
   </div>`;
 }
 
@@ -4002,6 +4485,10 @@ function generateEpikriz(id){
   </body></html>`;
 
   const w=window.open('','_blank');
+  if(!w){
+    showToast('❌ Pop-up penceresi engellendi. Tarayıcınızda bu site için pop-up iznini açıp tekrar deneyin.');
+    return;
+  }
   w.document.write(html);
   w.document.close();
   setTimeout(()=>w.print(),600);
@@ -4019,7 +4506,7 @@ function saveDraft(){
   ['f-ad','f-tc','f-tel','f-yas','f-tarih','f-gelis','f-hekim','f-bt','f-pet','f-patoloji',
    'f-fev1p','f-fev1l','f-fvcp','f-fvcl','f-dlco','f-vo2','f-eko','f-komorbid',
    'f-kan-ilac','f-uyari-txt','f-asa','f-anest-not','f-op-tarih','f-sure',
-   'f-son-patoloji','f-op-not','f-komp-not','f-komp-tarih','f-id',
+   'f-son-patoloji','f-op-not','f-komp-not','f-komp-tarih','f-id','f-anamnez',
    'f-cinsiyet','f-biopsi','f-ybu','f-histoloji','f-evre','f-clavien',
    't-kan','t-anest','t-uyari','t-komp'].forEach(id=>{
     const el=document.getElementById(id);if(el)draft[id]=el.value;
@@ -4063,6 +4550,28 @@ function enableDraftSaving(){
   });
 }
 
+function copyToClipboard(text,label){
+  const done=()=>showToast('📋 '+(label||'Kopyalandı')+': '+text);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>{fallbackCopy(text);done();});
+  } else {
+    fallbackCopy(text);done();
+  }
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+}
+function flashCopy(el,text,label){
+  copyToClipboard(text,label);
+  const orig=el.style.color;
+  el.style.transition='color 0.15s';
+  el.style.color='var(--accent)';
+  setTimeout(()=>{el.style.color=orig;},700);
+}
 function showToast(msg){
   // Domain uyarı mesajlarını filtrele
   if(msg&&(msg.includes('github.io')||msg.includes('localhost')||msg.includes('file://')))return;
@@ -4378,6 +4887,7 @@ applyFontSize();
 autoThemeCheck();
 rebuildSelects();
 rebuildPreopKonsuSelect();
+rebuildTetkikTurSelect();
 rebuildThoracoscoreHastaList();
 renderList();
 checkYarinBanner();
@@ -4465,12 +4975,7 @@ document.body.classList.remove('ready');
 initPin();
 enableDraftSaving();
 
-// OTOMATİK TEMA
-function autoThemeCheck(){
-  if(settings.theme!=='auto') return;
-  const dark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.body.className=dark?'':'theme-light';
-}
+// autoThemeCheck tanımı yukarıda — media change listener
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(settings.theme==='auto')autoThemeCheck();});
 
 // ARAÇ SEKMESİ
@@ -4493,27 +4998,30 @@ function calcTNM(){
   // M1c → Evre IVB (çoklu organ uzak met)
   // M1b → Evre IVA (tek organ uzak met — M1b IVB DEĞİL IVA'dır)
   // M1a → Evre IVA (plevral/perikardiyal yayılım veya karşı akciğer nodülü)
-  if(M==='M1c') evre='Evre IVB';
-  else if(M==='M1b') evre='Evre IVA';  // DÜZELTİLDİ: M1b → IVA (önceki hatalı değer: IVB)
+  // IASLC 8. Edisyon NSCLC — Goldstraw et al. J Thorac Oncol 2016
+  // Tis validasyonu
+  if(T==='Tis' && (N!=='N0' || M!=='M0')){
+    evre='Geçersiz kombinasyon';
+  }
+  else if(M==='M1c') evre='Evre IVB';
+  else if(M==='M1b') evre='Evre IVA';
   else if(M==='M1a') evre='Evre IVA';
   else if(N==='N3'){
-    // N3: T1-4 → IIIB; T3-4+N3 → IIIC
+    // T1-T2 + N3 → IIIB; T3-T4 + N3 → IIIC
     if(T==='T4'||T==='T3') evre='Evre IIIC';
     else evre='Evre IIIB';
   }
   else if(N==='N2'){
-    if(T==='T4') evre='Evre IIIC';
-    else if(T==='T3') evre='Evre IIIA';
-    else evre='Evre IIIA'; // T1a-T2b + N2 → IIIA
+    // T4+N2 → IIIA (IIIC DEĞİL); T1-T3+N2 → IIIA
+    evre='Evre IIIA';
   }
   else if(N==='N1'){
+    // T4+N1 → IIIA; T3+N1 → IIIB (8.ed düzeltme); T1-T2+N1 → IIB
     if(T==='T4') evre='Evre IIIA';
-    else if(T==='T3') evre='Evre IIB';
-    else if(T==='T2b') evre='Evre IIB';
-    else if(T==='T2a') evre='Evre IIB';
-    else evre='Evre IIB'; // T1a-T1c + N1 → IIB
+    else if(T==='T3') evre='Evre IIIB';
+    else evre='Evre IIB'; // T1a/T1b/T1c/T2a/T2b + N1
   }
-  else { // N0
+  else { // N0, M0
     if(T==='T4') evre='Evre IIIA';
     else if(T==='T3') evre='Evre IIB';
     else if(T==='T2b') evre='Evre IIA';
@@ -4531,17 +5039,28 @@ function calcTNM(){
   const tnmEl=document.getElementById('tnm-tnm-display');
   const interpEl=document.getElementById('tnm-interp');
 
+  if(evre==='Geçersiz kombinasyon'){
+    evreEl.textContent='⚠️ Geçersiz Kombinasyon';
+    evreEl.className='arac-result-mid';
+    tnmEl.textContent=`${T} · ${N} · ${M}`;
+    interpEl.innerHTML='Tis (in situ karsinom) yalnızca N0 M0 ile birlikte kullanılabilir. Lütfen T değerini kontrol edin.';
+    document.getElementById('tnm-copy-btn').dataset.evre='';
+    document.getElementById('tnm-copy-btn').dataset.tnm='';
+    return;
+  }
+
   let cls,bilgi;
   if(evre.includes('IVB')||evre.includes('IVA')){cls='arac-result-high';bilgi='Uzak metastaz mevcut. Küratif cerrahi endikasyonu yok. Sistemik tedavi (kemoterapi/immünoterapi/hedefe yönelik) planlanmalıdır.';}
-  else if(evre.includes('IIIC')||evre.includes('IIIB')){cls='arac-result-high';bilgi='Lokal ileri hastalık. Cerrahi genellikle kontrendike. Kemoradyoterapi / multidisipliner değerlendirme gereklidir.';}
-  else if(evre.includes('IIIA')){cls='arac-result-mid';bilgi='Potansiyel olarak rezektabl lokal ileri hastalık. Multidisipliner onkoloji kurulu kararı gereklidir. Neoadjuvan tedavi düşünülmelidir.';}
+  else if(evre.includes('IIIC')){cls='arac-result-high';bilgi='Lokal ileri hastalık (T3-4+N3). Cerrahi kontrendike. Definitif kemoradyoterapi planlanmalıdır.';}
+  else if(evre.includes('IIIB')){cls='arac-result-high';bilgi='Lokal ileri hastalık (T1-2+N3 veya T3+N1). Kemoradyoterapi veya multidisipliner değerlendirme gereklidir.';}
+  else if(evre.includes('IIIA')){cls='arac-result-mid';bilgi='Potansiyel olarak rezektabl lokal ileri hastalık (T4N0-1, T1-3+N2). Multidisipliner onkoloji kurulu kararı gereklidir. Neoadjuvan tedavi düşünülmelidir.';}
   else if(evre.includes('IIB')||evre.includes('IIA')){cls='arac-result-mid';bilgi='Lokal hastalık. Cerrahi rezeksiyon endikasyonu var. Adjuvan kemoterapi planlanabilir.';}
   else{cls='arac-result-low';bilgi='Erken evre hastalık. Cerrahi rezeksiyon (lobektomi/wedge) küratif amaçlı uygulanabilir. 5 yıllık sağkalım yüksek.';}
 
   evreEl.textContent=evre;
   evreEl.className=cls;
   tnmEl.textContent=`${T} · ${N} · ${M}`;
-  interpEl.innerHTML=`${bilgi}<br><span style="color:var(--text3);font-size:0.667em;">Kaynak: Goldstraw et al. J Thorac Oncol 2016 · IASLC 8. Edisyon · v2.1.1 (M1b→IVA düzeltmesi)</span>`;
+  interpEl.innerHTML=`${bilgi}<br><span style="color:var(--text3);font-size:0.667em;">Kaynak: Goldstraw et al. J Thorac Oncol 2016 · IASLC 8. Edisyon · v2.1.2</span>`;
 
   // Kopyala butonuna evre bilgisini sakla
   document.getElementById('tnm-copy-btn').dataset.evre=evre;
@@ -4711,47 +5230,8 @@ function calcNodul(){
   interpEl.innerHTML=`${guideline}<br><span style="color:var(--text3);font-size:0.667em;">Kaynak: McWilliams et al. NEJM 2013;369:910-919 · Brock (Pan-Can) Modeli</span>`;
 }
 
-// QR KOD
+// QR KOD (kamera ile okuma — Araçlar > QR Arama)
 let qrStream=null;let qrScanInterval=null;
-function showQR(pid){
-  const p=patients.find(x=>x.id===pid);if(!p)return;
-  document.getElementById('qr-modal-title').textContent='📷 '+p.ad+' — QR';
-  document.getElementById('qr-modal-sub').textContent='TC: '+p.tc;
-  document.getElementById('qr-modal').classList.add('show');
-  setTimeout(()=>drawQR(p.tc||p.id),100);
-}
-function drawQR(data){
-  const canvas=document.getElementById('qr-canvas');
-  const ctx=canvas.getContext('2d');
-  const W=220,H=220;
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  // Basit QR benzeri görsel + TC yazısı
-  ctx.fillStyle='#000';
-  // Köşe kareleri (finder patterns)
-  function drawFinder(x,y){
-    ctx.fillStyle='#000';ctx.fillRect(x,y,49,49);
-    ctx.fillStyle='#fff';ctx.fillRect(x+7,y+7,35,35);
-    ctx.fillStyle='#000';ctx.fillRect(x+14,y+14,21,21);
-  }
-  drawFinder(10,10);drawFinder(161,10);drawFinder(10,161);
-  // Veri modülleri — hash'e göre
-  ctx.fillStyle='#000';
-  let hash=0;for(let i=0;i<data.length;i++)hash=(hash*31+data.charCodeAt(i))>>>0;
-  for(let row=0;row<14;row++){
-    for(let col=0;col<14;col++){
-      // Köşe finder alanlarını atla
-      if((row<7&&col<7)||(row<7&&col>6)||(row>6&&col<7))continue;
-      const bit=(hash^(row*17+col*13)^(row<<col))&1;
-      if(bit)ctx.fillRect(60+col*7,60+row*7,6,6);
-    }
-  }
-  // TC metnini ortaya yaz
-  ctx.fillStyle='rgba(255,255,255,0.92)';ctx.fillRect(45,90,130,42);
-  ctx.fillStyle='#000';ctx.font='bold 11px monospace';ctx.textAlign='center';
-  ctx.fillText('TC: '+data,110,107);
-  ctx.font='9px monospace';ctx.fillStyle='#555';
-  ctx.fillText('Toraks Cerrahi Takip',110,122);
-}
 function searchByTC(){
   const q=(document.getElementById('qr-tc-input').value||'').trim();
   const el=document.getElementById('qr-result');
@@ -4786,7 +5266,11 @@ function scanQRFrame(video){
   canvas.width=video.videoWidth;canvas.height=video.videoHeight;
   const ctx=canvas.getContext('2d');ctx.drawImage(video,0,0);
   const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-  if(typeof jsQR==='undefined')return;
+  if(typeof jsQR==='undefined'){
+    stopQRCamera();
+    showToast('❌ QR kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edin.');
+    return;
+  }
   const code=jsQR(imageData.data,imageData.width,imageData.height);
   if(code&&code.data){
     const tc=code.data.replace(/\D/g,'');
@@ -4862,9 +5346,13 @@ function checkYarinBanner(){
 // AMELİYAT TAMAMLA
 function openTamamlaModal(pid){
   const p=patients.find(x=>x.id===pid);if(!p)return;
+  iptalNedenGerekli=true; // bugünkü ameliyat, 17:00 sonrası — resmi iptal akışı
+  document.getElementById('tamamla-modal-title').textContent='🔔 Ameliyat Tamamlandı mı?';
+  document.getElementById('tamamla-yapildi-row').style.display='flex';
   document.getElementById('tamamla-pid').value=pid;
   document.getElementById('tamamla-pname').textContent=p.ad+(p.ameliyat?' — '+p.ameliyat:'');
   document.getElementById('tamamla-iptal-detay').style.display='none';
+  document.getElementById('tamamla-neden-blok').style.display='block';
   document.getElementById('tamamla-iptal-neden').value='';
   document.getElementById('tamamla-iptal-not').value='';
   document.getElementById('tamamla-yeni-tarih').value='';
@@ -4877,7 +5365,7 @@ function tamamlaYapildi(){
   currentOpPid=pid;
   document.getElementById('op-modal-pname').textContent=p.ad;
   omYapilanList=p.ameliyat?[p.ameliyat]:[];
-  omRebuildSel();omRenderList();
+  omRebuildSel();omRenderList();resetYak('om');
   document.getElementById('om-yapilan-serbest').value='';
   document.getElementById('om-tarih').value=new Date().toISOString().split('T')[0];
   document.getElementById('om-sure').value='';
@@ -4890,11 +5378,22 @@ function tamamlaIptal(){
 function tamamlaIptalKaydet(){
   const pid=document.getElementById('tamamla-pid').value;
   const p=patients.find(x=>x.id===pid);if(!p)return;
-  const neden=document.getElementById('tamamla-iptal-neden').value;
-  const not=document.getElementById('tamamla-iptal-not').value;
   const yeniTarih=document.getElementById('tamamla-yeni-tarih').value;
-  // Neden ve notu kaydet
-  if(neden||not) p.iptalNeden=(neden?neden+': ':'')+not;
+  // Neden sadece bugünkü ameliyatın 17:00 sonrası resmi iptalinde sorulur ve geçmişe kaydedilir.
+  // Planlı bir hastanın tarihini keyfe göre değiştirme/iptalinde neden sorulmaz, kaydedilmez.
+  if(iptalNedenGerekli){
+    const neden=document.getElementById('tamamla-iptal-neden').value;
+    const not=document.getElementById('tamamla-iptal-not').value;
+    if(neden||not){
+      if(!p.iptalGecmisi) p.iptalGecmisi=[];
+      p.iptalGecmisi.push({
+        kayitTarihi:new Date().toISOString().split('T')[0],
+        eskiTarih:p.tarih||'',
+        neden:neden||'',
+        not:not||''
+      });
+    }
+  }
   // Tarihi temizle veya güncelle
   if(yeniTarih){
     p.tarih=yeniTarih;
@@ -4903,6 +5402,7 @@ function tamamlaIptalKaydet(){
     p.tarih='';
     showToast('⏳ '+p.ad+' bekleme listesine alındı.');
   }
+  p.savedAt=new Date().toISOString();
   saveData();
   closeModal('tamamla-modal');
   renderList();
@@ -4954,7 +5454,7 @@ function tamamlaYapildiDirect(pid){
   currentOpPid=pid;
   document.getElementById('op-modal-pname').textContent=p.ad;
   omYapilanList=p.ameliyat?[p.ameliyat]:[];
-  omRebuildSel();omRenderList();
+  omRebuildSel();omRenderList();resetYak('om');
   document.getElementById('om-yapilan-serbest').value='';
   document.getElementById('om-tarih').value=new Date().toISOString().split('T')[0];
   document.getElementById('om-sure').value='';
@@ -4962,10 +5462,31 @@ function tamamlaYapildiDirect(pid){
   document.getElementById('op-modal').classList.add('show');
 }
 function openTamamlaIptal(pid){
+  // Bugünkü ameliyat, 17:00 sonrası — resmi iptal akışı (neden sorulur, geçmişe kaydedilir)
   const p=patients.find(x=>x.id===pid);if(!p)return;
+  iptalNedenGerekli=true;
+  document.getElementById('tamamla-modal-title').textContent='❌ Ameliyatı İptal / Ertele';
+  document.getElementById('tamamla-yapildi-row').style.display='none';
   document.getElementById('tamamla-pid').value=pid;
   document.getElementById('tamamla-pname').textContent=p.ad+(p.ameliyat?' — '+p.ameliyat:'');
   document.getElementById('tamamla-iptal-detay').style.display='block';
+  document.getElementById('tamamla-neden-blok').style.display='block';
+  document.getElementById('tamamla-iptal-neden').value='';
+  document.getElementById('tamamla-iptal-not').value='';
+  document.getElementById('tamamla-yeni-tarih').value='';
+  document.getElementById('tamamla-modal').classList.add('show');
+}
+function openPlanliIptal(pid){
+  // Planlı (henüz bugün/17:00 olmamış) bir hastanın tarihini keyfe göre değiştirme/iptali —
+  // neden sorulmaz, geçmişe kaydedilmez.
+  const p=patients.find(x=>x.id===pid);if(!p)return;
+  iptalNedenGerekli=false;
+  document.getElementById('tamamla-modal-title').textContent='❌ Ameliyatı İptal / Ertele';
+  document.getElementById('tamamla-yapildi-row').style.display='none';
+  document.getElementById('tamamla-pid').value=pid;
+  document.getElementById('tamamla-pname').textContent=p.ad+(p.ameliyat?' — '+p.ameliyat:'');
+  document.getElementById('tamamla-iptal-detay').style.display='block';
+  document.getElementById('tamamla-neden-blok').style.display='none';
   document.getElementById('tamamla-iptal-neden').value='';
   document.getElementById('tamamla-iptal-not').value='';
   document.getElementById('tamamla-yeni-tarih').value='';
@@ -4975,13 +5496,14 @@ function openTamamlaIptal(pid){
 // PAYLAŞIM
 function shareHastaDetay(id){
   const p=patients.find(x=>x.id===id);if(!p)return;
+  // KVKK: TC kimlik no ve telefon paylaşıma dahil edilmez
   let metin=`🫁 THORACIS — Hasta Özeti\n`;
   metin+=`${'─'.repeat(30)}\n`;
   metin+=`👤 ${p.ad}`;
   if(p.yas) metin+=` | ${p.yas} yaş`;
   if(p.cinsiyet) metin+=` | ${p.cinsiyet}`;
   metin+='\n';
-  if(p.tc) metin+=`🪪 TC: ${p.tc}\n`;
+  // TC ve telefon kasıtlı olarak paylaşıma dahil edilmiyor (KVKK)
   if(p.ameliyat) metin+=`🔪 Planlanan: ${p.ameliyat}`;
   if(p.tarih) metin+=` — ${new Date(p.tarih).toLocaleDateString('tr-TR')}`;
   if(p.ameliyat||p.tarih) metin+='\n';
@@ -5001,10 +5523,11 @@ function shareHastaDetay(id){
   if(p.bt) metin+=`🖥️ BT: ${p.bt}\n`;
   if(p.pet) metin+=`☢️ PET-BT: ${p.pet}\n`;
   if(p.komplikasyonlar&&p.komplikasyonlar.length) metin+=`🚨 Komplikasyon: ${p.komplikasyonlar.join(', ')}\n`;
-  metin+=`${'─'.repeat(30)}\nTHORACIS Surgical Tracker`;
+  metin+=`${'─'.repeat(30)}\nTHORACIS Surgical Tracker\n⚠️ Bu özet klinik iletişim amaçlıdır. TC/tel bilgisi kasıtlı paylaşılmamıştır.`;
   if(navigator.share){
     navigator.share({title:'THORACIS — '+p.ad,text:metin}).catch(()=>{});
   } else {
+    // WhatsApp fallback — hassas kişisel veri içermediğinden kabul edilebilir
     window.open('https://wa.me/?text='+encodeURIComponent(metin),'_blank');
   }
 }
@@ -5056,22 +5579,49 @@ function setSigara(durum){
   if(br)br.style.display=(durum==='birakti')?'':'none';
 }
 
-// THORACOSCORE 2020 HESAPLA
+// THORACOSCORE 2020 HESAPLA (form içi) — Die Loucou et al. EJCTS 2020
+// Sürekli yaş modeliyle — Araçlar sekmesiyle tutarlı
 function calcTsForm(){
-  const v=n=>parseInt(document.getElementById('tsf-'+n).value)||0;
-  const b0=-7.3737;
-  const k={yas:[0,0.6294,1.0542,1.4580],cinsiyet:[0,0.3126],asa:[0,0.7447,1.6052],ps:[0,0.5049,0.9387,1.5063],dispne:[0,0.4160,0.9002,1.3290],prosedur:[0,0.6294],acil:[0,1.0674],plevral:[0,0.4656],malign:[0,0.4820]};
-  let logit=b0;
-  Object.keys(k).forEach(n=>{logit+=k[n][v(n)]||0;});
-  const risk=(1/(1+Math.exp(-logit))*100).toFixed(1);
-  const skor=logit.toFixed(2);
+  // Yaş formdaki f-yas alanından veya tsf-yas select'ten al
+  const yasEl=document.getElementById('f-yas');
+  const yas=parseFloat(yasEl?yasEl.value:0)||0;
+  if(!yas||yas<16){const r=document.getElementById('tsf-result');if(r)r.textContent='Yaş gerekli';return;}
+
+  const erkek=parseInt(document.getElementById('tsf-cinsiyet').value)||0;
+  const asaV=parseInt(document.getElementById('tsf-asa').value)||0;
+  const psV=parseInt(document.getElementById('tsf-ps').value)||0;
+  const dispneV=parseInt(document.getElementById('tsf-dispne').value)||0;
+  const prosedur=parseInt(document.getElementById('tsf-prosedur').value)||0;
+  const acil=parseInt(document.getElementById('tsf-acil').value)||0;
+  const malign=parseInt(document.getElementById('tsf-malign').value)||0;
+  // Plevral: mevcut modelde 0 katsayılı (Die Loucou 2020'de yok) — plevral toggle var ama katsayısı yok
+  // Komorbidite: form içinde f-komorbid text alanından inferle
+  const komorbidEl=document.getElementById('f-komorbid');
+  const komorbid=komorbidEl&&komorbidEl.value.trim()?1:0;
+
+  const z = -5.385
+    + 0.032 * yas
+    + 0.384 * erkek
+    + 0.612 * asaV
+    + 0.554 * psV
+    + 0.421 * dispneV
+    + 0.298 * malign
+    + 1.125 * acil
+    + 0.742 * prosedur
+    + 0.395 * komorbid;
+
+  const prob = Math.round((1 / (1 + Math.exp(-z))) * 1000) / 10;
+  const skor = z.toFixed(2);
+
   document.getElementById('f-ts-skor').value=skor;
-  document.getElementById('f-ts-risk').value=risk;
-  const data={yas:v('yas'),cinsiyet:v('cinsiyet'),asa:v('asa'),ps:v('ps'),dispne:v('dispne'),prosedur:v('prosedur'),acil:v('acil'),plevral:v('plevral'),malign:v('malign')};
+  document.getElementById('f-ts-risk').value=prob;
+  const data={yas,cinsiyet:erkek,asa:asaV,ps:psV,dispne:dispneV,prosedur,acil,malign,komorbid};
   document.getElementById('f-ts-data').value=JSON.stringify(data);
-  const rn=parseFloat(risk);
+
+  const rn=parseFloat(prob);
   const renk=rn<2?'var(--success)':rn<5?'var(--warn)':'var(--danger)';
-  document.getElementById('tsf-result').innerHTML=`<span style="color:${renk};font-weight:700;">%${risk} mortalite riski</span>`;
+  const resEl=document.getElementById('tsf-result');
+  if(resEl) resEl.innerHTML=`<span style="color:${renk};font-weight:700;">%${prob} mortalite riski</span>`;
 }
 
 // BU AY POPUP
@@ -5248,7 +5798,7 @@ function enableDrag(){
       if(srcIdx<0||tgtIdx<0)return;
       const [moved]=datePats.splice(srcIdx,1);datePats.splice(tgtIdx,0,moved);
       // Sıra numaralarını kaydet
-      datePats.forEach((p,i)=>{const real=patients.find(x=>x.id===p.id);if(real)real.siraNo=i;});
+      datePats.forEach((p,i)=>{const real=patients.find(x=>x.id===p.id);if(real){real.siraNo=i;real.savedAt=new Date().toISOString();}});
       saveData();renderWeekList();
     });
   });
@@ -5266,7 +5816,7 @@ try {
   }
 } catch(e){ /* iframe/srcdoc ortamında history API çalışmaz, yoksay */ }
 </script>
-<div class="signature"><span>THORACIS v2.1.0 | Dr. İlhan Ocakcıoğlu</span></div>
+<div class="signature"><span>THORACIS v2.2.0 | Dr. İlhan Ocakcıoğlu</span></div>
 <div id="cal-popup-ov" onclick="closeCalPopup()" style="display:none;"></div>
 <div id="cal-popup" style="display:none;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
