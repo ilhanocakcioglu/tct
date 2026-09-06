@@ -5781,7 +5781,7 @@ function autoFillRezeksiyon(){const sel=document.getElementById('rez-hasta-sec')
 function calcRezeksiyon(){const n=selectedSegs.size;if(!n){document.getElementById('rez-result').style.display='none';return;}const fev1pct=parseFloat(document.getElementById('rez-fev1pct').value)||0;const dlcopct=parseFloat(document.getElementById('rez-dlcopct').value)||0;let ppoFev1,ppoDlco,formula='';if(perfuzyonOn){const perfPct=parseFloat(document.getElementById('rez-perf-pct').value)||0;const perfFrac=perfPct/100;ppoFev1=fev1pct*(1-perfFrac);ppoDlco=dlcopct*(1-perfFrac);formula='Perfüzyon: ppo%=Preop%×(1-'+perfPct+'%) | ppoFEV1%='+ppoFev1.toFixed(1)+' | ppoDLCO%='+ppoDlco.toFixed(1);}else{ppoFev1=fev1pct*(TOTAL_SEGS-n)/TOTAL_SEGS;ppoDlco=dlcopct*(TOTAL_SEGS-n)/TOTAL_SEGS;formula='Segment: ppo%=Preop%×(19−'+n+')/19 | ppoFEV1%='+ppoFev1.toFixed(1)+' | ppoDLCO%='+ppoDlco.toFixed(1);}let badge='',text='',color='';var fev1l_val=parseFloat(document.getElementById('rez-fev1').value)||0;var litreBad=fev1l_val&&(perfuzyonOn?fev1l_val*(1-(parseFloat(document.getElementById('rez-perf-pct').value)||0)/100):fev1l_val*(TOTAL_SEGS-n)/TOTAL_SEGS)<0.8;if(!fev1pct&&!dlcopct){badge='⚠️ Değer girilmedi';color='var(--border)';text='Lütfen SFT değerlerini girin.';}else if(litreBad||ppoFev1<30||ppoDlco<30){badge='🔴 YÜKSEK RİSK';color='#3f0606';text='Yüksek Risk! Fonksiyonel rezerv veya mutlak volüm kritik sınırın altındadır. Cerrahi mortalite çok yüksektir.';}else if(ppoFev1<60||ppoDlco<60){badge='🟡 ORTA RİSK — İleri Tetkik Gerekli';color='#3f2a00';text='Fonksiyonel rezerv sınırda. Merdiven testi (>22m güvenli) veya Shuttle Walk (>400m güvenli) uygulanmalı; sonuçlar suboptimal ise altın standart CPET (VO₂max) ile ileri değerlendirme yapılmalıdır.';}else{badge='🟢 DÜŞÜK RİSK';color='#052e16';text='Düşük Risk. Fonksiyonel parametreler operasyon için yeterli ve güvenli görünmektedir.';}document.getElementById('rez-result').style.display='block';document.getElementById('rez-ppofev1').textContent=fev1pct?ppoFev1.toFixed(1)+'%':'—';var fev1l_raw=parseFloat(document.getElementById('rez-fev1').value)||0;var lEl=document.getElementById('rez-ppofev1-l');if(lEl){if(fev1l_raw){var ppoL=perfuzyonOn?fev1l_raw*(1-(parseFloat(document.getElementById('rez-perf-pct').value)||0)/100):fev1l_raw*(TOTAL_SEGS-n)/TOTAL_SEGS;lEl.textContent=ppoL.toFixed(2)+' L';}else{lEl.textContent='';}}document.getElementById('rez-ppodlco').textContent=dlcopct?ppoDlco.toFixed(1)+'%':'—';const rb=document.getElementById('rez-risk-badge');rb.textContent=badge;rb.style.background=color;rb.style.color='#fff';rb.style.border='2px solid '+color;document.getElementById('rez-risk-text').textContent=text;}
 function rebuildRezeksiyonHastaList(){const sel=document.getElementById('rez-hasta-sec');if(!sel)return;sel.innerHTML='<option value="">— Hasta seçin —</option>';(patients||[]).filter(p=>!p.yapilanAmeliyat).sort((a,b)=>(a.ad||'').localeCompare(b.ad||'')).forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=(p.ad||'')+' '+(p.soyad||'');sel.appendChild(o);});}
 // SÜRÜKLE-BIRAK haftalık liste
-let dragSrcPid=null;let dragSrcDate=null;
+let dragSrcPid=null;let dragSrcDate=null;let dragOverPid=null;let dragOverDate=null;
 // Ortak sıralama mantığı — hem fare (desktop) hem dokunma (mobil) sürüklemesi bunu kullanır
 function reorderWeekPatients(srcPid,tgtPid,dateStr){
   if(!srcPid||!tgtPid||srcPid===tgtPid)return;
@@ -5792,7 +5792,14 @@ function reorderWeekPatients(srcPid,tgtPid,dateStr){
   const [moved]=datePats.splice(srcIdx,1);datePats.splice(tgtIdx,0,moved);
   // Sıra numaralarını kaydet
   datePats.forEach((p,i)=>{const real=patients.find(x=>x.id===p.id);if(real){real.siraNo=i;real.savedAt=new Date().toISOString();}});
-  saveData();renderWeekList();
+  saveData();
+  // renderWeekList() haftalık görünümü sıfırdan yeniden çizdiği için, yatay
+  // kaydırma konumu (hangi güne bakıldığı) sıfırlanmasın diye kaydedip geri koyuyoruz.
+  const scrollEl=document.querySelector('.week-cols');
+  const scrollLeft=scrollEl?scrollEl.scrollLeft:0;
+  renderWeekList();
+  const newScrollEl=document.querySelector('.week-cols');
+  if(newScrollEl) newScrollEl.scrollLeft=scrollLeft;
 }
 // Tarayıcının native HTML5 sürükle-bırak'ı (draggable/dragstart/drop) yerine
 // tek tip "Pointer Events" kullanıyoruz — fare, dokunma ve kalem için aynı kod
@@ -5805,6 +5812,7 @@ function enableDrag(){
     handle.addEventListener('pointerdown',e=>{
       e.preventDefault();
       dragSrcPid=card.dataset.pid;dragSrcDate=card.dataset.date;
+      dragOverPid=null;dragOverDate=null;
       card.classList.add('dragging');
       try{handle.setPointerCapture(e.pointerId);}catch(err){}
     });
@@ -5814,7 +5822,12 @@ function enableDrag(){
       const el=document.elementFromPoint(e.clientX,e.clientY);
       const overCard=el?el.closest('.week-pat-card[data-pid]'):null;
       document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('drag-over'));
-      if(overCard&&overCard.dataset.pid!==dragSrcPid) overCard.classList.add('drag-over');
+      if(overCard&&overCard.dataset.pid!==dragSrcPid){
+        overCard.classList.add('drag-over');
+        // Bırakma anında tam piksel bir kartın kenarına/aralığına denk gelirse
+        // işlem sessizce başarısız olmasın diye son geçerli hedefi hafızada tutuyoruz.
+        dragOverPid=overCard.dataset.pid;dragOverDate=overCard.dataset.date;
+      }
     });
     handle.addEventListener('pointerup',e=>{
       if(!dragSrcPid)return;
@@ -5822,7 +5835,8 @@ function enableDrag(){
       const overCard=el?el.closest('.week-pat-card[data-pid]'):null;
       document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('dragging','drag-over'));
       if(overCard) reorderWeekPatients(dragSrcPid,overCard.dataset.pid,overCard.dataset.date);
-      dragSrcPid=null;dragSrcDate=null;
+      else if(dragOverPid) reorderWeekPatients(dragSrcPid,dragOverPid,dragOverDate);
+      dragSrcPid=null;dragSrcDate=null;dragOverPid=null;dragOverDate=null;
     });
     handle.addEventListener('pointercancel',()=>{
       document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('dragging','drag-over'));
