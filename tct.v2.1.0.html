@@ -506,7 +506,7 @@ body{padding-bottom:40px;}
     <div id="splash-svg-wrap">
       <svg id="splash-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <!-- Tek birleşik skalpel path: gövde + ağız -->
-        <path id="sl-full" d="M30,170 L110,90 L155,52 Q162,44 158,38 Q152,32 144,39 L110,90" stroke="#00c2d4" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="sl-full" d="M30,170 L110,90 L155,52 Q162,44 158,38 Q152,32 144,39 L110,90" stroke="#00c2d4" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
         <!-- Parlama noktası -->
         <circle id="sl-shine" cx="152" cy="42" r="3" fill="#00c2d4" opacity="0"/>
         <!-- Akciğer soluk çizgisi -->
@@ -4931,6 +4931,10 @@ document.body.classList.remove('ready');
   const totalLen = path.getTotalLength();
   path.style.strokeDasharray = totalLen;
   path.style.strokeDashoffset = totalLen;
+  // dash ile tamamen gizlendiği için artık görünür yapılabilir — bu satırdan
+  // önce path'in HTML'de opacity="0" olması, JS bu satırlara gelene kadarki
+  // birkaç ms'lik pencerede çizilmemiş/tam haliyle anlık görünmesini (flaş) önler.
+  path.style.opacity = '1';
 
   const DRAW_START = 100;   // ms — çizim başlangıcı
   const DRAW_DUR   = 900;   // ms — çizim süresi
