@@ -383,8 +383,8 @@ body.theme-silver .cal-day.op-day .day-num{color:var(--accent);}
 .day-col.op-col{border-color:var(--warn);}
 .day-col-hdr{padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .day-col-title{font-size:0.733em;font-family:var(--mono);color:var(--warn);font-weight:600;}
-.day-col-date{font-size:0.667em;color:var(--text2);font-family:var(--mono);}
-.day-col-count{font-size:0.667em;background:color-mix(in srgb, var(--warn) 15%, transparent);color:color-mix(in srgb, var(--warn) 50%, black);padding:2px 6px;border-radius:3px;font-family:var(--mono);}
+.day-col-date{font-size:0.667em;color:var(--text2);font-family:var(--mono);margin-top:3px;}
+.day-col-count{font-size:0.667em;background:color-mix(in srgb, var(--warn) 15%, transparent);color:color-mix(in srgb, var(--warn) 75%, black);padding:2px 6px;border-radius:3px;font-family:var(--mono);}
 .week-pat-card{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none;-webkit-user-select:none;}
 .week-pat-card:last-child{border-bottom:none;}
 .week-pat-card:hover{background:var(--surface2);}
@@ -3580,6 +3580,8 @@ function renderWeekList(){
   const baseMon=new Date(todayD);baseMon.setDate(todayD.getDate()-dow+weekOffset*7);baseMon.setHours(0,0,0,0);
   const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const fmtLong=d=>d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+  const fmtWeekday=d=>d.toLocaleDateString('tr-TR',{weekday:'long'});
+  const fmtDayMonth=d=>d.toLocaleDateString('tr-TR',{day:'numeric',month:'long'});
   const rangeEl=document.getElementById('week-range-label');
 
   // Haftanın tüm günlerini oluştur
@@ -3605,7 +3607,10 @@ function renderWeekList(){
     const icon=isOp?'🔪':'📅';
     html+=`<div class="${colCls}">
       <div class="day-col-hdr">
-        <div><div class="day-col-title" style="color:${titleColor}">${icon} ${fmtLong(date).split(' ')[0]}</div><div class="day-col-date">${fmtLong(date)}</div></div>
+        <div style="display:flex;align-items:flex-start;gap:6px;">
+          <span style="font-size:0.733em;line-height:1.5;">${icon}</span>
+          <div><div class="day-col-title" style="color:${titleColor}">${fmtWeekday(date)}</div><div class="day-col-date">${fmtDayMonth(date)}</div></div>
+        </div>
         ${pts.length?`<div class="day-col-count" style="${isOp?'':'background:color-mix(in srgb, var(--accent) 15%, transparent);color:var(--accent);'}">${pts.length} hasta</div>`:''}
       </div>`;
     if(!pts.length){html+=`<div class="week-empty">${isOp?'Planlanmış ameliyat yok':'Hasta yok'}</div>`;}
