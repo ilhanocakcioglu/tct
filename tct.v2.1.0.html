@@ -17,7 +17,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>THORACIS — Surgical Tracker</title>
-<script type="text/javascript" nonce="c917d27021b247ae87d74a91970" src="//local.adguard.org?ts=1774886192641&amp;type=content-script&amp;dmn=attachment.outlook.live.net&amp;url=https%3A%2F%2Fattachment.outlook.live.net%2Fowa%2FMSA%253Ailhanocakcioglu%2540hotmail.com%2Fservice.svc%2Fs%2FGetFileAttachment%3Fid%3DAAkALgAAAAAAHYQDEapmEc2byACqAC%252FEWg0AXNk8hdA5D0SAC0xsq6hJ3wAI77RZaAAAARIAEAAMBu%252BWnTniTaBQKFq9qHFR%26isc%3D1%26X-OWA-CANARY%3DX-OWA-CANARY_cookie_is_null_or_empty%26owa%3Doutlook.live.com%26scriptVer%3D20260320002.06%26clientId%3D61A87E7122EB4CBA93139C7580FEFBA9%26origin%3D2%26isDownload%3Dtrue%26animation%3Dtrue&amp;app=com.apple.Safari&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script><script type="text/javascript" nonce="c917d27021b247ae87d74a91970" src="//local.adguard.org?ts=1774886192641&amp;name=AdGuard%20Extra&amp;type=user-script"></script><script type="text/javascript" nonce="c917d27021b247ae87d74a91970" src="//local.adguard.org?ts=1774379832123&amp;type=content-script&amp;dmn=attachment.outlook.live.net&amp;url=https%3A%2F%2Fattachment.outlook.live.net%2Fowa%2FMSA%253Ailhanocakcioglu%2540hotmail.com%2Fservice.svc%2Fs%2FGetFileAttachment%3Fid%3DAAkALgAAAAAAHYQDEapmEc2byACqAC%252FEWg0AXNk8hdA5D0SAC0xsq6hJ3wAI54LqGQAAARIAEADAsz1LvCpCQI%252F2H%252FQAVRe7%26isc%3D1%26X-OWA-CANARY%3DX-OWA-CANARY_cookie_is_null_or_empty%26owa%3Doutlook.live.com%26scriptVer%3D20260313003.08%26clientId%3D61A87E7122EB4CBA93139C7580FEFBA9%26origin%3D2%26isDownload%3Dtrue%26animation%3Dtrue&amp;app=com.apple.Safari&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script><script type="text/javascript" nonce="c917d27021b247ae87d74a91970" src="//local.adguard.org?ts=1774379832123&amp;name=AdGuard%20Extra&amp;type=user-script"></script><script type="text/javascript" nonce="c917d27021b247ae87d74a91970" src="//local.adguard.org?ts=1773716639130&amp;type=content-script&amp;dmn=attachment.outlook.live.net&amp;url=https%3A%2F%2Fattachment.outlook.live.net%2Fowa%2FMSA%253Ailhanocakcioglu%2540hotmail.com%2Fservice.svc%2Fs%2FGetFileAttachment%3Fid%3DAAkALgAAAAAAHYQDEapmEc2byACqAC%252FEWg0AXNk8hdA5D0SAC0xsq6hJ3wAI5bTIDgAAARIAEAAbb1C9aWQ3QJ4xvXZrQQwW%26isc%3D1%26X-OWA-CANARY%3DX-OWA-CANARY_cookie_is_null_or_empty%26owa%3Doutlook.live.com%26scriptVer%3D20260306001.05%26clientId%3D61A87E7122EB4CBA93139C7580FEFBA9%26origin%3D2%26isDownload%3Dtrue%26animation%3Dtrue&amp;app=com.apple.Safari&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script><script type="text/javascript" nonce="c917d27021b247ae87d74a91970" src="//local.adguard.org?ts=1773716639130&amp;name=AdGuard%20Extra&amp;type=user-script"></script><link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#00c2d4">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -485,6 +485,20 @@ body{padding-bottom:40px;}
 </style>
 </head>
 <body>
+<script>
+// Açılış animasyonu (splash) çizilmeden ÖNCE doğru temayı uygula —
+// aksi halde tarayıcı ilk boyamayı varsayılan koyu (siyaha yakın) renkle
+// yapıyor, sonra JS'in en altındaki applyTheme() çalışınca açık temaya
+// geçiyor; bu geçiş anlık bir siyah/koyu yanıp sönme gibi görünüyordu.
+(function(){
+  try{
+    var s=JSON.parse(localStorage.getItem('toraks_settings_v2')||'{}');
+    var t=s.theme||'dark';
+    if(t==='auto') t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+    document.body.className=t==='dark'?'':('theme-'+t);
+  }catch(e){}
+})();
+</script>
 
 <!-- AÇILIŞ ANİMASYONU -->
 <div id="splash-screen">
