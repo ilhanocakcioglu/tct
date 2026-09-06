@@ -176,7 +176,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .btn-outline-accent:hover{background:var(--accent);color:#fff;}
 .btn-w{border-color:var(--warn);color:var(--warn);}
 .tabs{display:flex;padding:4px 6px;background:var(--surface);border-bottom:1px solid var(--border);}
-.tab{padding:5px 2px;border-radius:6px;cursor:pointer;font-size:0.72rem;color:var(--text2);white-space:nowrap;transition:all .2s;flex:1;text-align:center;min-width:0;}
+.tab{padding:5px 2px;border-radius:6px;cursor:pointer;font-size:0.75rem;color:var(--text2);white-space:nowrap;transition:all .2s;flex:1;text-align:center;min-width:0;}
 .tab:hover{color:var(--text);background:var(--surface2);}
 .tab.active{background:var(--accent);color:#000;font-weight:600;}
 #cal-popup-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;}
@@ -634,8 +634,8 @@ body{padding-bottom:40px;}
   <div class="tab active" id="tab-list" onclick="switchTab('list')">Hastalar</div>
   <div class="tab" id="tab-takvim" onclick="switchTab('takvim')">Takvim</div>
   <div class="tab" id="tab-istatistik" onclick="switchTab('istatistik')">İstatistik</div>
-  <div class="tab" id="tab-araclar" onclick="switchTab('araclar')">🧮 Araçlar</div>
-  <div class="tab" id="tab-detail" onclick="switchTab('detail')">Detay</div>
+  <div class="tab" id="tab-araclar" onclick="switchTab('araclar')">Araçlar</div>
+  <div class="tab" id="tab-detail" onclick="switchTab('detail')" style="display:none;">Detay</div>
 </div>
 
 <main>
@@ -1061,7 +1061,7 @@ body{padding-bottom:40px;}
     <button class="fbtn" id="arac-tab-nodul" onclick="showArac('nodul',this)">🔵 Nodül Riski</button>
     <button class="fbtn" id="arac-tab-tnm" onclick="showArac('tnm',this)">🔬 TNM Evre</button>
     <button class="fbtn" id="arac-tab-qr" onclick="showArac('qr',this)">📷 QR Arama</button>
-    <button class="fbtn" id="arac-tab-rezeksiyon" onclick="showArac('rezeksiyon',this)">🫁 Rezeksiyon Planlayıcı</button>
+    <button class="fbtn" id="arac-tab-rezeksiyon" onclick="showArac('rezeksiyon',this)">🫁 ppoFEV1/DLCO</button>
   </div>
 
   <!-- THORACOSCORE -->
@@ -1276,7 +1276,7 @@ body{padding-bottom:40px;}
   <!-- REZEKSYON PLANLAYICI -->
   <div id="arac-rezeksiyon" style="display:none;">
   <div class="form-card">
-    <div class="sec-hdr green">🫁 Pulmoner Rezeksiyon Risk Hesaplayıcı</div>
+    <div class="sec-hdr green">🫁 ppoFEV1/DLCO Hesaplayıcı</div>
 
     <!-- Hasta Seç -->
     <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
