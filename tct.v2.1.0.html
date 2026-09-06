@@ -5785,7 +5785,9 @@ let dragSrcPid=null;let dragSrcDate=null;let dragOverPid=null;let dragOverDate=n
 // Ortak sıralama mantığı — hem fare (desktop) hem dokunma (mobil) sürüklemesi bunu kullanır
 function reorderWeekPatients(srcPid,tgtPid,dateStr){
   if(!srcPid||!tgtPid||srcPid===tgtPid)return;
-  let datePats=patients.filter(p=>p.tarih===dateStr&&!p.yapilanAmeliyat);
+  // Ekranda gösterilen sıra ile aynı olsun diye siraNo'ya göre sıralıyoruz —
+  // aksi halde dizideki (ekleniş) sırası kullanılır ve yanlış konuma taşınır.
+  let datePats=patients.filter(p=>p.tarih===dateStr&&!p.yapilanAmeliyat).sort((a,b)=>(a.siraNo||0)-(b.siraNo||0));
   const srcIdx=datePats.findIndex(p=>p.id===srcPid);
   const tgtIdx=datePats.findIndex(p=>p.id===tgtPid);
   if(srcIdx<0||tgtIdx<0)return;
