@@ -204,9 +204,10 @@ main{padding:10px;max-width:960px;margin:0 auto;}
 .patient-card.tarihsiz{border-left:3px solid var(--text3);}
 .patient-card.has-corner-btn{padding-top:26px;}
 .btn-icon-danger.corner{position:absolute;top:6px;right:8px;}
-.pavatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.933em;flex-shrink:0;}
+.pavatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.933em;flex-shrink:0;position:relative;}
 .pavatar.pre{background:linear-gradient(135deg,#1e3a5f,#0077b6);}
 .pavatar.post{background:linear-gradient(135deg,#052e16,#15803d);}
+.pavatar-badge{position:absolute;bottom:-2px;right:-2px;background:#22c55e;border:2px solid var(--surface);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;line-height:1;}
 .pinfo{flex:1;min-width:0;}
 .pname{font-weight:600;font-size:0.867em;}
 .pmeta{font-size:0.667em;color:var(--text2);margin-top:1px;font-family:var(--mono);}
@@ -4261,7 +4262,7 @@ function patCardHtml(p){
   const rightSideHtml = isWaiting ? quickTarihBtn : `<div class="pdate">${dateStr}</div>`;
   return`<div class="patient-card ${isPost?'done':p.tarih?'planned':'tarihsiz'}${iptalBtn?' has-corner-btn':''}" onclick="viewPatient('${p.id}')">
     ${iptalBtn}
-    <div class="pavatar ${isPost?'post':'pre'}">${isPost?'✅':'🫁'}</div>
+    <div class="pavatar ${isPost?'post':'pre'}">🫁${isPost?'<span class="pavatar-badge">✓</span>':''}</div>
     <div class="pinfo">
       <div class="pname">${p.ad}</div>
       <div class="pmeta">${p.tc||'TC yok'} · ${p.yas?p.yas+'y ':''} ${p.cinsiyet||''}</div>
