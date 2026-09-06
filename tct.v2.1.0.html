@@ -375,7 +375,7 @@ body.theme-silver .cal-day.op-day .day-num{color:var(--accent);}
 .cal-pat-badge.done{background:var(--success);color:#000;}
 .cal-badges{display:flex;gap:3px;flex-wrap:wrap;align-items:center;justify-content:center;width:100;}
 /* HAFTALIK AMELİYAT KARTLARI */
-.week-cols{display:flex;align-items:flex-start;gap:10px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;}
+.week-cols{display:flex;align-items:stretch;gap:10px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;}
 .week-cols::-webkit-scrollbar{height:8px;}
 .week-cols::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 .day-col{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;flex:0 0 270px;width:270px;scroll-snap-align:start;}
@@ -384,7 +384,7 @@ body.theme-silver .cal-day.op-day .day-num{color:var(--accent);}
 .day-col-hdr{padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .day-col-title{font-size:0.733em;font-family:var(--mono);color:var(--warn);font-weight:600;}
 .day-col-date{font-size:0.667em;color:var(--text2);font-family:var(--mono);}
-.day-col-count{font-size:0.667em;background:color-mix(in srgb, var(--warn) 15%, transparent);color:var(--warn);padding:2px 6px;border-radius:3px;font-family:var(--mono);}
+.day-col-count{font-size:0.667em;background:color-mix(in srgb, var(--warn) 15%, transparent);color:color-mix(in srgb, var(--warn) 50%, black);padding:2px 6px;border-radius:3px;font-family:var(--mono);}
 .week-pat-card{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none;-webkit-user-select:none;}
 .week-pat-card:last-child{border-bottom:none;}
 .week-pat-card:hover{background:var(--surface2);}
