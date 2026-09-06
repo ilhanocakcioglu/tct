@@ -172,6 +172,8 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .btn-d:hover{background:var(--danger);color:#fff;}
 .btn-s{border-color:var(--success);color:var(--success);}
 .btn-s:hover{background:var(--success);color:#000;}
+.btn-outline-accent{background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:6px;font-weight:600;font-family:var(--sans);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.btn-outline-accent:hover{background:var(--accent);color:#fff;}
 .btn-w{border-color:var(--warn);color:var(--warn);}
 .tabs{display:flex;padding:4px 6px;background:var(--surface);border-bottom:1px solid var(--border);}
 .tab{padding:5px 2px;border-radius:6px;cursor:pointer;font-size:0.72rem;color:var(--text2);white-space:nowrap;transition:all .2s;flex:1;text-align:center;min-width:0;}
@@ -195,11 +197,13 @@ main{padding:10px;max-width:960px;margin:0 auto;}
 .op-day-header{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;margin-top:8px;}
 .op-day-title{font-size:0.8em;font-weight:600;font-family:var(--mono);color:var(--warn);}
 .op-day-count{font-size:0.667em;color:var(--text2);margin-left:auto;}
-.patient-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.patient-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;position:relative;}
 .patient-card:hover{border-color:var(--accent);background:var(--surface2);}
 .patient-card.done{border-left:3px solid var(--success);}
 .patient-card.planned{border-left:3px solid var(--warn);}
 .patient-card.tarihsiz{border-left:3px solid var(--text3);}
+.patient-card.has-corner-btn{padding-top:26px;}
+.btn-icon-danger.corner{position:absolute;top:6px;right:8px;}
 .pavatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.933em;flex-shrink:0;}
 .pavatar.pre{background:linear-gradient(135deg,#1e3a5f,#0077b6);}
 .pavatar.post{background:linear-gradient(135deg,#052e16,#15803d);}
@@ -381,7 +385,7 @@ body.theme-silver .cal-day.op-day .day-num{color:var(--accent);}
 .day-col-title{font-size:0.733em;font-family:var(--mono);color:var(--warn);font-weight:600;}
 .day-col-date{font-size:0.667em;color:var(--text2);font-family:var(--mono);}
 .day-col-count{font-size:0.667em;background:#3f1c06;color:var(--warn);padding:2px 6px;border-radius:3px;font-family:var(--mono);}
-.week-pat-card{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.week-pat-card{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none;-webkit-user-select:none;}
 .week-pat-card:last-child{border-bottom:none;}
 .week-pat-card:hover{background:var(--surface2);}
 .week-pat-num{font-size:0.8em;font-family:var(--mono);color:var(--text3);min-width:20px;padding-top:1px;}
@@ -424,7 +428,7 @@ body.theme-silver .cal-day.op-day .day-num{color:var(--accent);}
 /* SÜRÜKLE BIRAK */
 .week-pat-card.dragging{opacity:.4;border:2px dashed var(--accent);}
 .week-pat-card.drag-over{border-top:3px solid var(--accent);}
-.drag-handle{cursor:grab;color:var(--text3);padding:0 4px;font-size:1.067em;flex-shrink:0;}
+.drag-handle{cursor:grab;color:var(--text3);padding:0 4px;font-size:1.067em;flex-shrink:0;touch-action:none;}
 /* ARAÇLAR */
 .arac-result-low{color:var(--success);}
 .arac-result-mid{color:var(--warn);}
@@ -3876,13 +3880,13 @@ function viewPatient(id){
   html+=`<div class="dcard" style="margin-bottom:20px;">
     <div class="sec-hdr">⚡ Hızlı İşlemler</div>
     <div style="padding:10px 12px;display:flex;gap:8px;">
-      <button onclick="openAiAnaliz('${p.id}')" style="flex:1;padding:12px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--purple);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
-        🤖 AI Analiz
+      <button onclick="openAiAnaliz('${p.id}')" style="flex:1;padding:8px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--purple);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
+        🤖 AI
       </button>
-      <button onclick="generateEpikriz('${p.id}')" style="flex:1;padding:12px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--accent);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
+      <button onclick="generateEpikriz('${p.id}')" style="flex:1;padding:8px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--accent);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
         📄 Epikriz
       </button>
-      <button onclick="shareHastaDetay('${p.id}')" style="flex:1;padding:12px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
+      <button onclick="shareHastaDetay('${p.id}')" style="flex:1;padding:8px 6px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:0.8em;font-weight:700;font-family:var(--mono);cursor:pointer;letter-spacing:.3px;">
         📤 Paylaş
       </button>
     </div>
@@ -4245,15 +4249,13 @@ function patCardHtml(p){
   const dateStr=p.opTarih?'✅ '+new Date(p.opTarih).toLocaleDateString('tr-TR'):p.tarih?'📅 '+new Date(p.tarih).toLocaleDateString('tr-TR'):(isWaiting?'':(p.gelis?'🏥 '+new Date(p.gelis).toLocaleDateString('tr-TR'):''));
   // Banner: son 24 saatte zorunlu eksik varsa göster
   const clBannerHtml = !isPost ? clBanner(p.id, p.ameliyat||'', p.tarih) : '';
-  const quickTarihBtn = isWaiting ? `<button class="btn btn-p" style="font-size:0.667em;padding:4px 8px;white-space:nowrap;" onclick="event.stopPropagation();openQuickTarihModal('${p.id}')">📅 Tarih Ata</button>` : '';
+  const quickTarihBtn = isWaiting ? `<button class="btn-outline-accent" style="font-size:0.667em;padding:4px 9px;" onclick="event.stopPropagation();openQuickTarihModal('${p.id}')">📅 Tarih Ata</button>` : '';
   // Planlı ama bugünkü (17:00 sonrası) ameliyat değilse — her zaman erişilebilir iptal/erteleme butonu
   const isPlanned = !isPost && !!p.tarih;
-  const iptalBtn = (isPlanned && !bugunAmeliyat) ? `<button class="btn-icon-danger" title="İptal/Ertelendi" onclick="event.stopPropagation();openPlanliIptal('${p.id}')">✕</button>` : '';
-  // Buton + tarih aynı dar sütunda üst üste dursun ki soldaki bilgi alanı daralmasın
-  const rightSideHtml = isWaiting
-    ? quickTarihBtn
-    : (iptalBtn ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">${iptalBtn}<div class="pdate">${dateStr}</div></div>` : `<div class="pdate">${dateStr}</div>`);
-  return`<div class="patient-card ${isPost?'done':p.tarih?'planned':'tarihsiz'}" onclick="viewPatient('${p.id}')">
+  const iptalBtn = (isPlanned && !bugunAmeliyat) ? `<button class="btn-icon-danger corner" title="İptal/Ertelendi" onclick="event.stopPropagation();openPlanliIptal('${p.id}')">✕</button>` : '';
+  const rightSideHtml = isWaiting ? quickTarihBtn : `<div class="pdate">${dateStr}</div>`;
+  return`<div class="patient-card ${isPost?'done':p.tarih?'planned':'tarihsiz'}${iptalBtn?' has-corner-btn':''}" onclick="viewPatient('${p.id}')">
+    ${iptalBtn}
     <div class="pavatar ${isPost?'post':'pre'}">${isPost?'✅':'🫁'}</div>
     <div class="pinfo">
       <div class="pname">${p.ad}</div>
@@ -5780,27 +5782,65 @@ function calcRezeksiyon(){const n=selectedSegs.size;if(!n){document.getElementBy
 function rebuildRezeksiyonHastaList(){const sel=document.getElementById('rez-hasta-sec');if(!sel)return;sel.innerHTML='<option value="">— Hasta seçin —</option>';(patients||[]).filter(p=>!p.yapilanAmeliyat).sort((a,b)=>(a.ad||'').localeCompare(b.ad||'')).forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=(p.ad||'')+' '+(p.soyad||'');sel.appendChild(o);});}
 // SÜRÜKLE-BIRAK haftalık liste
 let dragSrcPid=null;let dragSrcDate=null;
+// Ortak sıralama mantığı — hem fare (desktop) hem dokunma (mobil) sürüklemesi bunu kullanır
+function reorderWeekPatients(srcPid,tgtPid,dateStr){
+  if(!srcPid||!tgtPid||srcPid===tgtPid)return;
+  let datePats=patients.filter(p=>p.tarih===dateStr&&!p.yapilanAmeliyat);
+  const srcIdx=datePats.findIndex(p=>p.id===srcPid);
+  const tgtIdx=datePats.findIndex(p=>p.id===tgtPid);
+  if(srcIdx<0||tgtIdx<0)return;
+  const [moved]=datePats.splice(srcIdx,1);datePats.splice(tgtIdx,0,moved);
+  // Sıra numaralarını kaydet
+  datePats.forEach((p,i)=>{const real=patients.find(x=>x.id===p.id);if(real){real.siraNo=i;real.savedAt=new Date().toISOString();}});
+  saveData();renderWeekList();
+}
 function enableDrag(){
   document.querySelectorAll('.week-pat-card[data-pid]').forEach(card=>{
     card.draggable=true;
-    card.addEventListener('dragstart',e=>{dragSrcPid=card.dataset.pid;dragSrcDate=card.dataset.date;card.classList.add('dragging');});
+    card.addEventListener('dragstart',e=>{
+      dragSrcPid=card.dataset.pid;dragSrcDate=card.dataset.date;card.classList.add('dragging');
+      // Bazı tarayıcılarda (özellikle Firefox) sürüklemenin tamamlanabilmesi için
+      // dataTransfer'a veri konması şart — konmazsa drop hiç tetiklenmeyebiliyor.
+      if(e.dataTransfer){e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',card.dataset.pid);}
+    });
     card.addEventListener('dragend',()=>{card.classList.remove('dragging');document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('drag-over'));});
-    card.addEventListener('dragover',e=>{e.preventDefault();card.classList.add('drag-over');});
+    card.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move';card.classList.add('drag-over');});
     card.addEventListener('dragleave',()=>card.classList.remove('drag-over'));
     card.addEventListener('drop',e=>{
       e.preventDefault();card.classList.remove('drag-over');
-      if(dragSrcPid===card.dataset.pid)return;
-      // Sırala: aynı tarihli hastaları al, içlerinde yer değiştir
-      const dateStr=card.dataset.date;
-      let datePats=patients.filter(p=>p.tarih===dateStr&&!p.yapilanAmeliyat);
-      const srcIdx=datePats.findIndex(p=>p.id===dragSrcPid);
-      const tgtIdx=datePats.findIndex(p=>p.id===card.dataset.pid);
-      if(srcIdx<0||tgtIdx<0)return;
-      const [moved]=datePats.splice(srcIdx,1);datePats.splice(tgtIdx,0,moved);
-      // Sıra numaralarını kaydet
-      datePats.forEach((p,i)=>{const real=patients.find(x=>x.id===p.id);if(real){real.siraNo=i;real.savedAt=new Date().toISOString();}});
-      saveData();renderWeekList();
+      reorderWeekPatients(dragSrcPid,card.dataset.pid,card.dataset.date);
     });
+    // Dokunmatik (mobil) sürükleme — sadece ⠿ tutamacı üzerinden başlar,
+    // böylece listenin geri kalanında parmakla kaydırma (scroll) bozulmaz.
+    const handle=card.querySelector('.drag-handle');
+    if(handle){
+      handle.addEventListener('touchstart',()=>{
+        dragSrcPid=card.dataset.pid;dragSrcDate=card.dataset.date;
+        card.classList.add('dragging');
+      },{passive:true});
+      handle.addEventListener('touchmove',e=>{
+        if(!dragSrcPid)return;
+        e.preventDefault(); // sayfa kaymasını sadece sürükleme sırasında engelle
+        const touch=e.touches[0];
+        const el=document.elementFromPoint(touch.clientX,touch.clientY);
+        const overCard=el?el.closest('.week-pat-card[data-pid]'):null;
+        document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('drag-over'));
+        if(overCard&&overCard.dataset.pid!==dragSrcPid) overCard.classList.add('drag-over');
+      },{passive:false});
+      handle.addEventListener('touchend',e=>{
+        if(!dragSrcPid)return;
+        const touch=e.changedTouches[0];
+        const el=document.elementFromPoint(touch.clientX,touch.clientY);
+        const overCard=el?el.closest('.week-pat-card[data-pid]'):null;
+        document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('dragging','drag-over'));
+        if(overCard) reorderWeekPatients(dragSrcPid,overCard.dataset.pid,overCard.dataset.date);
+        dragSrcPid=null;dragSrcDate=null;
+      });
+      handle.addEventListener('touchcancel',()=>{
+        document.querySelectorAll('.week-pat-card').forEach(c=>c.classList.remove('dragging','drag-over'));
+        dragSrcPid=null;dragSrcDate=null;
+      });
+    }
   });
 }
 
