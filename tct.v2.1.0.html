@@ -4208,7 +4208,7 @@ function renderList(){
     Object.keys(grouped).sort((a,b)=>{if(a==='tarihsiz')return 1;if(b==='tarihsiz')return -1;return a.localeCompare(b);}).forEach(dateKey=>{
       const grp=grouped[dateKey];
       if(dateKey!=='tarihsiz'){const d=new Date(dateKey);const dow=d.getDay();const isOpD=isOpDay(d);
-        html+=`<div class="op-day-header"><span class="op-day-title" style="${isOpD?'':'color:var(--accent)'}">${isOpD?'🔪 OPERASYON GÜNÜ — ':'📅 '}${d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})}</span><span class="op-day-count">${grp.length} hasta</span></div>`;
+        html+=`<div class="op-day-header"><span class="op-day-title" style="${isOpD?'':'color:var(--accent)'}">${isOpD?'🔪 ':'📅 '}${d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})}</span><span class="op-day-count">${grp.length} hasta</span></div>`;
       }else{html+=`<div class="op-day-header"><span class="op-day-title" style="color:#60a5fa">⏳ Bekleme Listesi</span><span class="op-day-count">${grp.length} hasta</span></div>`;}
       html+=grp.map(p=>patCardHtml(p)).join('');
     });
