@@ -870,6 +870,10 @@ body{padding-bottom:40px;}
     <button type="button" onclick="formHatirEkle()" class="btn btn-p" style="font-size:0.8em;padding:5px 10px;white-space:nowrap;">+ Ekle</button>
   </div>
 
+  <div class="toggle-row" style="border-top:1px solid var(--border);"><span class="tlabel"><span style="font-size:1.35em;vertical-align:-2px;display:inline-block;margin-right:2px;">💉</span> Lokal Anestezi</span><div class="toggle" id="tog-lokal-anestezi" onclick="toggleLokalAnestezi(this)"></div></div>
+  <input type="hidden" id="t-lokal-anestezi" value="0">
+  <div id="lokal-anestezi-note" style="display:none;padding:10px 12px;color:var(--text2);font-size:0.8em;font-style:italic;border-bottom:1px solid var(--border);">ℹ️ Lokal anestezi ile yapılacağı için Anestezi &amp; ASA değerlendirmesi gerekli değil.</div>
+  <div id="anestezi-asa-block">
   <div class="sec-hdr">🩺 Anestezi &amp; ASA</div>
   <div class="toggle-row"><span class="tlabel">Anestezi Değerlendirmesi Yapıldı</span><div class="toggle" id="tog-anest" onclick="toggleIt(this,'t-anest',null);updateAnestNotAuto()"></div></div>
   <input type="hidden" id="t-anest" value="0">
@@ -924,6 +928,7 @@ body{padding-bottom:40px;}
     <input type="hidden" id="f-ts-skor" value="">
     <input type="hidden" id="f-ts-risk" value="">
     <input type="hidden" id="f-ts-data" value="">
+  </div>
   </div>
 
   <div class="sec-hdr purple">📋 Preop Konsültasyonlar</div>
@@ -2611,6 +2616,15 @@ function toggleIt(el,hidId,detailId){
   document.getElementById(hidId).value=v;
   if(detailId) document.getElementById(detailId).style.display=v==='1'?'block':'none';
 }
+// Lokal anestezi ile yapılacak hastalarda Anestezi & ASA (ve Thoracoscore) bölümü
+// gerekli değil — kayıtlı veriler silinmez, sadece görünümden gizlenir.
+function toggleLokalAnestezi(el){
+  el.classList.toggle('on');
+  const on=el.classList.contains('on');
+  document.getElementById('t-lokal-anestezi').value=on?'1':'0';
+  document.getElementById('anestezi-asa-block').style.display=on?'none':'block';
+  document.getElementById('lokal-anestezi-note').style.display=on?'block':'none';
+}
 function selAsa(el,val){
   document.querySelectorAll('.asa-btn').forEach(b=>b.classList.remove('sel'));
   el.classList.add('sel');
@@ -2937,6 +2951,11 @@ function clearForm(){
   document.getElementById('kan-detail').style.display='none';
   document.getElementById('uyari-detail').style.display='none';
   document.getElementById('komp-detail').style.display='none';
+  // Lokal Anestezi sıfırla
+  const laTog=document.getElementById('tog-lokal-anestezi');if(laTog)laTog.classList.remove('on');
+  const laHid=document.getElementById('t-lokal-anestezi');if(laHid)laHid.value='0';
+  const laBlock=document.getElementById('anestezi-asa-block');if(laBlock)laBlock.style.display='block';
+  const laNote=document.getElementById('lokal-anestezi-note');if(laNote)laNote.style.display='none';
   // Thoracoscore sıfırla
   const tsTog=document.getElementById('tog-ts');if(tsTog)tsTog.classList.remove('on');
   const tsHid=document.getElementById('t-ts');if(tsHid)tsHid.value='0';
@@ -3002,6 +3021,7 @@ async function _savePatientAsync(){
     uyari:document.getElementById('t-uyari').value,uyariTxt:document.getElementById('f-uyari-txt').value,
     anestezi:document.getElementById('t-anest').value,anestNot:document.getElementById('f-anest-not').value,
     asa:document.getElementById('f-asa').value,ybu:document.getElementById('f-ybu').value,
+    lokalAnestezi:document.getElementById('t-lokal-anestezi').value,
     sigaraDurum:document.getElementById('f-sigara-durum').value||'hic',
     sigaraPaket:document.getElementById('f-sigara-paket').value,
     sigaraBirakma:document.getElementById('f-sigara-birakma').value,
@@ -3100,6 +3120,7 @@ function editPatient(id){
   if(p.uyari==='1'){document.getElementById('t-uyari').value='1';document.getElementById('tog-uyari').classList.add('on');document.getElementById('uyari-detail').style.display='block';}
   if(p.anestezi==='1'){document.getElementById('t-anest').value='1';document.getElementById('tog-anest').classList.add('on');}
   if(p.asa) document.querySelectorAll('.asa-btn').forEach(b=>{if(b.textContent==='ASA '+p.asa)b.classList.add('sel');});
+  if(p.lokalAnestezi==='1'){document.getElementById('t-lokal-anestezi').value='1';document.getElementById('tog-lokal-anestezi').classList.add('on');document.getElementById('anestezi-asa-block').style.display='none';document.getElementById('lokal-anestezi-note').style.display='block';}
   // Sigara yükle
   setSigara(p.sigaraDurum||'hic');
   if(p.sigaraPaket){const el=document.getElementById('f-sigara-paket');if(el)el.value=p.sigaraPaket;}
@@ -4257,6 +4278,7 @@ function patCardHtml(p){
   else if(p.ameliyat)badges.push(`<span class="badge b-op">🔪 ${p.ameliyat.substring(0,22)}</span>`);
   if(p.evre)badges.push(`<span class="badge ${p.evre.startsWith('IV')?'b-danger':p.evre.startsWith('III')?'b-warn':p.evre.startsWith('II')?'b-blue':'b-ok'}">Evre ${p.evre}</span>`);
   if(p.histoloji)badges.push(`<span class="badge b-purple">${p.histoloji.substring(0,18)}</span>`);
+  if(p.lokalAnestezi==='1')badges.push(`<span class="badge b-blue">💉 Lokal</span>`);
   if(p.kanSulandirici==='1')badges.push(`<span class="badge b-warn">💊 Kan sld.</span>`);
   if(p.uyari==='1')badges.push(`<span class="badge b-danger">⚠️ Uyarı</span>`);
   if(p.ybu==='Gerekli')badges.push(`<span class="badge b-danger">🔴 YBÜ</span>`);
@@ -4530,7 +4552,7 @@ function saveDraft(){
    'f-kan-ilac','f-uyari-txt','f-asa','f-anest-not','f-op-tarih','f-sure',
    'f-son-patoloji','f-op-not','f-komp-not','f-komp-tarih','f-id','f-anamnez',
    'f-cinsiyet','f-biopsi','f-ybu','f-histoloji','f-evre','f-clavien',
-   't-kan','t-anest','t-uyari','t-komp'].forEach(id=>{
+   't-kan','t-anest','t-uyari','t-komp','t-lokal-anestezi'].forEach(id=>{
     const el=document.getElementById(id);if(el)draft[id]=el.value;
   });
   draft._savedAt=new Date().toISOString();
@@ -4559,6 +4581,13 @@ async function checkDraft(){
       // ASA butonları
       const asa=document.getElementById('f-asa');
       if(asa&&asa.value) document.querySelectorAll('.asa-btn').forEach(b=>{if(b.textContent==='ASA '+asa.value)b.classList.add('sel');});
+      // Lokal Anestezi
+      const laV=document.getElementById('t-lokal-anestezi');
+      if(laV&&laV.value==='1'){
+        document.getElementById('tog-lokal-anestezi').classList.add('on');
+        document.getElementById('anestezi-asa-block').style.display='none';
+        document.getElementById('lokal-anestezi-note').style.display='block';
+      }
       showToast('📝 Taslak yüklendi.');
     } else {clearDraft();}
   }catch(e){clearDraft();}
