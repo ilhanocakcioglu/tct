@@ -591,7 +591,7 @@ body{padding-bottom:40px;}
     </div>
     <div class="modal-body" style="padding:14px;">
       <div id="ai-analiz-hasta" style="font-size:0.8em;color:var(--text2);margin-bottom:10px;font-family:var(--mono);"></div>
-      <div id="ai-analiz-loading" style="display:none;text-align:center;padding:20px;color:var(--accent);font-family:var(--mono);font-size:0.8em;">⏳ Claude analiz ediyor...</div>
+      <div id="ai-analiz-loading" style="display:none;text-align:center;padding:20px;color:var(--accent);font-family:var(--mono);font-size:0.8em;">⏳ AI analiz ediyor...</div>
       <div id="ai-analiz-result" class="ai-result-box" style="display:none;"></div>
       <div style="margin-top:10px;font-size:0.667em;color:var(--text3);">⚕️ Bu analiz klinik karar desteği amaçlıdır. Nihai karar hekime aittir.</div>
 
@@ -1685,7 +1685,7 @@ body{padding-bottom:40px;}
         </div>
       </div>
       <div class="settings-cat">
-        <div class="settings-cat-label" onclick="toggleCategory(this)">🔐 Veri &amp; Güvenlik <span class="cat-count">(3)</span><span class="s-arrow">▶</span></div>
+        <div class="settings-cat-label" onclick="toggleCategory(this)">🔐 Veri &amp; Güvenlik <span class="cat-count">(2)</span><span class="s-arrow">▶</span></div>
         <div class="settings-cat-body">
           <div class="settings-section">
             <div class="settings-label" onclick="toggleSection(this)">🔐 PIN Güvenlik <span class="s-arrow">▶</span></div>
@@ -1708,35 +1708,37 @@ body{padding-bottom:40px;}
               <div style="font-size:0.667em;color:var(--text2);margin-top:6px;line-height:1.5;">Her hasta kaydında otomatik <strong style="color:var(--accent)">toraks_yedek.json</strong> indirilir. Yedek yüklerken hastalar üzerine yazılmaz — akıllıca birleştirilir: hangi cihazda son değişiklik yapıldıysa o kazanır, diğer cihazdaki yeni hastalar da eklenir.</div>
             </div>
           </div>
-          <div class="settings-section">
-            <div class="settings-label" onclick="toggleSection(this)">🤖 AI API Ayarları <span class="s-arrow">▶</span></div>
-            <div class="settings-body">
-              <div style="margin-bottom:10px;">
-                <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">AI Sağlayıcı</label>
-                <select id="ai-provider-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onProviderChange()">
-                  <option value="anthropic">Anthropic (Claude)</option>
-                  <option value="gemini">Google (Gemini)</option>
-                  <option value="openai">OpenAI (GPT)</option>
-                  <option value="groq">Groq</option>
-                </select>
-              </div>
-              <div style="margin-bottom:10px;">
-                <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">Model Gücü</label>
-                <select id="ai-tier-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onTierChange()"></select>
-              </div>
-              <div style="margin-bottom:10px;">
-                <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">API Key</label>
-                <div style="display:flex;gap:6px;align-items:center;">
-                  <input type="password" id="ai-api-key-input" placeholder="API key giriniz..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;font-family:var(--mono);">
-                  <button class="btn" id="ai-key-toggle" onclick="toggleApiKeyVisibility()" style="padding:7px 10px;font-size:0.82em;">👁</button>
-                </div>
-              </div>
-              <div style="display:flex;gap:6px;">
-                <button class="btn btn-p" onclick="saveApiKey()" style="flex:1;">💾 Kaydet</button>
-                <button class="btn" onclick="clearApiKey()" style="flex:1;">🗑 Sil</button>
-              </div>
-              <div id="ai-key-status" style="margin-top:8px;font-size:0.75em;font-family:var(--mono);color:var(--text2);"></div>
+        </div>
+      </div>
+      <div class="settings-cat">
+        <div class="settings-cat-label" onclick="toggleCategory(this)">🤖 AI API Ayarları <span class="s-arrow">▶</span></div>
+        <div class="settings-cat-body">
+          <div style="padding:2px 6px 6px;">
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">AI Sağlayıcı</label>
+              <select id="ai-provider-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onProviderChange()">
+                <option value="anthropic">Anthropic (Claude)</option>
+                <option value="gemini">Google (Gemini)</option>
+                <option value="openai">OpenAI (GPT)</option>
+                <option value="groq">Groq</option>
+              </select>
             </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">Model Gücü</label>
+              <select id="ai-tier-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onTierChange()"></select>
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">API Key</label>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input type="password" id="ai-api-key-input" placeholder="API key giriniz..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;font-family:var(--mono);">
+                <button class="btn" id="ai-key-toggle" onclick="toggleApiKeyVisibility()" style="padding:7px 10px;font-size:0.82em;">👁</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-p" onclick="saveApiKey()" style="flex:1;">💾 Kaydet</button>
+              <button class="btn" onclick="clearApiKey()" style="flex:1;">🗑 Sil</button>
+            </div>
+            <div id="ai-key-status" style="margin-top:8px;font-size:0.75em;font-family:var(--mono);color:var(--text2);"></div>
           </div>
         </div>
       </div>
@@ -4808,7 +4810,7 @@ async function openAiAnaliz(id){
   document.getElementById('ai-analiz-modal').classList.add('show');
   document.getElementById('ai-analiz-hasta').textContent=p.ad+' · '+(p.yas?p.yas+' yaş · ':'')+( p.cinsiyet||'');
   document.getElementById('ai-analiz-loading').style.display='block';
-  document.getElementById('ai-analiz-loading').textContent='⏳ Claude analiz ediyor...';
+  document.getElementById('ai-analiz-loading').textContent='⏳ AI analiz ediyor...';
   document.getElementById('ai-analiz-result').style.display='none';
 
   var satirlar=[
