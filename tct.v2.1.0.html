@@ -1721,6 +1721,10 @@ body{padding-bottom:40px;}
                 </select>
               </div>
               <div style="margin-bottom:10px;">
+                <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">Model Gücü</label>
+                <select id="ai-tier-select" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;" onchange="onTierChange()"></select>
+              </div>
+              <div style="margin-bottom:10px;">
                 <label style="font-size:0.78em;color:var(--text2);display:block;margin-bottom:5px;">API Key</label>
                 <div style="display:flex;gap:6px;align-items:center;">
                   <input type="password" id="ai-api-key-input" placeholder="API key giriniz..." style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:6px;font-size:0.82em;font-family:var(--mono);">
@@ -1916,6 +1920,40 @@ body{padding-bottom:40px;}
 const IDB_NAME='toraks_photos';
 const IDB_STORE='photos';
 let _idb=null;
+
+// ─── AI MODEL SEVİYELERİ (Model Gücü) ──────────────────────────────────────
+// Her sağlayıcı için 3 model seviyesi: hızlı (düşük maliyet), dengeli (önerilen), en güçlü (en derin analiz).
+// NOT: "strong" (en güçlü) satırındaki bazı modeller deneysel/preview olabilir; "balanced" her zaman
+// sağlayıcının en stabil, üretime uygun modelidir ve varsayılan seçimdir.
+// Bu sabitler dosyanın başında tanımlanır çünkü açılışta loadApiSettings() tarafından hemen kullanılır.
+const MODEL_TIERS = {
+  anthropic: { fast: 'claude-haiku-4-5-20251001', balanced: 'claude-sonnet-5', strong: 'claude-opus-5' },
+  gemini:    { fast: 'gemini-2.5-flash',          balanced: 'gemini-2.5-pro',  strong: 'gemini-3.1-pro-preview' },
+  openai:    { fast: 'gpt-5.6-luna',              balanced: 'gpt-5.6-terra',   strong: 'gpt-5.6-sol' },
+  groq:      { fast: 'openai/gpt-oss-20b',        balanced: 'openai/gpt-oss-120b', strong: 'minimaxai/minimax-m2.7' }
+};
+const TIER_LABELS = {
+  anthropic: {
+    fast: '⚡ Hızlı — Claude Haiku 4.5 (düşük maliyet, hızlı yanıt)',
+    balanced: '🧠 Güçlü — Claude Sonnet 5 (önerilen, dengeli)',
+    strong: '🔬 En Güçlü — Claude Opus 5 (en derin analiz, daha yavaş/pahalı)'
+  },
+  gemini: {
+    fast: '⚡ Hızlı — Gemini 2.5 Flash (düşük maliyet, hızlı yanıt)',
+    balanced: '🧠 Güçlü — Gemini 2.5 Pro (önerilen, dengeli)',
+    strong: '🔬 En Güçlü — Gemini 3.1 Pro (deneysel, en derin analiz)'
+  },
+  openai: {
+    fast: '⚡ Hızlı — GPT-5.6 Luna (düşük maliyet, hızlı yanıt)',
+    balanced: '🧠 Güçlü — GPT-5.6 Terra (önerilen, dengeli)',
+    strong: '🔬 En Güçlü — GPT-5.6 Sol (en derin analiz, daha yavaş/pahalı)'
+  },
+  groq: {
+    fast: '⚡ Hızlı — GPT-OSS 20B (çok düşük maliyet, çok hızlı)',
+    balanced: '🧠 Güçlü — GPT-OSS 120B (önerilen, dengeli)',
+    strong: '🔬 En Güçlü — MiniMax M2.7 (deneysel, en derin analiz)'
+  }
+};
 
 function idbOpen(){
   return new Promise((res,rej)=>{
@@ -3264,7 +3302,7 @@ async function processReportPhoto(input,targetId){
       // Anthropic — varsayılan
       response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
         headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:systemTxt,
+        body:JSON.stringify({model:'claude-sonnet-5',max_tokens:1200,system:systemTxt,
           messages:[{role:'user',content:[
             {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
             {type:'text',text:userTxt}
@@ -4880,13 +4918,13 @@ async function sendAiChat(){
     // Tüm geçmişi gönder
     var body;
     if(providerName==='anthropic'){
-      body=JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system:aiChatSystemPrompt,messages:aiChatHistory});
+      body=JSON.stringify({model:getModelFor('anthropic',getAiTier()),max_tokens:2000,system:aiChatSystemPrompt,messages:aiChatHistory});
     } else if(providerName==='gemini'){
       var contents=aiChatHistory.map(function(m){return{role:m.role==='assistant'?'model':'user',parts:[{text:m.content}]};});
       body=JSON.stringify({system_instruction:{parts:[{text:aiChatSystemPrompt}]},contents:contents,generationConfig:{maxOutputTokens:2000}});
     } else {
       var msgs2=[{role:'system',content:aiChatSystemPrompt}].concat(aiChatHistory);
-      body=JSON.stringify({model:providerName==='groq'?'llama-3.3-70b-versatile':'gpt-4o',max_tokens:2000,messages:msgs2});
+      body=JSON.stringify({model:getModelFor(providerName,getAiTier()),max_tokens:2000,messages:msgs2});
     }
     var response=await fetch(endpoint,{method:'POST',headers:headers,body:body});
     var data=await response.json();
@@ -5722,17 +5760,25 @@ function openBuAyPopup(){
 }
 
 // ─── AI API KEY YÖNETİMİ ───────────────────────────────────────────────────
+function getAiTier() {
+  return localStorage.getItem('tct_ai_tier') || 'balanced';
+}
+function getModelFor(providerName, tier) {
+  const t = MODEL_TIERS[providerName];
+  if (!t) return null;
+  return t[tier] || t.balanced;
+}
 const AI_PROVIDERS = {
   anthropic: {
     name: 'Anthropic (Claude)',
     endpoint: 'https://api.anthropic.com/v1/messages',
     headers: (key) => ({ 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }),
-    buildBody: (system, userMsg, maxTokens) => JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens, system, messages: [{ role: 'user', content: userMsg }] }),
+    buildBody: (system, userMsg, maxTokens) => JSON.stringify({ model: getModelFor('anthropic', getAiTier()), max_tokens: maxTokens, system, messages: [{ role: 'user', content: userMsg }] }),
     parseResponse: (data) => data.content && data.content[0] && data.content[0].text
   },
   gemini: {
     name: 'Google (Gemini)',
-    endpoint: (key) => `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${key}`,
+    endpoint: (key) => `https://generativelanguage.googleapis.com/v1beta/models/${getModelFor('gemini', getAiTier())}:generateContent?key=${key}`,
     headers: () => ({ 'Content-Type': 'application/json' }),
     buildBody: (system, userMsg, maxTokens) => JSON.stringify({ system_instruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: userMsg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
     parseResponse: (data) => data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text
@@ -5741,14 +5787,14 @@ const AI_PROVIDERS = {
     name: 'OpenAI (GPT)',
     endpoint: 'https://api.openai.com/v1/chat/completions',
     headers: (key) => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` }),
-    buildBody: (system, userMsg, maxTokens) => JSON.stringify({ model: 'gpt-4o', max_tokens: maxTokens, messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }] }),
+    buildBody: (system, userMsg, maxTokens) => JSON.stringify({ model: getModelFor('openai', getAiTier()), max_tokens: maxTokens, messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }] }),
     parseResponse: (data) => data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
   },
   groq: {
     name: 'Groq',
     endpoint: 'https://api.groq.com/openai/v1/chat/completions',
     headers: (key) => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` }),
-    buildBody: (system, userMsg, maxTokens) => JSON.stringify({ model: 'llama-3.3-70b-versatile', max_tokens: maxTokens, messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }] }),
+    buildBody: (system, userMsg, maxTokens) => JSON.stringify({ model: getModelFor('groq', getAiTier()), max_tokens: maxTokens, messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }] }),
     parseResponse: (data) => data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
   }
 };
@@ -5762,14 +5808,17 @@ function getApiProvider() {
 function saveApiKey() {
   const key = document.getElementById('ai-api-key-input').value.trim();
   const provider = document.getElementById('ai-provider-select').value;
+  const tier = document.getElementById('ai-tier-select').value;
   if (!key) { showApiStatus('❌ Key boş olamaz', 'var(--danger)'); return; }
   localStorage.setItem('tct_ai_key', btoa(key));
   localStorage.setItem('tct_ai_provider', provider);
+  localStorage.setItem('tct_ai_tier', tier);
   showApiStatus('✅ Kaydedildi', 'var(--success)');
 }
 function clearApiKey() {
   localStorage.removeItem('tct_ai_key');
   localStorage.removeItem('tct_ai_provider');
+  localStorage.removeItem('tct_ai_tier');
   document.getElementById('ai-api-key-input').value = '';
   showApiStatus('🗑 Silindi', 'var(--text2)');
 }
@@ -5777,10 +5826,23 @@ function toggleApiKeyVisibility() {
   const inp = document.getElementById('ai-api-key-input');
   inp.type = inp.type === 'password' ? 'text' : 'password';
 }
+function rebuildTierSelect(providerName, selectedTier) {
+  const sel = document.getElementById('ai-tier-select');
+  if (!sel) return;
+  const labels = TIER_LABELS[providerName] || TIER_LABELS.anthropic;
+  sel.innerHTML = ['fast','balanced','strong'].map(t => `<option value="${t}"${t===selectedTier?' selected':''}>${labels[t]}</option>`).join('');
+}
 function onProviderChange() {
   const p = document.getElementById('ai-provider-select').value;
   const placeholders = { anthropic: 'sk-ant-...', gemini: 'AIza...', openai: 'sk-...', groq: 'gsk_...' };
   document.getElementById('ai-api-key-input').placeholder = placeholders[p] || 'API key giriniz...';
+  // Sağlayıcı değişince model listesi de o sağlayıcıya göre güncellenir; kayıtlı seviye
+  // sadece o an ayarlarda seçili olan sağlayıcı için geçerliyse korunur, aksi halde "dengeli"ye döner.
+  const savedTier = (p === getApiProvider()) ? getAiTier() : 'balanced';
+  rebuildTierSelect(p, savedTier);
+}
+function onTierChange() {
+  // Seçim anında kaydedilmiyor — "Kaydet" butonuna basılınca provider ile birlikte kalıcı olur.
 }
 function showApiStatus(msg, color) {
   const el = document.getElementById('ai-key-status');
@@ -5789,9 +5851,11 @@ function showApiStatus(msg, color) {
 function loadApiSettings() {
   const key = getApiKey();
   const provider = getApiProvider();
+  const tier = getAiTier();
   const sel = document.getElementById('ai-provider-select');
   const inp = document.getElementById('ai-api-key-input');
   if (sel) sel.value = provider;
+  rebuildTierSelect(provider, tier);
   if (inp) { inp.value = key ? '••••••••••••••••' : ''; onProviderChange(); }
   if (key) showApiStatus('✅ API key kayıtlı', 'var(--success)');
 }
