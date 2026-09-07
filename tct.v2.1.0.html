@@ -3248,6 +3248,10 @@ async function processReportPhoto(input,targetId){
     const key=getApiKey();
     const providerName=getApiProvider();
     if(!key) throw new Error('API key girilmemiş. Lütfen Ayarlar > AI API Ayarları kısmından key ekleyin.');
+    if(!providerSupportsVision(providerName)){
+      const pName=(AI_PROVIDERS[providerName]&&AI_PROVIDERS[providerName].name)||providerName;
+      throw new Error(pName+' şu anda görsel/fotoğraf analizi desteklemiyor. Lütfen Ayarlar > AI API Ayarları kısmından Anthropic, Gemini veya OpenAI seçin');
+    }
     const systemTxt='Sen 20 yıllık deneyimli bir göğüs cerrahisi profesörüsün. Toraks BT, PET-BT ve diğer radyolojik raporları klinik açıdan yorumlama konusunda uzmansın.';
     const userTxt='Bu tıbbi rapor görüntüsünü dikkatle oku ve göğüs cerrahisi perspektifinden Türkçe özetle. Şunları mutlaka belirt:\n- Ana bulgu ve tanı\n- Tümör/lezyon varsa: lokalizasyon, boyut, karakteristik özellikler (solid/GGO/part-solid), SUVmax (PET ise)\n- Lenf nodu tutulumu (varsa istasyon ve boyut)\n- Vasküler/bronşiyal yakınlık veya invazyon\n- Uzak tutulum şüphesi\n- Operabiliteye etki edebilecek ek bulgular\nKısa, net ve klinik odaklı yaz. Maks 150 kelime.';
     let response, data, text;
@@ -3276,23 +3280,6 @@ async function processReportPhoto(input,targetId){
             {role:'user',content:[
               {type:'image_url',image_url:{url:`data:${mediaType};base64,${base64}`}},
               {type:'text',text:userTxt}
-            ]}
-          ]
-        })});
-      data=await response.json();
-      if(!response.ok) throw new Error((data.error&&data.error.message)||'HTTP '+response.status);
-      text=data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content;
-
-    } else if(providerName==='groq'){
-      // Groq — llama-3.2-11b-vision-preview, image_url base64
-      response=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
-        body:JSON.stringify({
-          model:'llama-3.3-70b-versatile',max_tokens:1200,
-          messages:[
-            {role:'user',content:[
-              {type:'image_url',image_url:{url:`data:${mediaType};base64,${base64}`}},
-              {type:'text',text:systemTxt+'\n\n'+userTxt}
             ]}
           ]
         })});
@@ -5769,6 +5756,12 @@ function getModelFor(providerName, tier) {
   const t = MODEL_TIERS[providerName];
   if (!t) return null;
   return t[tier] || t.balanced;
+}
+// Fotoğraf/görsel rapor analizi (BT, PET vb.) için hangi sağlayıcıların vizyon desteği var.
+// Groq şu an (2026) hiçbir aktif modelinde görsel girdi desteklemiyor — model gücü seviyesi fark etmiyor.
+const VISION_PROVIDERS = ['anthropic', 'gemini', 'openai'];
+function providerSupportsVision(providerName) {
+  return VISION_PROVIDERS.includes(providerName);
 }
 const AI_PROVIDERS = {
   anthropic: {
