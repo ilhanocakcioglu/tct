@@ -1054,7 +1054,24 @@ body{padding-bottom:40px;}
 <div id="page-istatistik" class="page">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
     <div style="font-size:0.8em;font-family:var(--mono);color:var(--accent);">📊 KARŞILAŞTIRMALı ANALİZ</div>
-    <button class="btn btn-d" onclick="openMorbidite()" style="font-size:0.733em;">🏥 Morbidite Toplantısı</button>
+    <button class="btn btn-d" onclick="openMorbidite()" style="font-size:0.733em;">🏥 Morbidite &amp; Mortalite</button>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px;">
+    <div style="font-size:0.75em;color:var(--accent);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center;">
+      <span>💬 İSTATİSTİKLER HAKKINDA SOR</span>
+      <span onclick="clearStatChat()" style="cursor:pointer;font-family:var(--sans);color:var(--text3);font-weight:400;letter-spacing:0;">🗑 Temizle</span>
+    </div>
+    <div id="stat-chat-messages" style="max-height:260px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;"></div>
+    <div id="stat-chat-status" style="font-size:0.7em;color:var(--text2);margin-bottom:6px;"></div>
+    <div style="display:flex;gap:6px;align-items:flex-end;">
+      <textarea id="stat-chat-input" placeholder="İstatistikler hakkında soru sor... (örn: Bu yılı geçen yılla karşılaştır)" rows="2"
+        style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:0.82em;font-family:var(--sans);resize:none;line-height:1.4;"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendStatChat();}"></textarea>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <button id="stat-mic-btn" class="btn" title="Sesli sor" onclick="toggleStatMic()" style="padding:7px 10px;font-size:1em;min-width:36px;">🎤</button>
+        <button class="btn" title="Gönder" onclick="sendStatChat()" style="padding:7px 10px;font-size:1em;min-width:36px;">➤</button>
+      </div>
+    </div>
   </div>
   <div id="stats-content"></div>
 </div>
@@ -1482,21 +1499,38 @@ body{padding-bottom:40px;}
 <div class="modal-overlay" id="morbidite-modal">
   <div class="modal" style="max-width:700px;width:95vw;">
     <div class="modal-hdr">
-      <div class="modal-title">🏥 Morbidite &amp; Mortalite Toplantısı</div>
+      <div class="modal-title">🏥 Morbidite &amp; Mortalite</div>
       <div class="modal-close" onclick="closeModal('morbidite-modal')">×</div>
     </div>
     <div class="modal-body" style="padding:0;">
-      <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+      <div style="padding:10px 14px 0;">
+        <select id="mb-period" onchange="setMorbPeriod(this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.78em;margin-bottom:8px;">
+          <option value="all">Tüm Zamanlar</option>
+          <option value="year">Bu Yıl</option>
+          <option value="month">Bu Ay</option>
+        </select>
+      </div>
+      <div style="padding:0 14px 10px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
         <span style="font-size:0.733em;color:var(--text2);">Filtre:</span>
         <button class="fbtn active" id="mb-f-komp" onclick="setMorbFilter('komp',this)">⚠️ Komplikasyon</button>
         <button class="fbtn" id="mb-f-mortalite" onclick="setMorbFilter('mortalite',this)">💀 Mortalite</button>
         <button class="fbtn" id="mb-f-ybu" onclick="setMorbFilter('ybu',this)">🔴 YBÜ</button>
         <button class="fbtn" id="mb-f-all" onclick="setMorbFilter('all',this)">Tümü</button>
-        <span style="margin-left:auto;font-size:0.667em;font-family:var(--mono);color:var(--text3);" id="mb-count"></span>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+          <span onclick="toggleMorbSort()" id="mb-sort-link" style="font-size:0.667em;color:var(--accent);cursor:pointer;text-decoration:underline;">↓ Şiddete Göre Sıralı</span>
+          <span style="font-size:0.667em;font-family:var(--mono);color:var(--text3);" id="mb-count"></span>
+        </span>
+      </div>
+      <div id="mb-ai-summary" style="display:none;margin:10px 14px;background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:12px;">
+        <div style="font-size:0.7em;font-family:var(--mono);color:var(--accent);font-weight:700;margin-bottom:6px;">🤖 AI ÖZETİ</div>
+        <div id="mb-ai-summary-text" style="font-size:0.78em;color:var(--text);line-height:1.6;"></div>
       </div>
       <div id="morbidite-list" style="max-height:65vh;overflow-y:auto;"></div>
     </div>
-    <div class="modal-footer"><button class="btn btn-p" onclick="closeModal('morbidite-modal')">✓ Kapat</button></div>
+    <div class="modal-footer">
+      <button class="btn btn-p" onclick="summarizeMorbidite()" style="margin-right:auto;">🤖 AI ile Özetle</button>
+      <button class="btn btn-p" onclick="closeModal('morbidite-modal')">✓ Kapat</button>
+    </div>
   </div>
 </div>
 
@@ -3336,6 +3370,24 @@ function amDisplayHtml(str){
   if(!str)return str;
   return str.split(' + ').map(amChipHtml).join(' + ');
 }
+// Bir hastanın ameliyat yaklaşımını (Kapalı/Açık) belirle.
+// Kural: bileşenlerden en az biri "Açık" ise tüm vaka "Açık" sayılır (konversiyon dahil).
+// Açık yoksa ve en az bir VATS/Robotik varsa "Kapalı" sayılır. Hiçbiri etiketli değilse null (belirsiz).
+function getApproachKind(p){
+  const list=(p.yapilanAmeliyatList&&p.yapilanAmeliyatList.length)?p.yapilanAmeliyatList:(p.yapilanAmeliyat?p.yapilanAmeliyat.split(' + '):[]);
+  if(!list.length) return null;
+  let hasAcik=false, hasKapali=false;
+  list.forEach(a=>{
+    const m=a.match(/\((VATS|Açık|Robotik)\)$/);
+    if(m){
+      if(m[1]==='Açık') hasAcik=true;
+      else hasKapali=true;
+    }
+  });
+  if(hasAcik) return 'acik';
+  if(hasKapali) return 'kapali';
+  return null;
+}
 
 // YAPILAN AMELİYAT (çoklu)
 let yapilanPlan=[];
@@ -3728,11 +3780,18 @@ function renderStats(){
   const kompSorted=Object.entries(kompCount).sort((a,b)=>b[1]-a[1]);const maxKomp=kompSorted[0]?kompSorted[0][1]:1;
   const evrePalette={'IA1':'#22c55e','IA2':'#22c55e','IA3':'#22c55e','IB':'#22c55e','IIA':'#60a5fa','IIB':'#60a5fa','IIIA':'#f59e0b','IIIB':'#f59e0b','IIIC':'#f59e0b','IVA':'#ef4444','IVB':'#ef4444','Benign':'#94a3b8'};
 
+  const kapaliSayisi=done.filter(p=>getApproachKind(p)==='kapali').length;
+  const acikSayisi=done.filter(p=>getApproachKind(p)==='acik').length;
+  const yaklasimBelirliToplam=kapaliSayisi+acikSayisi;
+  const kapaliPct=yaklasimBelirliToplam?Math.round(kapaliSayisi/yaklasimBelirliToplam*100):null;
+  const kompPct=done.length?Math.round(done.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.length).length/done.length*100):null;
+  const mortaliteSayisi=done.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.includes('Mortalite')).length;
+
   let html=`<div class="stats-grid">
     <div class="stats-card" style="grid-column:1/-1">
-      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-        ${[['Toplam Hasta',all.length,'var(--accent)'],['Ameliyat Yapıldı',done.length,'var(--success)'],['Planlı Operasyon',all.filter(p=>p.tarih&&!p.yapilanAmeliyat).length,'var(--warn)'],['Ort. Süre (dk)',avgSure||'—','var(--purple)'],['YBÜ Gerekli',all.filter(p=>p.ybu==='Gerekli').length,'var(--danger)'],['Komplikasyon',done.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.length).length,'var(--danger)']].map(([l,v,c])=>`
-          <div style="text-align:center;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+        ${[['Ameliyat',done.length,'var(--success)'],['Ort. Süre (dk)',avgSure||'—','var(--purple)'],['YBÜ',all.filter(p=>p.ybu==='Gerekli').length,'var(--warn)'],['Kapalı',kapaliPct!==null?kapaliPct+'%':'—','#60a5fa'],['Komplikasyon',kompPct!==null?kompPct+'%':'—','var(--danger)'],['Mortalite',mortaliteSayisi,'#475569']].map(([l,v,c])=>`
+          <div style="text-align:center;padding:8px 6px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
             <div style="font-size:1.467em;font-weight:700;font-family:var(--mono);color:${c}">${v}</div>
             <div style="font-size:0.667em;color:var(--text2)">${l}</div>
           </div>`).join('')}
@@ -4961,6 +5020,150 @@ function toggleAiMic(){
   aiSpeechRecognition.start();
 }
 
+// ─── İSTATİSTİK SEKMESİ — SERBEST AI SOHBETİ ───────────────────────────────
+// Sohbet geçmişi sadece bellekte tutulur (localStorage'a yazılmaz): sekmeler arası
+// geçişte kaybolmaz, ama uygulama tamamen kapatılıp yeniden açıldığında sıfırlanır —
+// zamanla sonsuza kadar birikmesin diye bilinçli bir tercih.
+let statChatHistory=[];
+let statMicActive=false;
+let statSpeechRecognition=null;
+const statChatSystemPromptBase='Sen bir göğüs cerrahisi kliniğinin ameliyat istatistiklerini yorumlayan bir asistansın. '
+  +'Sana kliniğin yıl/ay bazlı toplu ameliyat istatistikleri verilecek (hasta adı, TC gibi hiçbir kimlik bilgisi YOK, sadece sayılar). '
+  +'SADECE bu istatistik verileriyle ilgili sorulara (karşılaştırma, trend, dağılım yorumu vb.) Türkçe cevap ver. '
+  +'Verilen istatistik verileriyle ilgisi olmayan bir soru sorulursa (genel sohbet, güncel olaylar, tıbbi olmayan konular, fiyat/hava durumu vb.), '
+  +'kibarca bu konuda yardımcı olamayacağını belirt ve istatistiklerle ilgili bir soru sormasını öner. Kısa ve net cevaplar ver.';
+function buildStatContext(){
+  const done=patients.filter(p=>p.yapilanAmeliyat&&p.opTarih);
+  if(!done.length) return 'Henüz hiç ameliyat kaydı yok.';
+  const byYear={};
+  done.forEach(p=>{
+    const y=p.opTarih.substring(0,4), m=p.opTarih.substring(0,7);
+    if(!byYear[y]) byYear[y]={toplam:0,ameliyat:{},histoloji:{},evre:{},komp:{},aylik:{},cinsiyet:{},asa:{},
+      sureler:[],yaslar:[],fev1ler:[],dlcolar:[],ybuSayisi:0,komorbidSayisi:0,lokalSayisi:0};
+    const yy=byYear[y];
+    yy.toplam++;
+    const op=p.yapilanAmeliyat||'Belirsiz'; yy.ameliyat[op]=(yy.ameliyat[op]||0)+1;
+    if(p.histoloji) yy.histoloji[p.histoloji]=(yy.histoloji[p.histoloji]||0)+1;
+    if(p.evre) yy.evre[p.evre]=(yy.evre[p.evre]||0)+1;
+    if(p.komplikasyonlar&&p.komplikasyonlar.length) p.komplikasyonlar.forEach(k=>{yy.komp[k]=(yy.komp[k]||0)+1;});
+    yy.aylik[m]=(yy.aylik[m]||0)+1;
+    if(p.cinsiyet) yy.cinsiyet[p.cinsiyet]=(yy.cinsiyet[p.cinsiyet]||0)+1;
+    if(p.asa) yy.asa['ASA '+p.asa]=(yy.asa['ASA '+p.asa]||0)+1;
+    if(p.sure&&!isNaN(p.sure)) yy.sureler.push(parseFloat(p.sure));
+    if(p.yas&&!isNaN(p.yas)) yy.yaslar.push(parseFloat(p.yas));
+    if(p.fev1p&&!isNaN(p.fev1p)) yy.fev1ler.push(parseFloat(p.fev1p));
+    if(p.dlco&&!isNaN(p.dlco)) yy.dlcolar.push(parseFloat(p.dlco));
+    if(p.ybu==='Gerekli') yy.ybuSayisi++;
+    if(p.komorbid&&p.komorbid.trim()) yy.komorbidSayisi++;
+    if(p.lokalAnestezi==='1') yy.lokalSayisi++;
+  });
+  const fmtCounts=obj=>Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+' '+v).join(', ')||'—';
+  const avg=arr=>arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):'—';
+  let txt='';
+  Object.keys(byYear).sort().reverse().forEach(y=>{
+    const yy=byYear[y];
+    txt+=`\n${y} YILI — Toplam ${yy.toplam} ameliyat\n`;
+    txt+=`Ameliyat türleri: ${fmtCounts(yy.ameliyat)}\n`;
+    txt+=`Histoloji: ${fmtCounts(yy.histoloji)}\n`;
+    txt+=`Evre dağılımı: ${fmtCounts(yy.evre)}\n`;
+    txt+=`Komplikasyonlar: ${fmtCounts(yy.komp)}\n`;
+    txt+=`Aylık dağılım: ${fmtCounts(yy.aylik)}\n`;
+    txt+=`Cinsiyet dağılımı: ${fmtCounts(yy.cinsiyet)}\n`;
+    txt+=`ASA skoru dağılımı: ${fmtCounts(yy.asa)}\n`;
+    txt+=`Ortalama yaş: ${avg(yy.yaslar)}\n`;
+    txt+=`Ortalama ameliyat süresi (dk): ${avg(yy.sureler)}\n`;
+    txt+=`Ortalama FEV1%: ${avg(yy.fev1ler)}\n`;
+    txt+=`Ortalama DLCO%: ${avg(yy.dlcolar)}\n`;
+    txt+=`YBÜ gerekli sayısı: ${yy.ybuSayisi}\n`;
+    txt+=`Ek hastalığı (komorbidite) olan hasta sayısı: ${yy.komorbidSayisi}\n`;
+    txt+=`Lokal anestezi ile yapılan ameliyat sayısı: ${yy.lokalSayisi}\n`;
+  });
+  return txt.trim();
+}
+function appendStatChatMsg(role,text){
+  const msgs=document.getElementById('stat-chat-messages');
+  const div=document.createElement('div');
+  const isUser=(role==='user');
+  div.style.cssText='padding:8px 11px;border-radius:8px;font-size:0.82em;max-width:92%;line-height:1.5;'
+    +(isUser?'align-self:flex-end;background:var(--surface3);color:var(--text);text-align:right;':'align-self:flex-start;background:var(--surface2);color:var(--text2);border:1px solid var(--border);');
+  if(!isUser){
+    div.innerHTML='<div>'+text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')+'</div>'
+      +'<div style="margin-top:5px;text-align:right;"><button onclick="speakText(this)" data-text="'+encodeURIComponent(text)+'" style="background:none;border:1px solid var(--border);color:var(--text3);padding:2px 7px;border-radius:5px;font-size:0.85em;cursor:pointer;">🔊</button></div>';
+  } else {
+    div.textContent=text;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+async function sendStatChat(){
+  const input=document.getElementById('stat-chat-input');
+  const msg=input.value.trim();
+  if(!msg) return;
+  input.value='';
+  appendStatChatMsg('user',msg);
+  statChatHistory.push({role:'user',content:msg});
+  const status=document.getElementById('stat-chat-status');
+  status.textContent='⏳ Yanıt bekleniyor...';
+  try{
+    const key=getApiKey();
+    const providerName=getApiProvider();
+    if(!key) throw new Error('API key girilmemiş. Lütfen Ayarlar > AI API Ayarları kısmından key ekleyin.');
+    const provider=AI_PROVIDERS[providerName];
+    const endpoint=typeof provider.endpoint==='function'?provider.endpoint(key):provider.endpoint;
+    const headers=provider.headers(key);
+    const sysPrompt=statChatSystemPromptBase+'\n\nGÜNCEL İSTATİSTİK VERİLERİ:\n'+buildStatContext();
+    let body;
+    if(providerName==='anthropic'){
+      body=JSON.stringify({model:getModelFor('anthropic',getAiTier()),max_tokens:1200,system:sysPrompt,messages:statChatHistory});
+    } else if(providerName==='gemini'){
+      const contents=statChatHistory.map(m=>({role:m.role==='assistant'?'model':'user',parts:[{text:m.content}]}));
+      body=JSON.stringify({system_instruction:{parts:[{text:sysPrompt}]},contents:contents,generationConfig:{maxOutputTokens:1200}});
+    } else {
+      const msgs2=[{role:'system',content:sysPrompt}].concat(statChatHistory);
+      body=JSON.stringify({model:getModelFor(providerName,getAiTier()),max_tokens:1200,messages:msgs2});
+    }
+    const response=await fetch(endpoint,{method:'POST',headers:headers,body:body});
+    const data=await response.json();
+    if(!response.ok) throw new Error((data.error&&data.error.message)||'HTTP '+response.status);
+    const reply=provider.parseResponse(data);
+    if(!reply) throw new Error('Yanıt alınamadı');
+    statChatHistory.push({role:'assistant',content:reply});
+    appendStatChatMsg('assistant',reply);
+    status.textContent='';
+  } catch(e){
+    status.textContent='❌ '+(e.message||'Hata');
+  }
+}
+function clearStatChat(){
+  statChatHistory=[];
+  const msgs=document.getElementById('stat-chat-messages');
+  if(msgs) msgs.innerHTML='';
+  const status=document.getElementById('stat-chat-status');
+  if(status) status.textContent='';
+}
+function toggleStatMic(){
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){showToast('⚠️ Tarayıcınız mikrofon desteğini desteklemiyor.');return;}
+  const btn=document.getElementById('stat-mic-btn');
+  const status=document.getElementById('stat-chat-status');
+  if(statMicActive){
+    if(statSpeechRecognition) statSpeechRecognition.stop();
+    statMicActive=false;btn.textContent='🎤';btn.style.background='';status.textContent='';return;
+  }
+  statSpeechRecognition=new SpeechRecognition();
+  statSpeechRecognition.lang='tr-TR';statSpeechRecognition.continuous=false;statSpeechRecognition.interimResults=false;
+  statSpeechRecognition.onstart=function(){statMicActive=true;btn.textContent='🔴';btn.style.background='#ef444430';status.textContent='🎤 Dinleniyor...';};
+  statSpeechRecognition.onresult=function(e){
+    const transcript=e.results[0][0].transcript;
+    document.getElementById('stat-chat-input').value=transcript;
+    status.textContent='';btn.textContent='🎤';btn.style.background='';statMicActive=false;
+    sendStatChat();
+  };
+  statSpeechRecognition.onerror=function(e){status.textContent='❌ Mikrofon hatası: '+e.error;btn.textContent='🎤';btn.style.background='';statMicActive=false;};
+  statSpeechRecognition.onend=function(){if(statMicActive){statMicActive=false;btn.textContent='🎤';btn.style.background='';status.textContent='';}};
+  statSpeechRecognition.start();
+}
+
 // BAŞLANGIÇ
 applyTheme();
 applyFontSize();
@@ -5367,7 +5570,12 @@ function scanQRFrame(video){
 
 // MORBİDİTE TOPLANTISI
 let morbFilter='komp';
+let morbPeriod='all';
+let morbSortSeverity=true;
+let morbLastList=[];
+const CLAVIEN_RANK={'Grade V':7,'Grade IVb':6,'Grade IVa':5,'Grade IIIb':4,'Grade IIIa':3,'Grade II':2,'Grade I':1};
 function openMorbidite(){
+  document.getElementById('mb-ai-summary').style.display='none';
   setMorbFilter('komp',document.getElementById('mb-f-komp'));
   document.getElementById('morbidite-modal').classList.add('show');
 }
@@ -5377,12 +5585,43 @@ function setMorbFilter(f,btn){
   if(btn) btn.classList.add('active');
   renderMorbidite();
 }
+function setMorbPeriod(p){
+  morbPeriod=p;
+  renderMorbidite();
+}
+function toggleMorbSort(){
+  morbSortSeverity=!morbSortSeverity;
+  document.getElementById('mb-sort-link').textContent=morbSortSeverity?'↓ Şiddete Göre Sıralı':'📅 Tarihe Göre Sıralı';
+  renderMorbidite();
+}
 function renderMorbidite(){
   let list;
   if(morbFilter==='komp') list=patients.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.length);
   else if(morbFilter==='mortalite') list=patients.filter(p=>p.komplikasyonlar&&p.komplikasyonlar.includes('Mortalite'));
   else if(morbFilter==='ybu') list=patients.filter(p=>p.ybu==='Gerekli');
   else list=patients.filter(p=>p.yapilanAmeliyat);
+  // Dönem filtresi (opTarih üzerinden)
+  if(morbPeriod!=='all'){
+    const now=new Date();
+    const curY=String(now.getFullYear());
+    const curM=curY+'-'+String(now.getMonth()+1).padStart(2,'0');
+    list=list.filter(p=>{
+      if(!p.opTarih) return false;
+      if(morbPeriod==='year') return p.opTarih.substring(0,4)===curY;
+      if(morbPeriod==='month') return p.opTarih.substring(0,7)===curM;
+      return true;
+    });
+  }
+  // Sıralama: şiddete göre (Clavien V/Mortalite en üstte) ya da tarihe göre (en yeni üstte)
+  list=list.slice().sort((a,b)=>{
+    if(morbSortSeverity){
+      const ra=CLAVIEN_RANK[a.clavien]||0, rb=CLAVIEN_RANK[b.clavien]||0;
+      if(ra!==rb) return rb-ra;
+    }
+    return (b.opTarih||'').localeCompare(a.opTarih||'');
+  });
+  morbLastList=list;
+  document.getElementById('mb-ai-summary').style.display='none';
   document.getElementById('mb-count').textContent=list.length+' vaka';
   if(!list.length){document.getElementById('morbidite-list').innerHTML='<div style="padding:20px;text-align:center;font-size:0.8em;color:var(--text3);">Bu kriterde vaka yok.</div>';return;}
   document.getElementById('morbidite-list').innerHTML=list.map(p=>`
@@ -5396,6 +5635,46 @@ function renderMorbidite(){
       </div>
       ${p.kompNot?`<div style="font-size:0.733em;color:var(--text2);margin-top:5px;">${p.kompNot.substring(0,100)}${p.kompNot.length>100?'…':''}</div>`:''}
     </div>`).join('');
+}
+async function summarizeMorbidite(){
+  const box=document.getElementById('mb-ai-summary');
+  const textEl=document.getElementById('mb-ai-summary-text');
+  box.style.display='block';
+  textEl.textContent='⏳ AI özet hazırlıyor...';
+  try{
+    const key=getApiKey();
+    const providerName=getApiProvider();
+    if(!key) throw new Error('API key girilmemiş. Lütfen Ayarlar > AI API Ayarları kısmından key ekleyin.');
+    if(!morbLastList.length) throw new Error('Bu kriterde özetlenecek vaka yok.');
+    const provider=AI_PROVIDERS[providerName];
+    const endpoint=typeof provider.endpoint==='function'?provider.endpoint(key):provider.endpoint;
+    const headers=provider.headers(key);
+    // Hasta adı/TC gönderilmiyor — sadece klinik olarak gerekli, kimliksiz bilgiler
+    const caseLines=morbLastList.map((p,i)=>`Vaka ${i+1}: ${p.yas||'?'} yaş, ${p.yapilanAmeliyat||'ameliyat belirsiz'}, `
+      +`${p.opTarih?new Date(p.opTarih).toLocaleDateString('tr-TR'):'tarih belirsiz'}, `
+      +`Evre ${p.evre||'belirsiz'}, Clavien-Dindo ${p.clavien||'belirtilmemiş'}, `
+      +`Komplikasyonlar: ${(p.komplikasyonlar||[]).join(', ')||'yok'}${p.kompNot?', Not: '+p.kompNot:''}`).join('\n');
+    const sysPrompt='Sen bir göğüs cerrahisi kliniğinin Morbidite & Mortalite toplantısı için vaka özeti hazırlayan bir asistansın. '
+      +'Sana verilen vaka listesini (hasta kimlik bilgisi olmadan) klinik açıdan özetle: genel örüntüler, en kritik/öncelikli vakalar, '
+      +'dikkat çekici bir tema varsa belirt. Kısa, net, toplantıda sunuma hazır bir Türkçe paragraf yaz. Maks 120 kelime.';
+    const userMsg='Vaka listesi:\n'+caseLines;
+    let body;
+    if(providerName==='anthropic'){
+      body=JSON.stringify({model:getModelFor('anthropic',getAiTier()),max_tokens:600,system:sysPrompt,messages:[{role:'user',content:userMsg}]});
+    } else if(providerName==='gemini'){
+      body=JSON.stringify({system_instruction:{parts:[{text:sysPrompt}]},contents:[{role:'user',parts:[{text:userMsg}]}],generationConfig:{maxOutputTokens:600}});
+    } else {
+      body=JSON.stringify({model:getModelFor(providerName,getAiTier()),max_tokens:600,messages:[{role:'system',content:sysPrompt},{role:'user',content:userMsg}]});
+    }
+    const response=await fetch(endpoint,{method:'POST',headers:headers,body:body});
+    const data=await response.json();
+    if(!response.ok) throw new Error((data.error&&data.error.message)||'HTTP '+response.status);
+    const text=provider.parseResponse(data);
+    if(!text) throw new Error('Yanıt alınamadı');
+    textEl.textContent=text;
+  } catch(e){
+    textEl.textContent='❌ '+(e.message||'Hata oluştu');
+  }
 }
 
 
